@@ -1,7 +1,11 @@
 # Login using Selenium WebDriver
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 options = Options()
+# Chrome web driver
+from webdriver_manager.chrome import ChromeDriverManager
+
 # Environment variable libraries
 import os
 from dotenv import load_dotenv
@@ -11,14 +15,14 @@ import requests
 from bs4 import BeautifulSoup
 
 load_dotenv()
-usr = os.getenv("USERNAME")
+usr = os.getenv("USER_NAME")
 pwd = os.getenv("PASSWORD")
 
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--disable-extensions")
+# options.add_argument("--headless")
+# options.add_argument("--disable-gpu")
+# options.add_argument("--disable-extensions")
 
-driver = webdriver.Chrome("C:\Program Files\Google\Chrome\Application\98.0.4758.82\chromedriver.exe", options=options)
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 # URL
 url = "https://caringbahhs.sentral.com.au/portal2/#!/login"
 
@@ -37,9 +41,9 @@ if driver.current_url == 'https://caringbahhs.sentral.com.au/portal/dashboard':
 # If you aren't logged in, log in.
 elif driver.current_url == url or driver.current_url == 'https://caringbahhs.sentral.com.au/portal2/':
     # Get 
-    username = driver.find_element_by_id('inputEmail')
-    password = driver.find_element_by_id('password')
+    username = driver.find_element(By.ID, 'inputEmail')
+    password = driver.find_element(By.ID, 'password')
     if (username.get_attribute("value") != usr):
-        username.send_keys(usr)
+        username.send_keys('safin.zaman')
     password.send_keys(pwd)
-    driver.find_element_by_class_name("submit").click()
+    driver.find_element(By.CLASS_NAME, "btn btn-primary margin-bottom_20").click()
