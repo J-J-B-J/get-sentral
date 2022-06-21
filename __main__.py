@@ -36,8 +36,13 @@ driver.get(url)
 def scrape_timetable(html):
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
-    timetable = soup(lambda tag: tag.name == 'td' and tag.get('class') == ['timetable-dayperiod'])
+    # timetable = soup(lambda tag: tag.name == 'td' and tag.get('class') == ['timetable-dayperiod'])
+    # get the child 'strong' in the below asjdjkad              | down here `and tag.get('class') == ['small-caps']`
+    # timetable = soup(lambda tag: tag.name in ['strong', 'small'] and tag.parent.parent.attrs.get('class') == 'timetable-class')
+    timetable = soup.find_all(class_="timetable-class") # ^^ turn lambda func code to vanilla function
     print(timetable)
+    # print(driver.find_elements(By.CLASS_NAME, "small-caps"))
+    print('ABC')
 
 # Check if you already are logged in and in the dashboard
 if driver.current_url == 'https://caringbahhs.sentral.com.au/portal/dashboard':
@@ -52,8 +57,6 @@ elif driver.current_url == url or driver.current_url == 'https://caringbahhs.sen
     password.send_keys(pwd)
     driver.find_element(By.XPATH, '//button[text()="Log In"]').click()
     time.sleep(5)
-    if driver.current_url == 'https://caringbahhs.sentral.com.au/portal/dashboard':
-        scrape_timetable(driver.page_source)
-    else:
-        print('The program failed...')
-    
+    if driver.current_url != 'https://caringbahhs.sentral.com.au/portal/dashboard':
+        raise TypeError("The URL is not at the specified Sentral dashboard.\n Please disable headless mode and test the code to ensure that it is functional.")
+    scrape_timetable(driver.page_source)
