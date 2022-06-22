@@ -47,9 +47,12 @@ def scrape_timetable(html):
     # timetable = soup(lambda tag: tag.name in ['strong', 'small'] and tag.parent.parent.attrs.get('class') == 'timetable-class')
     # ^^ turn lambda func code to vanilla function
     timetable = soup.find_all(class_="timetable-class")
+    # make a for loop that iterates a number from 0 to 3, put that through the ResultSet square brackets and get the contents of each, extract and format from there as i have no internet whilst writing this note.
+    children = timetable[0].contents[0]
+    print(f'descendants: {children}')
+
     print(timetable)
     # print(driver.find_elements(By.CLASS_NAME, "small-caps"))
-    print('ABC')
 
 
 # Check if you already are logged in and in the dashboard
@@ -64,7 +67,7 @@ elif driver.current_url == url or driver.current_url == 'https://caringbahhs.sen
         username.send_keys('safin.zaman')
     password.send_keys(pwd)
     driver.find_element(By.XPATH, '//button[text()="Log In"]').click()
-    time.sleep(5)
+    time.sleep(1)
     if driver.current_url != 'https://caringbahhs.sentral.com.au/portal/dashboard':
         raise TypeError(
             "The URL is not at the specified Sentral dashboard.\n Please disable headless mode and test the code to ensure that it is functional.")
