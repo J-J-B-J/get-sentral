@@ -1,17 +1,17 @@
 """A function to get the timetable for the current week"""
-# Created by SuperHarmony910 !
-
 # Login using Selenium WebDriver
 import time
 from bs4 import BeautifulSoup
 import os
-from webdriver_manager.core.utils import ChromeType
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from json import load
+
+
+print('Created by SuperHarmony910 and J-J-B-J')
 
 
 def scrape_timetable(html):
@@ -112,8 +112,8 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         if debug:
             print("Not logged in - Logging in")
         # Get
-        username = driver.find_element(By.ID, 'inputEmail')
-        password = driver.find_element(By.ID, 'password')
+        username = driver.find_element(value='inputEmail')
+        password = driver.find_element(value='password')
         if username.get_attribute("value") != usr:
             username.send_keys(usr)
         password.send_keys(pwd)

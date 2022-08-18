@@ -127,6 +127,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# Secret files (may contain sensitive info)
-Sentral_Details.json
