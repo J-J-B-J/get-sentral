@@ -1,3 +1,5 @@
+# Created by SuperHarmony910 !
+
 # Login using Selenium WebDriver
 import time
 from bs4 import BeautifulSoup
@@ -80,3 +82,5 @@ elif driver.current_url == url or driver.current_url == 'https://caringbahhs.sen
         raise TypeError(
             "The URL is not at the specified Sentral dashboard.\n Please disable headless mode and test the code to ensure that it is functional.")
     scrape_timetable(driver.page_source)
+    
+    print('\n\n Made by SuperHarmony910')
