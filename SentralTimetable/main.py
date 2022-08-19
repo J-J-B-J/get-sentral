@@ -20,8 +20,10 @@ def scrape_timetable(html: str):
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
     data = {'classes': {}, 'notices': []}
-
-    timetable_periods = soup.find(class_="timetable table").find_all('tr')
+    try:
+        timetable_periods = soup.find(class_="timetable table").find_all('tr')
+    except AttributeError:
+        return data
     for period in timetable_periods:
         if 'inactive' in period.find('td')['class']:
             class_ = None
@@ -74,7 +76,7 @@ def scrape_timetable(html: str):
             minute = int(notice_date[5].split(':')[1])
         except ValueError:
             minute = 0
-        notice_date = datetime.datetime(year, month, day, hour, minute)
+        notice_date = str(datetime.datetime(year, month, day, hour, minute))
         notice_content = ""
         for tag in notice.find_all('p'):
             notice_content += ' '.join(tag.strings) + '\n'
