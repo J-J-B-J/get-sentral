@@ -15,7 +15,7 @@ from json import load
 print('Created by SuperHarmony910 and J-J-B-J')
 
 
-def scrape_timetable(html):
+def scrape_timetable(html: str):
     """Scrape the HTML for the timetable"""
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
