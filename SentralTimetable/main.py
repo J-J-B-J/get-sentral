@@ -18,28 +18,32 @@ def scrape_timetable(html):
     """Scrape the HTML for the timetable"""
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
-    timetable = soup.find_all(class_="timetable-class")
-    classes = []
-    for i in range(4):
-        try:
-            class_name = timetable[i].contents[1].contents[1].string
-        except IndexError:
-            class_name = "Unknown"
-        try:
-            class_room = timetable[i].small.find_all("strong")[0].string
-        except IndexError:
-            class_room = "Unknown"
-        try:
-            class_teacher = timetable[i].small.find_all("strong")[1].string
-        except IndexError:
-            class_teacher = "Unknown"
-        class_ = {
-            "subject": class_name,
-            "room": class_room,
-            "teacher": class_teacher
-        }
-        classes.append(class_)
-    return classes
+    timetable_periods = soup.find(class_="timetable table").find_all('tr')
+    data = {'classes': {}}
+    for period in timetable_periods:
+        if 'inactive' in period.find('td')['class']:
+            class_ = None
+        else:
+            try:
+                class_name = period.find_all('strong')[0].string
+            except IndexError:
+                class_name = "Unknown"
+            try:
+                class_room = period.find_all('strong')[1].string
+            except IndexError:
+                class_room = "Unknown"
+            try:
+                class_teacher = period.find_all("strong")[2].string
+            except IndexError:
+                class_teacher = "Unknown"
+            class_ = {
+                "subject": class_name,
+                "room": class_room,
+                "teacher": class_teacher
+            }
+        class_number = period.find('th').string
+        data['classes'][class_number] = class_
+    return data
 
 
 def get_data_from_json(json_file):
