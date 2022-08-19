@@ -1,5 +1,6 @@
 """A function to get the timetable for the current week"""
 # Login using Selenium WebDriver
+import datetime
 import time
 from bs4 import BeautifulSoup
 import os
@@ -18,8 +19,9 @@ def scrape_timetable(html):
     """Scrape the HTML for the timetable"""
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
+    data = {'classes': {}, 'notices': []}
+
     timetable_periods = soup.find(class_="timetable table").find_all('tr')
-    data = {'classes': {}}
     for period in timetable_periods:
         if 'inactive' in period.find('td')['class']:
             class_ = None
@@ -43,6 +45,47 @@ def scrape_timetable(html):
             }
         class_number = period.find('th').string
         data['classes'][class_number] = class_
+
+    notices = soup.find_all(class_='notice-wrap')
+    for notice in notices:
+        notice_title = notice.find('h4').string
+        notice_teacher = notice.find_all('strong')[1].string.strip()
+        notice_date = \
+            str(notice.find('small').contents[2]).strip().lstrip('on ').split()
+        try:
+            day = int(notice_date[1])
+        except ValueError:
+            day = 0
+        try:
+            month = ['', 'Janurary', 'February', 'March', 'April', 'May',
+                     'June', 'July', 'August', 'September', 'October',
+                     'November', 'December'].index(notice_date[2].rstrip(','))
+        except ValueError:
+            month = 0
+        try:
+            year = int(notice_date[3])
+        except ValueError:
+            year = 0
+        try:
+            hour = int(notice_date[5].split(':')[0])
+        except ValueError:
+            hour = 0
+        try:
+            minute = int(notice_date[5].split(':')[1])
+        except ValueError:
+            minute = 0
+        notice_date = datetime.datetime(year, month, day, hour, minute)
+        notice_content = ""
+        for tag in notice.find_all('p'):
+            notice_content += ' '.join(tag.strings) + '\n'
+
+        notice_data = {
+            'title': notice_title,
+            'teacher': notice_teacher,
+            'date': notice_date,
+            'content': notice_content
+        }
+        data['notices'].append(notice_data)
     return data
 
 
@@ -56,7 +99,7 @@ def get_data_from_json(json_file):
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = False):
+                  debug: bool = False, timeout: int = 5):
     """Get the timetable for the current week"""
     # Chrome web driver
     if debug:
@@ -92,7 +135,8 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     # Don't log unnecessary stuff
     options.add_argument('log-level=3')
     # Invisible (headless) browser
-    options.add_argument("--headless")
+    if not debug:
+        options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-extensions")
 
@@ -122,16 +166,40 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
             username.send_keys(usr)
         password.send_keys(pwd)
         driver.find_element(By.XPATH, '//button[text()="Log In"]').click()
-        time.sleep(2.5)
-        if not driver.current_url.endswith('/portal/dashboard'):
-            raise TypeError(
-                "The URL is not at the specified Sentral dashboard.\n Please "
-                "disable headless mode and test the code to ensure that it is "
-                "functional.")
+        start_time = time.time()
+        while True:
+            if driver.current_url.endswith('/portal/dashboard'):
+                break
+            elif time.time() > start_time + timeout:
+                raise TypeError(
+                    "The URL is not at the specified Sentral dashboard.\n "
+                    "Please disable headless mode and test the code to ensure "
+                    "that it is functional. The page may also have failed to "
+                    "load in 5 secs. You can change the timeout by passing a "
+                    "value to the timeout arguement"
+                )
         if debug:
             print("Logged in - Scraping Timetable")
         return scrape_timetable(driver.page_source)
 
 
 if __name__ == "__main__":
-    print(get_timetable())
+    timetable = get_timetable(debug=True)
+
+    print("\n\nCLASSES\n")
+    for my_period, my_class in timetable['classes'].items():
+        if my_class:
+            print(
+                f"{my_period}: {my_class['subject']} in {my_class['room']}"
+                f" with {my_class['teacher']}"
+            )
+        else:
+            print(f"{my_period}: Empty")
+
+    print("\n\nNOTICES\n")
+    for my_notice in timetable['my_notices']:
+        print(my_notice['title'].upper())
+        print('-' * len(my_notice['title']))
+        print(f"By {my_notice['teacher']} on {my_notice['date'].date()}")
+        print('-' * len(my_notice['title']))
+        print(my_notice['content'] + '\n')
