@@ -190,7 +190,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
 
 if __name__ == "__main__":
-    timetable = get_timetable(debug=True)
+    timetable = get_timetable(debug=get_data_from_json("Sentral_Details.json")["DEBUG"])
 
     print("\n\nCLASSES\n")
     for my_period, my_class in timetable['classes'].items():
