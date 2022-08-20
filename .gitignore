@@ -132,3 +132,7 @@ dmypy.json
 build
 dist
 SentralTimetable.egg-info
+
+# Environment variables
+*.env
+SentralTimetable/Sentral_Details.json
