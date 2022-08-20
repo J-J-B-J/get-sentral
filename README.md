@@ -54,12 +54,14 @@ Set the environment variables `SENTRAL_USERNAME`, `SENTRAL_PASSWORD` and `URL`
 ### Option 2
 Create a file called `Sentral_Details.json`.
 Set the contents of the file to
+```json
 {
     "USERNAME": "YOUR_USERNAME",
     "PASSWORD": "YOUR_PASSWORD",
     "URL": "https://YOUR_SCHOOL.sentral.com.au/portal/dashboard",
     "DEBUG": false
 }
+```
 
 ### Option 3
 Pass your details into the function, for example,
