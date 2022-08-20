@@ -155,12 +155,14 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     # Get timetable once in Sentral dashboard
 
     # Check if you already are logged in and in the dashboard
+    if debug:
+        print(f"Driver URL: {driver.current_url}")
     if driver.current_url.endswith('/portal/dashboard'):
         if debug:
             print("Already logged in - Scraping Timetable")
         return scrape_timetable(driver.current_url)
     # If you aren't logged in, log in.
-    elif driver.current_url == url or driver.current_url.endswith('/portal2/'):
+    elif driver.current_url == url or '/portal2/' in driver.current_url:
         if debug:
             print("Not logged in - Logging in")
         # Get
