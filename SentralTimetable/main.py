@@ -15,38 +15,9 @@ from json import load
 print('Created by SuperHarmony910 and J-J-B-J')
 
 
-def scrape_timetable(html: str):
+def scrape_timetable(html: str, driver: webdriver):
     """Scrape the HTML for the timetable"""
-    # Fetch the page and create a BeautifulSoup object
-    soup = BeautifulSoup(html, 'html.parser')
-    data = {'classes': {}, 'notices': []}
-    try:
-        timetable_periods = soup.find(class_="timetable table").find_all('tr')
-    except AttributeError:
-        return data
-    for period in timetable_periods:
-        if 'inactive' in period.find('td')['class']:
-            class_ = None
-        else:
-            try:
-                class_name = period.find_all('strong')[0].string
-            except IndexError:
-                class_name = "Unknown"
-            try:
-                class_room = period.find_all('strong')[1].string
-            except IndexError:
-                class_room = "Unknown"
-            try:
-                class_teacher = period.find_all("strong")[2].string
-            except IndexError:
-                class_teacher = "Unknown"
-            class_ = {
-                "subject": class_name,
-                "room": class_room,
-                "teacher": class_teacher
-            }
-        class_number = period.find('th').string
-        data['classes'][class_number] = class_
+    driver.findElement(By.XPATH('//a[text()="Daily Timetable"]')).click()
 
     notices = soup.find_all(class_='notice-wrap')
     for notice in notices:
@@ -90,6 +61,40 @@ def scrape_timetable(html: str):
             'content': notice_content
         }
         data['notices'].append(notice_data)
+
+        # Fetch the page and create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+    data = {'classes': {}, 'notices': []}
+    try:
+        timetable_periods = soup.find(class_="timetable table").find_all('tr')
+    except AttributeError:
+        return data
+
+    driver.findElement(By.XPATH('//a[text()="Daily Timetable"]')).click(); # navigate to daily timetable
+    for period in timetable_periods:
+        if 'inactive' in period.find('td')['class']:
+            class_ = None
+        else:
+            try:
+                class_name = period.find_all('strong')[0].string
+            except IndexError:
+                class_name = "Unknown"
+            try:
+                class_room = period.find_all('strong')[1].string
+            except IndexError:
+                class_room = "Unknown"
+            try:
+                class_teacher = period.find_all("strong")[2].string
+            except IndexError:
+                class_teacher = "Unknown"
+            class_ = {
+                "subject": class_name,
+                "room": class_room,
+                "teacher": class_teacher
+            }
+        class_number = period.find('th').string
+        data['classes'][class_number] = class_
+
     return data
 
 
@@ -144,8 +149,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-extensions")
 
-    driver = webdriver.Chrome(options=options,
-                              service=Service(ChromeDriverManager().install()))
+    driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
 
     # Get the page
     if debug:
@@ -160,7 +164,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     if driver.current_url.endswith('/portal/dashboard'):
         if debug:
             print("Already logged in - Scraping Timetable")
-        return scrape_timetable(driver.current_url)
+        return scrape_timetable(driver.current_url, driver)
     # If you aren't logged in, log in.
     elif driver.current_url == url or '/portal2/' in driver.current_url:
         if debug:
@@ -186,11 +190,12 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
                 )
         if debug:
             print("Logged in - Scraping Timetable")
-        return scrape_timetable(driver.page_source)
+        return scrape_timetable(driver.page_source, driver)
 
 
 if __name__ == "__main__":
-    timetable = get_timetable(debug=get_data_from_json("Sentral_Details.json")["DEBUG"])
+    timetable = get_timetable(debug=get_data_from_json(
+        "Sentral_Details.json")["DEBUG"])
 
     print("\n\nCLASSES\n")
     for my_period, my_class in timetable['classes'].items():
