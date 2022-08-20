@@ -59,7 +59,7 @@ def scrape_timetable(html: str):
         except ValueError:
             day = 0
         try:
-            month = ['', 'Janurary', 'February', 'March', 'April', 'May',
+            month = ['', 'January', 'February', 'March', 'April', 'May',
                      'June', 'July', 'August', 'September', 'October',
                      'November', 'December'].index(notice_date[2].rstrip(','))
         except ValueError:
