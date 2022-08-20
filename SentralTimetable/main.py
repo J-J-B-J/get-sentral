@@ -73,10 +73,12 @@ def scrape_timetable(html: str):
         except ValueError:
             hour = 0
         try:
-            minute = int(notice_date[5].split(':')[1])
+            minute = int(notice_date[5].split(':')[1][:-2])
         except ValueError:
             minute = 0
-        notice_date = str(datetime.datetime(year, month, day, hour, minute))
+        if notice_date[5].split(':')[1][-2:] == 'pm':
+            hour += 12
+        notice_date = (year, month, day, hour, minute)
         notice_content = ""
         for tag in notice.find_all('p'):
             notice_content += ' '.join(tag.strings) + '\n'
@@ -199,9 +201,12 @@ if __name__ == "__main__":
             print(f"{my_period}: Empty")
 
     print("\n\nNOTICES\n")
-    for my_notice in timetable['my_notices']:
+    for my_notice in timetable['notices']:
         print(my_notice['title'].upper())
         print('-' * len(my_notice['title']))
-        print(f"By {my_notice['teacher']} on {my_notice['date'].date()}")
+        d = my_notice['date']
+        my_notice_date = datetime.datetime(d[0], d[1], d[2], d[3], d[4])\
+            .strftime('%a, %d %b at %I:%M%p')
+        print(f"By {my_notice['teacher']} on {my_notice_date}")
         print('-' * len(my_notice['title']))
         print(my_notice['content'] + '\n')

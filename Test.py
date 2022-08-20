@@ -1,6 +1,6 @@
 """Test main.py"""
 import unittest
-from json import load
+from json import load, dumps
 
 from SentralTimetable.main import *
 
@@ -8,14 +8,14 @@ from SentralTimetable.main import *
 class TestScrapeTimetable(unittest.TestCase):
     def test_empty_timetable(self):
         self.assertEqual(
-            scrape_timetable(''),
-            {'classes': {}, 'notices': []}
+            {'classes': {}, 'notices': []},
+            scrape_timetable('')
         )
 
     def test_non_html_timetable(self):
         self.assertEqual(
-            scrape_timetable('Hi!'),
-            {'classes': {}, 'notices': []}
+            {'classes': {}, 'notices': []},
+            scrape_timetable('Hi!')
         )
 
     def test_actual_timetable(self):
@@ -24,8 +24,8 @@ class TestScrapeTimetable(unittest.TestCase):
         with open('Test_Json.json') as f:
             test_json = load(f)
         self.assertEqual(
-            test_json,
-            scrape_timetable(test_html)
+            dumps(test_json),
+            dumps(scrape_timetable(test_html))
         )
 
 

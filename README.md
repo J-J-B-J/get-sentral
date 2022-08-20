@@ -37,7 +37,7 @@ Calling `get_timetable` returns a dictionary in the following format:
         {
             'title': 'Basketball trials today at lunchtime!',
             'teacher': 'B. Sport',
-            'date': datetime.datetime(2022, 8, 19, 10, 0),
+            'date': (2022, 8, 19, 10, 0),   # Year, month, day, hour, minute
             'content': 'See you all at lunch time on the oval!'
         }
     ]
