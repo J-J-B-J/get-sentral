@@ -99,11 +99,11 @@ def get_data_from_json(json_file):
         with open(json_file, 'r') as f:
             return load(f)
     except:
-        return None
+        return {}
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = False, timeout: int = 5):
+                  debug: bool = None, timeout: int = 5):
     """Get the timetable for the current week"""
     # Chrome web driver
     if debug:
@@ -111,24 +111,32 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     options = Options()
 
     # Get credentials
-    if debug:
-        print("Getting Credentials")
+    # Use "is None" instead of "not" for debug because debug could be False
+    if debug is None:
+        debug = {"True": True, "False": False}.get(os.getenv("DEBUG"))
+        if debug is None:
+            debug = get_data_from_json("Sentral_Details.json").get("DEBUG")
+            if debug is None:
+                while True:
+                    debug = {"Y": True, "N": False}.get(input("Debug? Y/N: "))
+                    if debug is not None:
+                        break
     if not usr:
         usr = os.getenv("USER_NAME")
         if not usr:
-            usr = get_data_from_json("Sentral_Details.json")["USERNAME"]
+            usr = get_data_from_json("Sentral_Details.json").get("USERNAME")
             if not usr:
                 usr = input("Username: ")
     if not pwd:
         pwd = os.getenv("PASSWORD")
         if not pwd:
-            pwd = get_data_from_json("Sentral_Details.json")["PASSWORD"]
+            pwd = get_data_from_json("Sentral_Details.json").get("PASSWORD")
             if not pwd:
                 pwd = input("Password: ")
     if not url:
         url = os.getenv("URL")
         if not url:
-            url = get_data_from_json("Sentral_Details.json")["URL"]
+            url = get_data_from_json("Sentral_Details.json").get("URL")
             if not url:
                 url = input("URL: ")
 
@@ -190,7 +198,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
 
 if __name__ == "__main__":
-    timetable = get_timetable(debug=get_data_from_json("Sentral_Details.json")["DEBUG"])
+    timetable = get_timetable()
 
     print("\n\nCLASSES\n")
     for my_period, my_class in timetable['classes'].items():
