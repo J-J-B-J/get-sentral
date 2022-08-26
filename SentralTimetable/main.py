@@ -40,7 +40,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
             debug = get_data_from_json("Sentral_Details.json").get("DEBUG")
             if debug is None:
                 while True:
-                    debug = {"Y": True, "N": False}.get(input("Debug? Y/N: "))
+                    debug = {"y".lower(): True, "n".lower(): False}.get(input("Debug? Y/N: "))
                     if debug is not None:
                         break
     if not usr:
@@ -60,7 +60,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         if not url:
             url = get_data_from_json("Sentral_Details.json").get("URL")
             if not url:
-                url = input("URL: ")
+                url = "https://" + input("URL: ") + ".sentral.com.au/portal/dashboard"
 
     # Create the webdriver
     if debug:
@@ -80,7 +80,10 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     # Get the page
     if debug:
         print("Getting page")
-    driver.get(url)
+    try:
+        driver.get(url)
+    except:
+        raise TypeError(f'The Sentral URL you provided ({url}) was invalid! Please try again.')
 
     # Get timetable once in Sentral dashboard
 
@@ -91,7 +94,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         if debug:
             print("Already logged in - Scraping Timetable")
         return scrape_timetable(driver.current_url)
-    # If you aren't logged in, log in.
+    # If you aren't logged in, log in.url
     elif driver.current_url == url or '/portal2/' in driver.current_url:
         if debug:
             print("Not logged in - Logging in")
