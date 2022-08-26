@@ -69,7 +69,7 @@ def __print_colour(text: any, hex_code: str):
         '000000',  # Black
         'FF7F7F',  # Red
         '85EE88',  # Green
-        'FFFF00',  # Yellow
+        'FFF884',  # Yellow
         '0000FF',  # Blue
         'BF7FFF',  # Purple
         '84E6DD',  # Cyan
@@ -93,8 +93,9 @@ if __name__ == "__main__":
     print("\n\nCLASSES\n")
     for my_period, my_class in timetable['classes'].items():
         if my_class:
+            print(f'{my_period}: ', end='')
             __print_colour(
-                f"{my_period}: {my_class['subject']} in {my_class['room']}"
+                f"{my_class['subject']} in {my_class['room']}"
                 f" with {my_class['teacher']}",
                 my_class['colour']
             )
