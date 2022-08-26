@@ -27,10 +27,12 @@ def scrape_timetable(html: str):
                 class_teacher = period.find_all("strong")[2].string
             except IndexError:
                 class_teacher = "Unknown"
+            colour = str(period.find('div').attrs['style'])[-8:-1]
             class_ = {
                 "subject": class_name,
                 "room": class_room,
-                "teacher": class_teacher
+                "teacher": class_teacher,
+                "colour": colour
             }
         class_number = period.find('th').string
         data['classes'][class_number] = class_
