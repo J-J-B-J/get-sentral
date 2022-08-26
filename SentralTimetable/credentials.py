@@ -20,7 +20,7 @@ def get_credentials(debug, usr, pwd, url):
             debug = get_data_from_json("Sentral_Details.json").get("DEBUG")
             if debug is None:
                 while True:
-                    debug = {"Y": True, "N": False}.get(input("Debug? Y/N: "))
+                    debug = {"Y": True, "N": False}.get(input("Debug? Y/N: ")[0].upper())
                     if debug is not None:
                         break
     if not usr:
@@ -28,7 +28,7 @@ def get_credentials(debug, usr, pwd, url):
         if not usr:
             usr = get_data_from_json("Sentral_Details.json").get("USERNAME")
             if not usr:
-                usr = input("Username: ")
+                usr = input("Username: ").lower()
     if not pwd:
         pwd = os.getenv("PASSWORD")
         if not pwd:
