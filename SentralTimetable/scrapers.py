@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 
 
-def scrape_timetable(html: str):
+def scrape(html: str):
     """Scrape the HTML for the timetable"""
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')

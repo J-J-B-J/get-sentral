@@ -2,10 +2,9 @@
 import datetime
 from json import load
 
-from scrapers import *
-from webdriver import *
-from credentials import *
-
+import scrapers 
+import webdriver
+import credentials as creds
 
 print('Created by SuperHarmony910 and J-J-B-J')
 
@@ -15,7 +14,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     """Get the timetable for the current week"""
 
     # Get credentials
-    credentials = get_credentials(debug, usr, pwd, url)
+    credentials = creds.get(debug, usr, pwd, url)
     debug = credentials['debug']
     usr = credentials['usr']
     pwd = credentials['pwd']
@@ -24,15 +23,15 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     # Create the webdriver
     if debug:
         print("Creating webdriver")
-    driver = create_webdriver(headless=(not debug))
+    driver = webdriver.create(headless=(not debug))
 
     if debug:
         print("Getting page")
-    navigate_to_timetable(driver, usr, pwd, url, timeout)
+    webdriver.navigate(driver, usr, pwd, url, timeout)
     if debug:
         print("Logged in. Scraping Timetable")
 
-    return scrape_timetable(driver.page_source)
+    return scrapers.scrape(driver.page_source)
 
 
 if __name__ == "__main__":
