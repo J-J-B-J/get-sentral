@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 import time
 
 
-def create_webdriver(headless: bool):
+def create(headless: bool):
     """Create a webdriver for chrome"""
     options = Options()
     # Don't log unnecessary stuff
@@ -22,7 +22,7 @@ def create_webdriver(headless: bool):
                             service=Service(ChromeDriverManager().install()))
 
 
-def navigate_to_timetable(driver: webdriver.Chrome, usr: str, pwd: str,
+def navigate(driver: webdriver.Chrome, usr: str, pwd: str,
                           url: str, timeout: int = 5):
     """Navigate to the tdashboard page"""
     # Get the page
