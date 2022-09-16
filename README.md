@@ -49,7 +49,7 @@ Please note that this will autocorrect based on the number of periods and notice
 ## Parameter options
 
 ### Option 1
-Set the environment variables `SENTRAL_USERNAME`, `SENTRAL_PASSWORD` and `URL`
+Set the environment variables `SENTRAL_USERNAME`, `SENTRAL_PASSWORD`, `URL` and `DEBUG`
 
 ### Option 2
 Create a file called `Sentral_Details.json`.
