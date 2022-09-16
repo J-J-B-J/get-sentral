@@ -3,15 +3,11 @@ from setuptools import setup
 
 setup(
     name="SentralTimetable",
-    version="0.1",
-    description="The functions of Scratch brought to Python with Pygame.",
-    long_description="# Python-Scratch\nIs a Python library for creating "
-                     "Scratch projects.\nIt allows you to create a Scratch "
-                     "project in Python, using functions similar or "
-                     "identical to Scratch!",
+    version="0.2",
+    description="A tool to get your timetable from Sentral.",
     long_description_content_type="text/markdown",
     author="SuperHarmony910 and J-J-B-J",
-    url="https://github.com/J-J-B-J/get-sentral-timetable",
+    url="https://github.com/J-J-B-J/get-sentral",
     keywords="Sentral school timetable python scraper",
     python_requires=">=3.9",
     install_requires=[

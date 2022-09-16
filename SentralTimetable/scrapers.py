@@ -2,7 +2,8 @@
 from bs4 import BeautifulSoup
 
 
-def scrape(html: str):
+# TODO: Convert into two functions: scrape_notices and scrape_timetable
+def scrape_timetable(html: str):
     """Scrape the HTML for the timetable"""
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
@@ -79,4 +80,35 @@ def scrape(html: str):
             'content': notice_content
         }
         data['notices'].append(notice_data)
+    return data
+
+
+def scrape_calendar(html: str):
+    """Scrape the HTML for the calendar"""
+    # Fetch the page and create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+    data = {'events': []}
+    calendar = soup.find('table', class_='calendar')
+    days = calendar.find_all('td', id=True)
+    for day in days:
+        events_div = day.find('div', class_='calendar-eventdata')
+        events_this_day = events_div.find_all('div')
+        for event in events_this_day:
+            event_obj = {}
+            if 'class' not in event.attrs.keys():
+                continue
+            event_obj['name'] = event.text.replace('Events:', '').strip()
+            event_obj['flag'] = event.attrs.get('data-cat-event', '').replace('_', ' ').title()
+            event_obj['date'] = day.find('div', class_='center').text
+            time = event.find('span', 'tool-tip-time')
+            new_name = event_obj['name'].split(' - ')
+            x = 0
+            for section in new_name:
+                if not section.strip()[0].isnumeric():
+                    break
+                x += 1
+            event_obj['name'] = ' - '.join(new_name[x:])
+            if time:
+                event_obj['date'] += ' ' + time.text
+            data['events'].append(event_obj)
     return data

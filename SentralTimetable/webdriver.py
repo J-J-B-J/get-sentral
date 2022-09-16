@@ -22,12 +22,9 @@ def create(headless: bool):
                             service=Service(ChromeDriverManager().install()))
 
 
-def navigate(driver: webdriver.Chrome, usr: str, pwd: str,
-                          url: str, timeout: int = 5):
-    """Navigate to the tdashboard page"""
-    # Get the page
-    driver.get(url)
-
+def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
+          timeout: int = 5):
+    """Log in through the usual prompt"""
     # If you aren't logged in, log in.
     if (not driver.current_url.endswith('/portal/dashboard')) and \
             driver.current_url == url or '/portal2/' in driver.current_url:
@@ -41,7 +38,7 @@ def navigate(driver: webdriver.Chrome, usr: str, pwd: str,
         start_time = time.time()
         while True:
             if driver.current_url.endswith('/portal/dashboard'):
-                break
+                return
             elif time.time() > start_time + timeout:
                 raise TypeError(
                     "The URL is not at the specified Sentral dashboard.\n "
@@ -50,3 +47,20 @@ def navigate(driver: webdriver.Chrome, usr: str, pwd: str,
                     "load in 5 secs. You can change the timeout by passing a "
                     "value to the timeout arguement"
                 )
+
+
+def go_to_calendar(driver: webdriver.Chrome, timeout: int = 5):
+    url = driver.find_element(By.ID, 'school-applications-nav').find_element(By.CLASS_NAME, 'colour-resources').get_attribute('href')
+    driver.get(url)
+    start_time = time.time()
+    while True:
+        if '/webcal/calendar/' in driver.current_url:
+            return
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )

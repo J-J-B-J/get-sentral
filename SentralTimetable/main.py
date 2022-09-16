@@ -1,6 +1,9 @@
 """A function to get the timetable for the current week"""
 import datetime
 from json import load
+import time
+import string
+import random
 
 import scrapers 
 import webdriver
@@ -9,16 +12,21 @@ import credentials as creds
 print('Created by SuperHarmony910 and J-J-B-J')
 
 
+def stringgen(length):
+    """Generate a random string"""
+    letters = string.ascii_lowercase  # define the lower case string
+    # define the condition for random.choice() method
+    result = ''.join((random.choice(letters)) for _ in range(length))
+    return result
+
+
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
                   debug: bool = None, timeout: int = 5):
     """Get the timetable for the current week"""
+    data = {}
 
     # Get credentials
-    credentials = creds.get(debug, usr, pwd, url)
-    debug = credentials['debug']
-    usr = credentials['usr']
-    pwd = credentials['pwd']
-    url = credentials['url']
+    debug, usr, pwd, url = creds.get(debug, usr, pwd, url)
 
     # Create the webdriver
     if debug:
@@ -27,11 +35,29 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
     if debug:
         print("Getting page")
-    webdriver.navigate(driver, usr, pwd, url, timeout)
-    if debug:
-        print("Logged in. Scraping Timetable")
+    driver.get(url)
 
-    return scrapers.scrape(driver.page_source)
+    if debug:
+        print("Logging in")
+    webdriver.login(driver, usr, pwd, url, timeout)
+
+    if debug:
+        print("Scraping Timetable")
+    timetable = scrapers.scrape_timetable(driver.page_source)
+    for x, y in timetable.items():
+        data[x] = y
+
+    if debug:
+        print("Navigating to calendar")
+    webdriver.go_to_calendar(driver, timeout * 2)
+
+    if debug:
+        print("Scraping Calendar")
+    calendar = scrapers.scrape_calendar(driver.page_source)
+    for x, y in calendar.items():
+        data[x] = y
+
+    return data
 
 
 def __print_colour(text: any, hex_code: str):
@@ -69,10 +95,10 @@ def __print_colour(text: any, hex_code: str):
         'FF7F7F',  # Red
         '85EE88',  # Green
         'FFF884',  # Yellow
-        '0000FF',  # Blue
+        '84E6DD',  # Blue
         'BF7FFF',  # Purple
-        '84E6DD',  # Cyan
-        'FFFFFF',  # White
+        'CEFEFD',  # Cyan
+        'EEEEEE',  # White
     )
     for colour in colours:
         diff = 0
@@ -111,3 +137,10 @@ if __name__ == "__main__":
         print(f"By {my_notice['teacher']} on {my_notice_date}")
         print('-' * len(my_notice['title']))
         print(my_notice['content'] + '\n')
+
+    print("\nEVENTS\n")
+    for my_event in timetable['events']:
+        print(my_event['date'] + ': ' + my_event['name'].upper())
+        if my_event['flag']:
+            print("Flag: " + my_event['flag'])
+        print()

@@ -44,9 +44,4 @@ def get(debug, usr, pwd, url):
             if not url:
                 url = input("URL: ")
 
-    return {
-        'debug': debug,
-        'usr': usr,
-        'pwd': pwd,
-        'url': url
-    }
+    return debug, usr, pwd, url
