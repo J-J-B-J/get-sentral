@@ -5,9 +5,7 @@ import time
 import string
 import random
 
-import scrapers 
-import webdriver
-import credentials as creds
+from . import scrapers, webdriver, credentials as creds
 
 print('Created by SuperHarmony910 and J-J-B-J')
 
