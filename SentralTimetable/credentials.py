@@ -13,6 +13,7 @@ def get_data_from_json(json_file):
         return {}
 
 
+# TODO: Make timeout settable by credential methods
 def get(debug, usr, pwd, url):
     """Get the credentials for the program"""
     # Use "is None" instead of "not" for debug because debug could be False

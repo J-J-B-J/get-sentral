@@ -38,6 +38,7 @@ Calling `get_timetable` returns a dictionary in the following format:
             'title': 'Basketball trials today at lunchtime!',
             'teacher': 'B. Sport',
             'date': (2022, 8, 19, 10, 0),   # Year, month, day, hour, minute that the notice was posted at
+            'date string': 'Friday, 19 August 2022 at 10:00 am',  # The time that was read from the Sentral website
             'content': 'See you all at lunch time on the oval!'
         }
     ],
