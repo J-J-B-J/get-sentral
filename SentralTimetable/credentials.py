@@ -2,7 +2,9 @@
 from json import load
 import json
 import os
+
 json_filename = "Sentral_Details.json"
+
 
 def get_data_from_json(json_file):
     """Get the data from the JSON environment file"""
@@ -23,7 +25,8 @@ def get(debug, usr, pwd, url):
             debug = get_data_from_json(json_filename).get("DEBUG")
             if debug is None:
                 while True:
-                    debug = {"Y": True, "N": False}.get(input("Debug? Y/N: ")[0].upper())
+                    debug = {"Y": True, "N": False}.get(
+                        input("Debug? Y/N: ")[0].upper())
                     if debug is not None:
                         break
     if not usr:

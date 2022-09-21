@@ -21,11 +21,17 @@ def scrape_timetable(html: str):
             except IndexError:
                 class_name = "Unknown"
             try:
-                class_room = period.find_all('strong')[1].string
+                if 'Room' in period.text:
+                    class_room = period.find_all('strong')[1].string
+                else:
+                    class_room = "Unknown"
             except IndexError:
                 class_room = "Unknown"
             try:
-                class_teacher = period.find_all("strong")[2].string
+                if 'with' in period.text:
+                    class_teacher = period.find_all('strong')[-1].string
+                else:
+                    class_teacher = "Unknown"
             except IndexError:
                 class_teacher = "Unknown"
             colour = str(period.find('div').attrs['style'])[-8:-1]
