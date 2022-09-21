@@ -29,7 +29,8 @@ Calling `get_timetable` returns a dictionary in the following format:
         '1': {  # A class in period one
             'subject': 'Math Yr 12',
             'room': 'AG01',
-            'teacher': 'A. Mathematician'
+            'teacher': 'A. Mathematician',
+            'colour': '#FF00FF'  # The colour for the bar on the left
         },
         '2': None   # An empty period
     },
