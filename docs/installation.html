@@ -34,8 +34,67 @@
     </nav>
 
     <div class="container">
-        <h2>This page hasn't been built yet!</h2>
-        <p>Check back soon!</p>
+        <h2>Installation</h2>
+
+        <div>
+            <h3>Download</h3>
+
+            <h5>Github</h5>
+            <ol>
+                <li>Download the latest source code from <a class="link" href="https://github.com/J-J-B-J/get-sentral/releases/latest">the releases page</a>.</li>
+                <li>Unzip the file.</li>
+            </ol>
+
+            <h5>Github CLI</h5>
+            <small>N.B. Make sure you have the <a class="link" href="https://docs.github.com/en/github-cli">GitHub CLI</a> installed.</small>
+
+            <ol>
+                <li>Open a new terminal window/tab.</li>
+                <li>Change into the <code>Downloads</code> directory with <code>cd Downloads</code></li>
+                <li>Run <code>gh repo clone J-J-B-J/get-sentral</code> to download the files.</li>
+            </ol>
+
+            <h5>Github Desktop</h5>
+            <small>N.B. Make sure you have the <a class="link" href="https://docs.github.com/en/desktop">GitHub Desktop</a> installed.</small>
+
+            <ol>
+                <li>Open GitHub Desktop.</li>
+                <li>In the menu bar, click on <code>File > Clone Repository</code></li>
+                <li>Click on the URL tab.</li>
+                <li>Enter <code>J-J-B-J/get-sentral</code> into the <code>URL or username/repository</code> box.</li>
+                <li>Click <code>Choose...</code> to choose where to save the repo.</li>
+                <li>Set the clone name to <code>get-sentral</code> and the path to your <code>Downloads</code> folder.</li>
+                <li>Click select.</li>
+                <li>Click clone.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Build & Install</h3>
+
+            <ol>
+                <li>Open a new terminal window/tab.</li>
+                <li>Run <code>cd Downloads/get-sentral</code> to enter the get-sentral directory.</li>
+                <li>
+                    Run <code>python3 setup.py sdist bdist_wheel</code> to install the package.
+                    <br>
+                    <small>N.B. If you use Python 2, use <code>python</code> instead of <code>python3</code> above.</small>
+                </li>
+                <li>Run <code>cd dist</code> to enter the package directory.</li>
+                <li>Run <code>find . -type f -name "*.tar.gz"</code> to find the name of the package.</li>
+                <li>
+                    Run <code>pip3 install [FILE_NAME]</code> to install the package.
+                    <br>
+                    <small>
+                        N.B. FILE_NAME should be the result of the previous step's command.
+                        So, if you got <code>./SentralTimetable-0.2.tar.gz</code>, then run <code>pip3 install SentralTimetable-0.2.tar.gz</code>
+                    </small>
+                    <br>
+                    <small>N.B. If you use Python 2, use <code>pip</code> instead of <code>pip3</code> above.</small>
+                </li>
+            </ol>
+        </div>
+
     </div>
 
 </body>

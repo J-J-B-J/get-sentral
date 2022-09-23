@@ -10,8 +10,20 @@ h2 {
     color: #D0D0D0;
 }
 
+h3 {
+    color: #a0a0a0;
+}
+
+h5 {
+    color: #a0a0a0;
+}
+
 p {
     color: #D0D0D0;
+}
+
+small {
+    color: #9da7b7;
 }
 
 li {
@@ -36,6 +48,12 @@ th {
 td {
     border: 1px solid #D0D0D0;
     width: 50%;
+}
+
+code {
+    color: #D0D0D0;
+    background-color: #3D3F41;
+    border: 3px solid #3D3F41;
 }
 
 .image {
