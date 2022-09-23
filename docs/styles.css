@@ -1,0 +1,59 @@
+body {
+    background-color: #2B2B2B;
+}
+
+h1 {
+    color: #D0D0D0;
+}
+
+h2 {
+    color: #D0D0D0;
+}
+
+p {
+    color: #D0D0D0;
+}
+
+li {
+    color: #D0D0D0;
+}
+
+table {
+    color: #D0D0D0;
+    border-collapse: collapse;
+}
+
+nav {
+    background-color: #3D3F41;
+}
+
+th {
+    border: 1px solid #D0D0D0;
+    height: 50px;
+    text-align: center;
+}
+
+td {
+    border: 1px solid #D0D0D0;
+    width: 50%;
+}
+
+.image {
+    text-align: center;
+}
+
+.pystr {
+    color: olivedrab;
+}
+
+.pyint {
+    color: #7296B8FF;
+}
+
+.pykey {
+    color: darkorange;
+}
+
+.link {
+    color: #8EB2EAFF;
+}
