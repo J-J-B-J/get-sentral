@@ -71,6 +71,7 @@
                 <small>Make sure it starts with <code>https://</code> and ends with <code>/portal/dashboard</code></small>
             </li>
             <li><code>DEBUG</code> - Weather or not to debug the program</li>
+            <li><code>TIMEOUT</code> - The time to give the website to load before raising an error</li>
         </ul>
 
         <p>
@@ -82,7 +83,7 @@
         <div>
             <h3>Parameters</h3>
             <p>This is the simplest way of setting the variables. Simply pass them into the function, like so:</p>
-            <code>SentralTimetable.get_timetable(<span class="pyparam">usr</span>=<span class="pystr">"andy.griffiths1"</span>, <span class="pyparam">pwd</span>=<span class="pystr">"TerryIsAnIdiot"</span>, <span class="pyparam">url</span>=<span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>, <span class="pyparam">debug</span>=<span class="pykey">False</span>)</code>
+            <code>SentralTimetable.get_timetable(<span class="pyparam">usr</span>=<span class="pystr">"andy.griffiths1"</span>, <span class="pyparam">pwd</span>=<span class="pystr">"TerryIsAnIdiot"</span>, <span class="pyparam">url</span>=<span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>, <span class="pyparam">debug</span>=<span class="pykey">False</span>, <span class="pyparam">timeout</span>=<span class="pyint">5</span>)</code>
         </div>
 
         <br>
@@ -103,6 +104,9 @@
                 <li>
                     <code><span class="pystr">"DEBUG"</span></code><small> - Set to <code><span class="pystr">"True"</span></code> or <code><span class="pystr">"False"</span></code></small>
                 </li>
+                <li>
+                    <code><span class="pystr">"TIMEOUT"</span></code><small> - Set to an integer that has been formatted as a string, e.g. <code><span class="pystr">"15"</span></code></small>
+                </li>
             </ul>
 
             <p>For example, use the following code before calling <code>get_timetable()</code>:</p>
@@ -110,7 +114,8 @@
                 os.putenv(<span class="pystr">"USER_NAME"</span>, <span class="pystr">"andy.griffiths1"</span>)<br>
                 os.putenv(<span class="pystr">"PASSWORD"</span>, <span class="pystr">"TerryIsAnIdiot"</span>)<br>
                 os.putenv(<span class="pystr">"URL"</span>, <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>)<br>
-                os.putenv(<span class="pystr">"DEBUG"</span>, <span class="pystr">"False"</span>)
+                os.putenv(<span class="pystr">"DEBUG"</span>, <span class="pystr">"False"</span>)<br>
+                os.putenv(<span class="pystr">"TIMEOUT"</span>, <span class="pystr">"15"</span>)
             </code>
         </div>
 
@@ -129,10 +134,11 @@
                         <li><code><span class="pystr">"PASSWORD"</span></code> - Your school password</li>
                         <li><code><span class="pystr">"URL"</span></code> - Your school's sentral url</li>
                         <li><code><span class="pystr">"DEBUG"</span></code> - Weather or not to debug the program - set to <code><span class="pykey">true</span></code> or <code><span class="pykey">false</span></code></li>
+                        <li><code><span class="pystr">"TIMEOUT"</span></code> - Time to give the page to load before raising an error - set to an integer such as <code><span class="pyint">15</span></code></li>
                     </ul>
                     For example, set the contents of the .json file to
                     <code>
-                        {<span class="pystr">"USERNAME"</span>: <span class="pystr">"andy.griffiths1"</span>, <span class="pystr">"PASSWORD"</span>: <span class="pystr">"TerryIsAnIdiot"</span>, <span class="pystr">"URL"</span>: <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>, <span class="pystr">"DEBUG"</span>: <span class="pykey">false</span>}
+                        {<span class="pystr">"USERNAME"</span>: <span class="pystr">"andy.griffiths1"</span>, <span class="pystr">"PASSWORD"</span>: <span class="pystr">"TerryIsAnIdiot"</span>, <span class="pystr">"URL"</span>: <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>, <span class="pystr">"DEBUG"</span>: <span class="pykey">false</span>, <span class="pystr">"TIMEOUT"</span>: <code><span class="pyint">15</span></code>}
                     </code>
                 </li>
             </ol>
@@ -143,19 +149,6 @@
         <div>
             <h3>input()</h3>
             <p>If you do not enter the credentials in one of the above methods, the program will automatically ask for the credentials using the <code><span class="pyfn">input</span>()</code> function.</p>
-            <ol>
-                <li>Create a new file in the project directory called <code>Sentral_Details.json</code></li>
-                <li>Create a ditionary in the file using <code>{}</code></li>
-                <li>
-                    Fill the dictionary with the following keys and values:
-                    <ul>
-                        <li><code>"USERNAME"</code> - Your school username</li>
-                        <li><code>"PASSWORD"</code> - Your school password</li>
-                        <li><code>"URL"</code> - Your school's sentral url</li>
-                        <li><code>"DEBUG"</code> - Weather or not to debug the program - set to <code><span class="pykey">true</span></code> or <code><span class="pykey">false</span></code></li>
-                    </ul>
-                </li>
-            </ol>
         </div>
 
         <br>

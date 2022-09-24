@@ -19,12 +19,12 @@ def stringgen(length):
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = None, timeout: int = 5):
+                  debug: bool = None, timeout: int = None):
     """Get the timetable for the current week"""
     data = {}
 
     # Get credentials
-    debug, usr, pwd, url = creds.get(debug, usr, pwd, url)
+    debug, usr, pwd, url, timeout = creds.get(debug, usr, pwd, url, timeout)
 
     # Create the webdriver
     if debug:
@@ -111,10 +111,10 @@ def __print_colour(text: any, hex_code: str):
 
 
 if __name__ == "__main__":
-    timetable = get_timetable()
+    my_timetable = get_timetable()
 
     print("\n\nCLASSES\n")
-    for my_period, my_class in timetable['classes'].items():
+    for my_period, my_class in my_timetable['classes'].items():
         if my_class:
             print(f'{my_period}: ', end='')
             __print_colour(
@@ -126,7 +126,7 @@ if __name__ == "__main__":
             print(f"{my_period}: Empty")
 
     print("\n\nNOTICES\n")
-    for my_notice in timetable['notices']:
+    for my_notice in my_timetable['notices']:
         print(my_notice['title'].upper())
         print('-' * len(my_notice['title']))
         d = my_notice['date']
@@ -137,7 +137,7 @@ if __name__ == "__main__":
         print(my_notice['content'] + '\n')
 
     print("\nEVENTS\n")
-    for my_event in timetable['events']:
+    for my_event in my_timetable['events']:
         print(my_event['date'] + ': ' + my_event['name'].upper())
         if my_event['flag']:
             print("Flag: " + my_event['flag'])

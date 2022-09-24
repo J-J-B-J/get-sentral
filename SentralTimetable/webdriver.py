@@ -50,7 +50,14 @@ def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
 
 
 def go_to_calendar(driver: webdriver.Chrome, timeout: int = 5):
-    url = driver.find_element(By.ID, 'school-applications-nav').find_element(By.CLASS_NAME, 'colour-resources').get_attribute('href')
+    """
+    Navigate to the calendar page from the dashboard
+    :param driver: The webdriver object to use
+    :param timeout: The time to wait for the page to load
+    :return: None
+    """
+    url = driver.find_element(By.ID, 'school-applications-nav')\
+        .find_element(By.CLASS_NAME, 'colour-resources').get_attribute('href')
     driver.get(url)
     start_time = time.time()
     while True:

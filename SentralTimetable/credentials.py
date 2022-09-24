@@ -16,7 +16,7 @@ def get_data_from_json(json_file):
 
 
 # TODO: Make timeout settable by credential methods
-def get(debug, usr, pwd, url):
+def get(debug, usr, pwd, url, timeout):
     """Get the credentials for the program"""
     # Use "is None" instead of "not" for debug because debug could be False
     if debug is None:
@@ -47,5 +47,22 @@ def get(debug, usr, pwd, url):
             url = get_data_from_json(json_filename).get("URL")
             if not url:
                 url = input("URL: ")
+    if not timeout:
+        try:
+            timeout = int(os.getenv("TIMEOUT"))
+        except ValueError:
+            timeout = None
+        if not timeout:
+            timeout = get_data_from_json(json_filename).get("TIMEOUT")
+            if not timeout:
+                while True:
+                    try:
+                        timeout = int(input("Timeout: "))
+                        if timeout < 5:
+                            print("Timeout must not be less than 5")
+                        else:
+                            break
+                    except ValueError:
+                        print("Invalid timeout")
 
-    return debug, usr, pwd, url
+    return debug, usr, pwd, url, timeout
