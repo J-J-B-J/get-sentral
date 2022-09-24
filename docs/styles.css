@@ -22,6 +22,10 @@ p {
     color: #D0D0D0;
 }
 
+pre {
+    color: #D0D0D0;
+}
+
 small {
     color: #9da7b7;
 }
@@ -41,7 +45,6 @@ nav {
 
 th {
     border: 1px solid #D0D0D0;
-    height: 50px;
     text-align: center;
 }
 
@@ -72,6 +75,22 @@ code {
     color: darkorange;
 }
 
+.pyparam {
+    color: #c00000;
+}
+
+.pyfn {
+    color: mediumpurple;
+}
+
+.pycom {
+    color: #EEE7EB7F;
+}
+
 .link {
     color: #8EB2EAFF;
+}
+
+.invisibletable {
+    border: none;
 }
