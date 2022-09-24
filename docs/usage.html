@@ -94,7 +94,12 @@
 
         <div>
             <h3>In an external Python program</h3>
-            <p>This mode outputs the data as a dictionary object. The dictionary uses this format:</p>
+            <p>To use this mode, use:</p>
+            <code>
+                <span class="pykey">import</span> SentralTimetable
+                SentralTimetable.get_timetable()
+            </code>
+            <p>Using <code>get_timetable()</code> returns the data as a dictionary object. The dictionary uses this format:</p>
             <br>
             <pre>
 {
@@ -130,6 +135,12 @@
     ]
 }
             </pre>
+
+            <p>You can use the output in another language by using the json module.</p>
+
+            <br>
+            <br>
+
         </div>
 
     </div>
