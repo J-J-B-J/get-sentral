@@ -1,7 +1,6 @@
 """A function to get the timetable for the current week"""
 import datetime
 from json import load
-import time
 import string
 import random
 
@@ -19,7 +18,7 @@ def stringgen(length):
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = None, timeout: int = None):
+                  debug: bool = None, timeout: int = None) -> dict:
     """Get the timetable for the current week"""
     data = {}
 
@@ -41,9 +40,8 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
     if debug:
         print("Scraping Timetable")
-    timetable = scrapers.scrape_timetable(driver.page_source)
-    for x, y in timetable.items():
-        data[x] = y
+    data['classes'] = scrapers.scrape_timetable(driver.page_source)
+    data['notices'] = scrapers.scrape_notices(driver.page_source)
 
     if debug:
         print("Navigating to calendar")
@@ -51,9 +49,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
     if debug:
         print("Scraping Calendar")
-    calendar = scrapers.scrape_calendar(driver.page_source)
-    for x, y in calendar.items():
-        data[x] = y
+    data['events'] = scrapers.scrape_calendar(driver.page_source)
 
     return data
 

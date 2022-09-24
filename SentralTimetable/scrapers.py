@@ -2,12 +2,15 @@
 from bs4 import BeautifulSoup
 
 
-# TODO: Convert into two functions: scrape_notices and scrape_timetable
-def scrape_timetable(html: str):
-    """Scrape the HTML for the timetable"""
+def scrape_timetable(html: str) -> dict:
+    """
+    Scrape the HTML for the timetable
+    :param html: The HTML source code
+    :return: The timetable
+    """
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
-    data = {'classes': {}, 'notices': []}
+    data = {}
     try:
         timetable_periods = soup.find(class_="timetable table").find_all('tr')
     except AttributeError:
@@ -42,8 +45,19 @@ def scrape_timetable(html: str):
                 "colour": colour
             }
         class_number = period.find('th').string
-        data['classes'][class_number] = class_
+        data[class_number] = class_
+    return data
 
+
+def scrape_notices(html: str) -> list:
+    """
+    Scrape the HTML for the notices
+    :param html: The HTML source code
+    :return: Notices
+    """
+    # Fetch the page and create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+    data = []
     notices = soup.find_all(class_='notice-wrap')
     for notice in notices:
         notice_title = notice.find('h4').string
@@ -91,15 +105,19 @@ def scrape_timetable(html: str):
             'date string': notice_date_string,
             'content': notice_content
         }
-        data['notices'].append(notice_data)
+        data.append(notice_data)
     return data
 
 
-def scrape_calendar(html: str):
-    """Scrape the HTML for the calendar"""
+def scrape_calendar(html: str) -> list:
+    """
+    Scrape the HTML for the calendar
+    :param html: The HTML source code
+    :return: The calendar events
+    """
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
-    data = {'events': []}
+    data = []
     calendar = soup.find('table', class_='calendar')
     days = calendar.find_all('td', id=True)
     for day in days:
@@ -110,7 +128,8 @@ def scrape_calendar(html: str):
             if 'class' not in event.attrs.keys():
                 continue
             event_obj['name'] = event.text.replace('Events:', '').strip()
-            event_obj['flag'] = event.attrs.get('data-cat-event', '').replace('_', ' ').title()
+            event_obj['flag'] = event.attrs.get('data-cat-event', '').replace(
+                '_', ' ').title()
             event_obj['date'] = day.find('div', class_='center').text
             time = event.find('span', 'tool-tip-time')
             new_name = event_obj['name'].split(' - ')
@@ -122,5 +141,5 @@ def scrape_calendar(html: str):
             event_obj['name'] = ' - '.join(new_name[x:])
             if time:
                 event_obj['date'] += ' ' + time.text
-            data['events'].append(event_obj)
+            data.append(event_obj)
     return data

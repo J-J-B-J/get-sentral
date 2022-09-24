@@ -7,8 +7,12 @@ from selenium.webdriver.common.by import By
 import time
 
 
-def create(headless: bool):
-    """Create a webdriver for chrome"""
+def create(headless: bool) -> webdriver.Chrome:
+    """
+    Create a webdriver object
+    :param headless: Weather or not to make the webdriver headless
+    :return: The webdriver object
+    """
     options = Options()
     # Don't log unnecessary stuff
     options.add_argument('log-level=3')
@@ -23,8 +27,16 @@ def create(headless: bool):
 
 
 def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
-          timeout: int = 5):
-    """Log in through the usual prompt"""
+          timeout: int = 5) -> None:
+    """
+    Login to the Sentral dashboard
+    :param driver: The webdriver object to use
+    :param usr: The username to use
+    :param pwd: The password to use
+    :param url: The URL to use
+    :param timeout: The time to wait for the page to load
+    :return: None
+    """
     # If you aren't logged in, log in.
     if (not driver.current_url.endswith('/portal/dashboard')) and \
             driver.current_url == url or '/portal2/' in driver.current_url:
@@ -49,14 +61,14 @@ def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
                 )
 
 
-def go_to_calendar(driver: webdriver.Chrome, timeout: int = 5):
+def go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> None:
     """
     Navigate to the calendar page from the dashboard
     :param driver: The webdriver object to use
     :param timeout: The time to wait for the page to load
     :return: None
     """
-    url = driver.find_element(By.ID, 'school-applications-nav')\
+    url = driver.find_element(value='school-applications-nav')\
         .find_element(By.CLASS_NAME, 'colour-resources').get_attribute('href')
     driver.get(url)
     start_time = time.time()
