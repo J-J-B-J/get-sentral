@@ -91,6 +91,19 @@ code {
     color: #8EB2EAFF;
 }
 
+.headerlink {
+    color: #a0a0a0;
+}
+
 .invisibletable {
     border: none;
+}
+
+.card {
+    background-color: #3D3F41;
+}
+
+.card-img-top {
+    height: 250px;
+    object-fit: contain;
 }
