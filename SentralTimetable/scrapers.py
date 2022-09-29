@@ -122,7 +122,11 @@ def scrape_calendar(html: str) -> list:
     days = calendar.find_all('td', id=True)
     for day in days:
         events_div = day.find('div', class_='calendar-eventdata')
-        events_this_day = events_div.find_all('div')
+        if events_div:
+            events_this_day = events_div.find_all('div')
+        else:
+            # There are no events on this date
+            events_this_day = []
         for event in events_this_day:
             event_obj = {}
             if 'class' not in event.attrs.keys():
