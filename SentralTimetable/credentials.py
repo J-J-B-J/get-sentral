@@ -61,7 +61,7 @@ def get(debug: bool, usr: str, pwd: str, url: str, timeout: int) -> tuple:
     if not timeout:
         try:
             timeout = int(os.getenv("TIMEOUT"))
-        except ValueError:
+        except ValueError or TypeError:
             timeout = None
         if not timeout:
             timeout = get_data_from_json(JSON_FILENAME).get("TIMEOUT")
