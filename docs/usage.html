@@ -86,7 +86,7 @@
                     <br>
                     <small>N.B. If you use a <a class="link" href="https://www.jetbrains.com">JetBrains</a> product, the project is already set up for you.</small>
                 </li>
-                <li>Run <code>SentralTimetable/main.py</code></li>
+                <li>Run <code>example.py</code></li>
             </ol>
 
             <h5>Terminal</h5>
@@ -94,7 +94,7 @@
                 <li>Open a new terminal tab/window.</li>
                 <li>Run <code>cd Downloads/get-sentral</code></li>
                 <li>
-                    Run <code>python3 SentralTimetable/main.py</code>
+                    Run <code>python3 example.py</code>
                     <br>
                     <small>N.B. If you use Python 2, use <code>python</code> instead of <code>python3</code> above.</small>
                 </li>
@@ -106,10 +106,10 @@
         <div>
             <h3>In an external Python program</h3>
             <p>To use this mode, use:</p>
-            <code>
-                <span class="pykey">import</span> SentralTimetable
-                SentralTimetable.get_timetable()
-            </code>
+            <pre>
+<span class="pykey">import</span> SentralTimetable
+SentralTimetable.get_timetable()
+            </pre>
             <p>Using <code>get_timetable()</code> returns the data as a dictionary object. The dictionary uses this format:</p>
             <br>
             <pre>

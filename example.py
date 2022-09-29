@@ -1,57 +1,8 @@
-"""A function to get the timetable for the current week"""
-import datetime
-from json import load
-import string
-import random
-
-from SentralTimetable import scrapers, webdriver, credentials as creds
-
-print('Created by SuperHarmony910 and J-J-B-J')
-
-
-def stringgen(length):
-    """Generate a random string"""
-    letters = string.ascii_lowercase  # define the lower case string
-    # define the condition for random.choice() method
-    result = ''.join((random.choice(letters)) for _ in range(length))
-    return result
-
-
-def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = None, timeout: int = None) -> dict:
-    """Get the timetable for the current week"""
-    data = {}
-
-    # Get credentials
-    debug, usr, pwd, url, timeout = creds.get(debug, usr, pwd, url, timeout)
-
-    # Create the webdriver
-    if debug:
-        print("Creating webdriver")
-    driver = webdriver.create(headless=(not debug))
-
-    if debug:
-        print("Getting page")
-    driver.get(url)
-
-    if debug:
-        print("Logging in")
-    webdriver.login(driver, usr, pwd, url, timeout)
-
-    if debug:
-        print("Scraping Timetable")
-    data['classes'] = scrapers.scrape_timetable(driver.page_source)
-    data['notices'] = scrapers.scrape_notices(driver.page_source)
-
-    if debug:
-        print("Navigating to calendar")
-    webdriver.go_to_calendar(driver, timeout * 2)
-
-    if debug:
-        print("Scraping Calendar")
-    data['events'] = scrapers.scrape_calendar(driver.page_source)
-
-    return data
+"""
+Run this as an example to test out the code. If you have built and installed
+the package, you should be able to use it in another directory.
+"""
+from SentralTimetable import get_timetable
 
 
 def __print_colour(text: any, hex_code: str):
@@ -106,7 +57,8 @@ def __print_colour(text: any, hex_code: str):
     print('\x1b[0;' + closest_colour + 'm' + str(text) + '\033[0;0m')
 
 
-if __name__ == "__main__":
+def main():
+    """The main function"""
     my_timetable = get_timetable()
 
     print("\n\nCLASSES\n")
@@ -138,3 +90,7 @@ if __name__ == "__main__":
         if my_event['flag']:
             print("Flag: " + my_event['flag'])
         print()
+
+
+if __name__ == "__main__":
+    main()
