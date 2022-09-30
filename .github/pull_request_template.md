@@ -1,0 +1,3 @@
+This PR [fixes issue/adds feature/patches bug] #[ISSUE_NUMBER]
+
+I have done this by ...
