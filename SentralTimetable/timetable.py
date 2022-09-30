@@ -9,6 +9,8 @@ except ImportError:
     import scrapers
     import webdriver
 
+with open('SentralTimetable/get_sentral.txt', 'r') as f:
+    print(f.read())
 print('Created by SuperHarmony910 and J-J-B-J')
 
 
