@@ -3,9 +3,10 @@ from setuptools import setup
 
 setup(
     name="SentralTimetable",
-    version="0.2",
+    version="2022.0.4",
     description="A tool to get your timetable from Sentral.",
     long_description_content_type="text/markdown",
+    long_description=open("README.md").read(),
     author="SuperHarmony910 and J-J-B-J",
     url="https://github.com/J-J-B-J/get-sentral",
     keywords="Sentral school timetable python scraper",
@@ -23,11 +24,11 @@ setup(
         "License :: Other/Proprietary License",
         "Natural Language :: English",
         "Environment :: Console",
-        "Environment :: Web Environment"
+        "Environment :: Web Environment",
         "Programming Language :: Python :: 3",
         "Operating System :: MacOS",
-        "Operating System :: Microsoft :: Windows"
-        "Operating System :: Unix"
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: Unix",
         "Topic :: Education",
         "Topic :: Software Development",
         "Topic :: Software Development :: Libraries :: Python Modules",
