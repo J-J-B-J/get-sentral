@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 import time
 
 
-def create(headless: bool) -> webdriver.Chrome:
+def create_webdriver(headless: bool) -> webdriver.Chrome:
     """
     Create a webdriver object
     :param headless: Weather or not to make the webdriver headless
@@ -26,8 +26,8 @@ def create(headless: bool) -> webdriver.Chrome:
                             service=Service(ChromeDriverManager().install()))
 
 
-def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
-          timeout: int = 5) -> None:
+def webdriver_login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
+                    timeout: int = 5) -> None:
     """
     Login to the Sentral dashboard
     :param driver: The webdriver object to use
@@ -61,7 +61,8 @@ def login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
                 )
 
 
-def go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> None:
+def webdriver_go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> \
+        None:
     """
     Navigate to the calendar page from the dashboard
     :param driver: The webdriver object to use

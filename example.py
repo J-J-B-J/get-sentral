@@ -3,6 +3,7 @@ Run this as an example to test out the code. If you have built and installed
 the package, you should be able to use it in another directory.
 """
 from SentralTimetable import get_timetable
+import datetime
 
 
 def __print_colour(text: any, hex_code: str):

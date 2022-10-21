@@ -19,7 +19,8 @@ def get_data_from_json(json_file: str) -> dict:
         return {}
 
 
-def get(debug: bool, usr: str, pwd: str, url: str, timeout: int) -> tuple:
+def get_credentials(debug: bool, usr: str, pwd: str, url: str, timeout: int)\
+        -> tuple:
     """
     Get the credentials
     :param debug: Weather or not to debug
@@ -61,7 +62,9 @@ def get(debug: bool, usr: str, pwd: str, url: str, timeout: int) -> tuple:
     if not timeout:
         try:
             timeout = int(os.getenv("TIMEOUT"))
-        except ValueError or TypeError:
+        except TypeError:
+            timeout = None
+        except ValueError:
             timeout = None
         if not timeout:
             timeout = get_data_from_json(JSON_FILENAME).get("TIMEOUT")
