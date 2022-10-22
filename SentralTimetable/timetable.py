@@ -3,6 +3,7 @@
 from .credentials import *
 from .scrapers import *
 from .webdriver import *
+from .objects import *
 
 # Print the get-sentral logo
 print("""
@@ -26,9 +27,8 @@ print('Created by SuperHarmony910 and J-J-B-J')
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = None, timeout: int = None) -> dict:
+                  debug: bool = None, timeout: int = None) -> Sentral:
     """Get the timetable for the current week"""
-    data = {}
 
     # Get credentials
     debug, usr, pwd, url, timeout = get_credentials(debug, usr, pwd, url,
@@ -49,8 +49,8 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
     if debug:
         print("Scraping Timetable")
-    data['classes'] = scrape_timetable(driver.page_source)
-    data['notices'] = scrape_notices(driver.page_source)
+    classes = scrape_timetable(driver.page_source)
+    notices = scrape_notices(driver.page_source)
 
     if debug:
         print("Navigating to calendar")
@@ -58,6 +58,10 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
 
     if debug:
         print("Scraping Calendar")
-    data['events'] = scrape_calendar(driver.page_source)
+    events = scrape_calendar(driver.page_source)
 
-    return data
+    return Sentral(
+        classes=classes,
+        notices=notices,
+        events=events
+    )
