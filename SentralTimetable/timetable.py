@@ -51,6 +51,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         print("Scraping Timetable")
     classes = scrape_timetable(driver.page_source)
     notices = scrape_notices(driver.page_source)
+    user = scrape_user(driver.page_source)
 
     if debug:
         print("Navigating to calendar")
@@ -63,5 +64,6 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     return Sentral(
         classes=classes,
         notices=notices,
-        events=events
+        events=events,
+        user=user
     )
