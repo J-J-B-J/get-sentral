@@ -14,7 +14,8 @@ setup(
     install_requires=[
         'bs4~=0.0.1',
         'beautifulsoup4~=4.10.0',
-        'selenium~=4.4.2'
+        'selenium~=4.4.2',
+        'TextBarcodeGenerator~=2022.0.2'
     ],
     package_dir={'': '.'},
     classifiers=[

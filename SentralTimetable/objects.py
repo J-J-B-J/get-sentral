@@ -157,17 +157,37 @@ class Event:
         return f"Event({self.title} on {self.date})"
 
 
+class User:
+    """A class to manage the user details"""
+
+    def __init__(self, name: str, school: str, number: int, barcode: str):
+        self.name = name
+        self.school = school
+        self.number = number
+        self.barcode = barcode
+
+    def __str__(self):
+        return f"{self.name} ({self.school}, {self.number})\n{self.barcode}"
+
+    def __repr__(self):
+        return f"User({self.name}, {self.school}, {self.number}, " \
+               f"{self.barcode})"
+
+
 class Sentral:
     """One class to rule them all... or at least contain the others"""
 
     def __init__(self, classes: list[Period or EmptyPeriod],
-                 notices: list[Notice], events: list[Event]):
+                 notices: list[Notice], events: list[Event], user: User):
         self.classes = classes
         self.notices = notices
         self.events = events
+        self.user = user
 
     def __str__(self):
-        return f"Sentral({self.classes}, {self.notices}, {self.events})"
+        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+               f"{self.user})"
 
     def __repr__(self):
-        return f"Sentral({self.classes}, {self.notices}, {self.events})"
+        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+               f"{self.user})"

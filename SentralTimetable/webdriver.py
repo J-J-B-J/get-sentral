@@ -15,7 +15,7 @@ def create_webdriver(headless: bool) -> webdriver.Chrome:
     """
     options = Options()
     # Don't log unnecessary stuff
-    options.add_argument('log-level=3')
+    options.add_argument('log-level=0')
     # Invisible (headless) browser
     if headless:
         options.add_argument("--headless")

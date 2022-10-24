@@ -3,6 +3,7 @@ from .objects import *
 
 from bs4 import BeautifulSoup
 import datetime
+from BarcodeGenerator import generate_barcode
 
 
 MONTHS_LONG = [
@@ -123,6 +124,37 @@ def scrape_notices(html: str) -> list:
         )
         data.append(notice_data)
     return data
+
+
+def scrape_user(html: str) -> User:
+    """
+    Scrape the user data
+    :param html: The HTML source code
+    :return: The user data
+    """
+    soup = BeautifulSoup(html, 'html.parser')
+    try:
+        school_div = soup.find('h1')
+        school = str(school_div.text)
+        subtext = str(school_div.find('span').text)
+        school = school.replace(subtext, '').strip()
+    except AttributeError:
+        school = "Unknown"
+
+    student_div = soup.find(class_='student-login')
+    try:
+        name = str(student_div.find('span').text.title())
+    except AttributeError:
+        name = "Unknown"
+    try:
+        number = int(student_div.find('small').text)
+    except AttributeError:
+        number = 0
+    except ValueError:
+        number = 0
+    barcode = generate_barcode(number)
+
+    return User(name, school, number, barcode)
 
 
 def scrape_calendar(html: str) -> list:
