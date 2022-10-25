@@ -97,171 +97,291 @@
 
         <div>
             <br>
-            <h2>Timetable</h2>
+            <h2>Using <code>get_timetable()</code></h2>
             <br>
-            <table style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Sentral</th>
-                        <th>Python</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="image">
-                            <img src="img/SentralTimetable.png" alt="Sample Sentral Timetable" width="90%">
-                        </td>
-                        <td>
-                            <pre>
+            <p>
+                <code>get_timetable()</code> returns a tree of Python objects, defined in <code>objects.py</code>.
+                The root of the tree is a <code>Sentral</code> object.
+            </p>
+            <h2>
+                <code>Sentral</code>
+                <span class="pycom">{Custom}</span>
+            </h2>
+            <p>This is simply a container for the other objects.</p>
+            <div style="text-indent: 20px">
+                <h3>
+                    <code>.classes</code>
+                    <span class="pycom">{list}</span>
+                </h3>
+                <p>A list of <code>Period</code> and <code>EmptyPeriod</code> objects.</p>
+                <div style="text-indent: 40px">
+                    <h4>
+                        <code>EmptyPeriod</code>
+                    </h4>
+                    <p>An empty period, which is a period with no class.</p>
+                    <div style="text-indent:60px">
+                        <h5>
+                            <code>.period</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The name/number of the period.</p>
+                    </div>
 
-    {
-        <span class="pystr">'classes'</span>: {
-            <span class="pystr">'0'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'1'</span>: {
-                <span class="pystr">'subject'</span>: <span class="pystr">'Class 1',</span>
-                <span class="pystr">'room'</span>: <span class="pystr">'AG.01'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'A. ARMADILLO',</span>
-                <span class="pystr">'colour'</span>: <span class="pystr">'#85EE88'</span>
-            },
-            <span class="pystr">'R'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'2'</span>: {
-                <span class="pystr">'subject'</span>: <span class="pystr">'Class 2',</span>
-                <span class="pystr">'room'</span>: <span class="pystr">'BG.02'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'B. Bear',</span>
-                <span class="pystr">'colour'</span>: <span class="pystr">'#84E6DD'</span>
-            },
-            <span class="pystr">'B'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'3'</span>: {
-                <span class="pystr">'subject'</span>: <span class="pystr">'Class 3',</span>
-                <span class="pystr">'room'</span>: <span class="pystr">'CG.03'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'C. CAT',</span>
-                <span class="pystr">'colour'</span>: <span class="pystr">'#BFBF9F'</span>
-            },
-            <span class="pystr">'L1'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'L2'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'4'</span>: {
-                <span class="pystr">'subject'</span>: <span class="pystr">'Class 4',</span>
-                <span class="pystr">'room'</span>: <span class="pystr">'DG.04'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'D. DUCK',</span>
-                <span class="pystr">'colour'</span>: <span class="pystr">'#FF7F7F'</span>
-            },
-            <span class="pystr">'A'</span>: <span class="pykey">None</span>,
-            <span class="pystr">'5'</span>: <span class="pykey">None</span>
-        },
-    }
-                            </pre>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    <h4>
+                        <code>Period</code>
+                    </h4>
+                    <p>A period with a class.</p>
+                    <div style="text-indent: 60px">
+                        <h5>
+                            <code>.period</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The name/number of the period.</p>
+
+                        <h5>
+                            <code>.subject</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The subject name of the period.</p>
+
+                        <h5>
+                            <code>.room</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The room of the period.</p>
+
+                        <h5>
+                            <code>.teacher</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The teacher of the period.</p>
+
+                        <h5>
+                            <code>.colour</code>
+                            <span class="pycom">{Colour}</span>
+                        </h5>
+                        <p>The background colour of the period.</p>
+                        <div style="text-indent: 80px">
+                            <h6>
+                                <code>.red</code> /
+                                <code>.r</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The red component of the colour.</p>
+
+                            <h6>
+                                <code>.green</code> /
+                                <code>.g</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The green component of the colour.</p>
+
+                            <h6>
+                                <code>.blue</code> /
+                                <code>.b</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The blue component of the colour.</p>
+
+                            <h6>
+                                <code>.hex</code>
+                                <span class="pycom">{str}</span>
+                            </h6>
+                            <p>The hex code of the colour in the format <code class="pystr">#123ABC</code>.</p>
+
+                            <h6>
+                                <code>.rgb</code>
+                                <span class="pycom">{tuple}</span>
+                            </h6>
+                            <p>The RGB components of the colour in the format <code>(<span class="pyint">0</span>, <span class="pyint">128</span>, <span class="pyint">255</span>)</code>.</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h3>
+                    <code>.notices</code>
+                    <span class="pycom">{list}</span>
+                </h3>
+                <p>A list of <code>Notice</code> objects.</p>
+                <div style="text-indent: 40px">
+                    <h4>
+                        <code>Notice</code>
+                    </h4>
+                    <p>A notice.</p>
+                    <div style="text-indent: 60px">
+                        <h5>
+                            <code>.title</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The title of the notice.</p>
+
+                        <h5>
+                            <code>.content</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The content of the notice.</p>
+
+                        <h5>
+                            <code>.teacher</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The teacher who sent the notice.</p>
+
+                        <h5>
+                            <code>.date</code>
+                            <span class="pycom">{Date}</span>
+                        </h5>
+                        <p>The date of the notice.</p>
+                        <div style="text-indent: 80px">
+                            <h6>
+                                <code>.day</code> /
+                                <code>.dy</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The day of the month in <code>1 .. 31</code>, <code>1 .. 30</code>, <code>1 .. 29</code> or <code>1 .. 28</code>, depending on the month and weather it is a leap year.</p>
+
+                            <h6>
+                                <code>.month</code> /
+                                <code>.mth</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The month in <code>1 .. 12</code>.</p>
+
+                            <h6>
+                                <code>.year</code> /
+                                <code>.yr</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The year in <code>0 .. ∞</code>.</p>
+
+                            <h6>
+                                <code>.hour</code> /
+                                <code>.hr</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The hour in <code>0 .. 23</code>.</p>
+
+                            <h6>
+                                <code>.minute</code> /
+                                <code>.mnt</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The minute in <code>0 .. 59</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>
+                    <code>.events</code>
+                    <span class="pycom">{list}</span>
+                </h3>
+                <p>A list of <code>Event</code> objects.</p>
+                <div style="text-indent: 40px">
+                    <h4>
+                        <code>Event</code>
+                    </h4>
+                    <p>An event.</p>
+                    <div style="text-indent: 60px">
+                        <h5>
+                            <code>.title</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The title of the event.</p>
+
+                        <h5>
+                            <code>.type_</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The type of event. Is either <code class="pystr">"event"</code> or <code class="pystr">"assessment"</code>.</p>
+
+                        <h5>
+                            <code>.teacher</code>
+                            <span class="pycom">{str}</span>
+                        </h5>
+                        <p>The teacher who sent the event.</p>
+
+                        <h5>
+                            <code>.date</code>
+                            <span class="pycom">{Date}</span>
+                        </h5>
+                        <p>The date of the event.</p>
+                        <div style="text-indent: 80px">
+                            <h6>
+                                <code>.day</code> /
+                                <code>.dy</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The day of the month in <code>1 .. 31</code>, <code>1 .. 30</code>, <code>1 .. 29</code> or <code>1 .. 28</code>, depending on the month and weather it is a leap year.</p>
+
+                            <h6>
+                                <code>.month</code> /
+                                <code>.mth</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The month in <code>1 .. 12</code>.</p>
+
+                            <h6>
+                                <code>.year</code> /
+                                <code>.yr</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The year in <code>0 .. ∞</code>.</p>
+
+                            <h6>
+                                <code>.hour</code> /
+                                <code>.hr</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The hour in <code>0 .. 23</code>.</p>
+
+                            <h6>
+                                <code>.minute</code> /
+                                <code>.mnt</code>
+                                <span class="pycom">{int}</span>
+                            </h6>
+                            <p>The minute in <code>0 .. 59</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>
+                    <code>.user</code>
+                    <span class="pycom">{User}</span>
+                </h3>
+                <p>A class to hold the details of the user who is logged in.</p>
+                <div style="text-indent: 40px">
+                    <h5>
+                        <code>.name</code>
+                        <span class="pycom">{str}</span>
+                    </h5>
+                    <p>The name of the user.</p>
+
+                    <h5>
+                        <code>.school</code>
+                        <span class="pycom">{str}</span>
+                    </h5>
+                    <p>The school of the user.</p>
+
+                    <h5>
+                        <code>.number</code>
+                        <span class="pycom">{int}</span>
+                    </h5>
+                    <p>The Student ID of the user. As seen on your library card.</p>
+
+                    <h5>
+                        <code>.barcode</code>
+                        <span class="pycom">{str}</span>
+                    </h5>
+                    <p>
+                        The barcode of the user. As seen on your library card.
+                        This is a C39 barcode generated by the <a href="https://github.com/J-J-B-J/BarcodeGenerator" class="link">TextBarcodeGenerator</a> python library, also by J-J-B-J.
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <br>
-
-        <div>
-            <br>
-            <h2>Daily Notices</h2>
-            <br>
-            <table style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Sentral</th>
-                        <th>Python</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="image">
-                            <img src="img/SentralNotices.png" alt="Sample Sentral Notices" width="90%">
-                        </td>
-                        <td>
-                            <pre>
-
-    {
-        <span class="pystr">'notices'</span>: [
-            {
-                <span class="pystr">'title'</span>: <span class="pystr">'Computer left behind'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'TERRY DENTON',</span>
-                <span class="pystr">'date'</span>: (<span class="pyint">2022</span>, <span class="pyint">0</span>, <span class="pyint">16</span>, <span class="pyint">2</span>, <span class="pyint">21</span>),
-                <span class="pystr">'content'</span>: <span class="pystr">'Hey Andy, you left your computer behind at the '
-                           'office!\n'</span>
-            },
-            {
-                <span class="pystr">'title'</span>: <span class="pystr">'BOOK DUE TOMORROW!'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'Mr Big Nose',</span>
-                <span class="pystr">'date'</span>: (<span class="pyint">2022</span>, <span class="pyint">0</span>, <span class="pyint">15</span>, <span class="pyint">8</span>, <span class="pyint">52</span>),
-                <span class="pystr">'content'</span>: <span class="pystr">'ANDY! TERRY! YOU BETTER HAVE THAT BOOK ON MY '
-                            'OFFICE BY TOMORROW AT NOON!!!\n'</span>
-            },
-            {
-                <span class="pystr">'title'</span>: <span class="pystr">'Next book projection'</span>,
-                <span class="pystr">'teacher'</span>: <span class="pystr">'ANDY GRIFFITHS',</span>
-                <span class="pystr">'date'</span>: (<span class="pyint">2022</span>, <span class="pyint">0</span>, <span class="pyint">15</span>, <span class="pyint">8</span>, <span class="pyint">52</span>),
-                <span class="pystr">'content'</span>: <span class="pystr">'The new book will probably be done in a few '
-                           'months.\n'</span>
-           }
-        ]
-    }
-                            </pre>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <br>
-
-        <div>
-            <br>
-            <h2>Calendar</h2>
-            <br>
-            <table style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Sentral</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="image">
-                            <img src="img/SentralCalendar.png" alt="Sample Sentral Calendar" width="100%">
-                        </td>
-                    </tr>
-                </tbody>
-                <thead>
-                    <tr>
-                        <th>Python</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <pre>
-
-    {
-        <span class="pystr">'events'</span>: [
-            {<span class="pystr">'name'</span>: <span class="pystr">'STAFF DEVELOPMENT DAY'</span>,                               <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa018'                  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'*** WEEK 1B'</span>,                                         <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa018'                  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'All students return'</span>,                                 <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa019'                  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Legacy Public Speaking Local Final - School'</span>,         <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa019 08:50am - 1:45pm' </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Yr 8 - Shakespeare incursion - Gym'</span>,                  <span class="pystr">'flag'</span>: <span class="pystr">'Year 8'</span>,    <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa019 1:48pm - 3:05pm'  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Book Club Incursion - School'</span>,                        <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa020 08:50am - 11:55am'</span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">"Yr 11 Premier's Debating Challenge Round 5 - School"</span>, <span class="pystr">'flag'</span>: <span class="pystr">'Year 11'</span>,   <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa020 08:50am - 11:50am'</span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'All Day - State Cross Country - Eastern Creek'</span>,       <span class="pystr">'flag'</span>: <span class="pystr">'All Years'</span>, <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022'                  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'All Day - Book Club Incursion - School'</span>,              <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022'                  </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Pds 1& 2 - Boys Baseball Grand Final'</span>,                <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022 08:50am - 11:55am'</span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'HSC Minimum Standards Catchup'</span>,                       <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022 08:50am - 1:10pm' </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">"Yr 11 Premier's Debating Round 16 - School"</span>,          <span class="pystr">'flag'</span>: <span class="pystr">'Year 11'</span>,   <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022 09:30am - 12pm'   </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Yrs 9/10 PASS1 - Gymnastics'</span>,                         <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022 12pm - 1:10pm'    </span>},
-            {<span class="pystr">'name'</span>: <span class="pystr">'Yrs 9/10 PASS2 - Gymnastics'</span>,                         <span class="pystr">'flag'</span>: <span class="pystr">''</span>,          <span class="pystr">'date'</span>: <span class="pystr">'Jul\xa022 1:50pm - 3:05pm'  </span>}
-        ]
-    }
-                            </pre>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <br><br>
 
     </div>
 </body>
