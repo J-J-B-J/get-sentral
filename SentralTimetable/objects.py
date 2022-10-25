@@ -92,8 +92,11 @@ class Date:
             raise ValueError("Invalid minute")
 
     def __str__(self):
-        return f"{self.day}/{self.month}/{self.year} {self.hour}:" \
-               f"{str(self.minute).rjust(2, '0')}"
+        if self.hour != 0 or self.minute != 0:
+            return f"{self.day}/{self.month}/{self.year} {self.hour}:" \
+                   f"{str(self.minute).rjust(2, '0')}"
+        else:
+            return f"{self.day}/{self.month}/{self.year}"
 
     def __repr__(self):
         return f"Date({self.year}, {self.month}, {self.day}, {self.hour}, " \
