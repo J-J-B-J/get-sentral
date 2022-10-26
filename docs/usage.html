@@ -108,47 +108,8 @@
             <p>To use this mode, use:</p>
             <pre>
 <span class="pykey">import</span> SentralTimetable
-SentralTimetable.get_timetable()
-            </pre>
-            <p>Using <code>get_timetable()</code> returns the data as a dictionary object. The dictionary uses this format:</p>
-            <br>
-            <pre>
-{
-    <span class="pystr">'classes'</span>: {
-        <span class="pystr">'1'</span>: {  <span class="pycom"># A class in period one</span>
-            <span class="pystr">'subject'</span>: <span class="pystr">'Math Yr 12'</span>,
-            <span class="pystr">'room'</span>: <span class="pystr">'AG01'</span>,
-            <span class="pystr">'teacher'</span>: <span class="pystr">'A. Mathematician'</span>,
-            <span class="pystr">'colour'</span>: <span class="pystr">'#FF00FF'</span>  <span class="pycom"># The colour for the bar on the left</span>
-        },
-        '2': <span class="pykey">None</span>   <span class="pycom"># An empty period</span>
-    },
-    <span class="pystr">'notices'</span>: [
-        {
-            <span class="pystr">'title'</span>: <span class="pystr">'Basketball trials today at lunchtime!'</span>,
-            <span class="pystr">'teacher'</span>: <span class="pystr">'B. Sport'</span>,
-            <span class="pystr">'date'</span>: (<span class="pyint">2022</span>, <span class="pyint">8</span>, <span class="pyint">19</span>, <span class="pyint">10</span>, <span class="pyint">0</span>),   <span class="pycom"># Year, month, day, hour, minute that the notice was posted at</span>
-            <span class="pystr">'date string'</span>: <span class="pystr">'Friday, 19 August 2022 at 10:00 am'</span>,  <span class="pycom"># The time that was read from the Sentral website</span>
-            <span class="pystr">'content'</span>: <span class="pystr">'See you all at lunchtime on the oval!'</span>
-        }
-    ],
-    <span class="pystr">'events'</span>: [
-        {
-            <span class="pystr">'title'</span>: <span class="pystr">'Subject Selections due'</span>,
-            <span class="pystr">'flag'</span>: <span class="pystr">''</span>,  <span class="pycom"># Flags can be empty</span>
-            <span class="pystr">'date'</span>: <span class="pystr">'December 2'</span>  <span class="pycom"># The date attribute is the date of the event</span>
-        },
-        {
-            <span class="pystr">'title'</span>: <span class="pystr">'Assessment: Australian Geography'</span>,
-            <span class="pystr">'flag'</span>: <span class="pystr">'Year 10'</span>,  <span class="pycom"># Flags are usually year numbers</span>
-            <span class="pystr">'date'</span>: <span class="pystr">'April 23 10:30 am'</span>   <span class="pycom"># The date attribute can have a date and time too</span>
-        }
-    ]
-}
-            </pre>
-
-            <p>You can use the output in another language by using the json module.</p>
-
+SentralTimetable.get_timetable()</pre>
+            <p>Using <code>get_timetable()</code> returns the data as a <code>Sentral()</code> object. See the home page for details on this object, or see <code>objects.py</code>.</p>
             <br>
             <br>
 
