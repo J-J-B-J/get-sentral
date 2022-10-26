@@ -121,13 +121,12 @@
             </ul>
 
             <p>For example, use the following code before calling <code>get_timetable()</code>:</p>
-            <code>
-                os.putenv(<span class="pystr">"USER_NAME"</span>, <span class="pystr">"andy.griffiths1"</span>)<br>
-                os.putenv(<span class="pystr">"PASSWORD"</span>, <span class="pystr">"TerryIsAnIdiot"</span>)<br>
-                os.putenv(<span class="pystr">"URL"</span>, <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>)<br>
-                os.putenv(<span class="pystr">"DEBUG"</span>, <span class="pystr">"False"</span>)<br>
-                os.putenv(<span class="pystr">"TIMEOUT"</span>, <span class="pystr">"15"</span>)
-            </code>
+            <pre>
+os.putenv(<span class="pystr">"USER_NAME"</span>, <span class="pystr">"andy.griffiths1"</span>)
+os.putenv(<span class="pystr">"PASSWORD"</span>, <span class="pystr">"TerryIsAnIdiot"</span>)
+os.putenv(<span class="pystr">"URL"</span>, <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>)
+os.putenv(<span class="pystr">"DEBUG"</span>, <span class="pystr">"False"</span>)
+os.putenv(<span class="pystr">"TIMEOUT"</span>, <span class="pystr">"15"</span>)</pre>
         </div>
 
         <br>
@@ -147,10 +146,15 @@
                         <li><code><span class="pystr">"DEBUG"</span></code> - Weather or not to debug the program - set to <code><span class="pykey">true</span></code> or <code><span class="pykey">false</span></code></li>
                         <li><code><span class="pystr">"TIMEOUT"</span></code> - Time to give the page to load before raising an error - set to an integer such as <code><span class="pyint">15</span></code></li>
                     </ul>
-                    For example, set the contents of the .json file to
-                    <code>
-                        {<span class="pystr">"USERNAME"</span>: <span class="pystr">"andy.griffiths1"</span>, <span class="pystr">"PASSWORD"</span>: <span class="pystr">"TerryIsAnIdiot"</span>, <span class="pystr">"URL"</span>: <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>, <span class="pystr">"DEBUG"</span>: <span class="pykey">false</span>, <span class="pystr">"TIMEOUT"</span>: <code><span class="pyint">15</span></code>}
-                    </code>
+                    For example, set the contents of the .json file to:<br><br>
+                    <pre>
+{
+    <span class="pystr">"USERNAME"</span>: <span class="pystr">"andy.griffiths1"</span>,
+    <span class="pystr">"PASSWORD"</span>: <span class="pystr">"TerryIsAnIdiot"</span>,
+    <span class="pystr">"URL"</span>: <span class="pystr">"https://yarravalleygrammar.sentral.com.au/portal/dashboard"</span>,
+    <span class="pystr">"DEBUG"</span>: <span class="pykey">false</span>,
+    <span class="pystr">"TIMEOUT"</span>: <code><span class="pyint">15</span></code>
+}</pre>
                 </li>
             </ol>
         </div>
