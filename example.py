@@ -85,6 +85,12 @@ def main():
             print(event.flag + '\033[0;0m')
         print()
 
+    print("\n\nME\n")
+    print(f"Name: {timetable.user.name}")
+    print(f"Number: {timetable.user.number}")
+    print(f"School: {timetable.user.school}")
+    print(f"\nBarcode:\n\n{timetable.user.barcode}")
+
 
 if __name__ == "__main__":
     main()
