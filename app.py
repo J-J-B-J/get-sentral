@@ -2,6 +2,7 @@
 import tkinter as tk
 from threading import Thread
 import SentralTimetable
+from functools import partial
 
 
 class App:
@@ -13,6 +14,8 @@ class App:
         self.window.title("Sentral")
         self.window.geometry("500x500")
         self.window.iconphoto(True, tk.PhotoImage(file='docs/img/icon.png'))
+        self.window.bind("<Command-r>", self.reload)
+
         self.create_buttons()
         self.section_objects = []
         self.data = SentralTimetable.Sentral(
@@ -23,6 +26,7 @@ class App:
         )
 
         self.state = 1
+        self.range_start = 0
         self.reload()
 
     def create_buttons(self):
@@ -78,6 +82,7 @@ class App:
         """Reload the data"""
         self.btn_reload.config(state=tk.DISABLED)
         self.btn_reload.unbind("<Button-1>")
+        self.window.unbind("<Command-r>")
 
         reload_window = tk.Tk()
         reload_window.title('↻')
@@ -105,11 +110,11 @@ class App:
                 reload_window.destroy()
                 self.btn_reload.config(state=tk.NORMAL)
                 self.btn_reload.bind("<Button-1>", self.reload)
+                self.window.bind("<Command-r>", self.reload)
             else:
                 reload_window.after(200, reload)
 
         reload()
-        self.window.focus_set()
 
     def destroy_section_objects(self):
         """Destroy all the objects in the section_objects list."""
@@ -131,8 +136,7 @@ class App:
     def timetable(self, *args):
         """The 'timetable' page"""
         self.destroy_section_objects()
-
-        lbl_title = self.create_title("Timetable")
+        self.create_title("Timetable")
 
         frm_timetable = tk.Frame(self.window, width=500, height=450)
         self.section_objects.append(frm_timetable)
@@ -178,26 +182,117 @@ class App:
     def notices(self, *args):
         """The 'notices' page"""
         self.destroy_section_objects()
+        self.create_title("Notices")
 
-        lbl_title = self.create_title("Notices")
+        frm_notices = tk.Frame(self.window, width=500, height=450)
+        self.section_objects.append(frm_notices)
+        frm_notices.pack()
+
+        def increase_range(*args):
+            """Increase the range of notices shown"""
+            self.range_start += 5
+            self.notices()
+
+        def decrease_range(*args):
+            """Decrease the range of notices shown"""
+            self.range_start -= 5
+            self.notices()
+
+        def open_notice(notice: SentralTimetable.Notice, event: tk.Event):
+            """Show the detail view for a notice"""
+            notice_window = tk.Tk()
+            notice_window.title('Notice')
+            notice_window.geometry('500x150')
+            notice_window.focus_set()
+            notice_window.bind(
+                "<Escape>",
+                lambda *args: notice_window.destroy()
+            )
+
+            lbl_title = tk.Label(
+                notice_window,
+                text=notice.title,
+                font=("Arial", 20)
+            )
+            lbl_title.pack(side=tk.TOP)
+
+            lbl_date = tk.Label(
+                notice_window,
+                text=f"By {notice.teacher} on "
+                     f"{notice.date.day}/{notice.date.month}/"
+                     f"{notice.date.year} at {notice.date.hour}:"
+                     f"{notice.date.minute}"
+            )
+            lbl_date.pack(side=tk.TOP)
+
+            lbl_content = tk.Label(
+                notice_window,
+                text=notice.content,
+                wraplength=490
+            )
+            lbl_content.pack(side=tk.TOP)
+
+            notice_window.mainloop()
+
+        for notice in self.data.notices[self.range_start:self.range_start + 5]:
+            frm_notice = tk.Frame(frm_notices, width=500, height=50)
+            self.section_objects.append(frm_notice)
+            frm_notice.pack()
+
+            lbl_notice_title = tk.Label(
+                frm_notice,
+                text=notice.title,
+                width=50,
+                height=2,
+                wraplength=390,
+                borderwidth=3,
+                relief="raised"
+            )
+            self.section_objects.append(lbl_notice_title)
+            lbl_notice_title.pack(side=tk.LEFT)
+            lbl_notice_title.bind(
+                "<Button-1>",
+                partial(open_notice, notice)
+            )
+
+        btn_increase_range = tk.Button(
+            frm_notices,
+            text=">",
+            width=10
+        )
+        self.section_objects.append(btn_increase_range)
+        btn_increase_range.pack(side=tk.RIGHT)
+        if self.range_start + 5 < len(self.data.notices):
+            btn_increase_range.bind("<Button-1>", increase_range)
+        else:
+            btn_increase_range.config(state=tk.DISABLED)
+
+        btn_decrease_range = tk.Button(
+            frm_notices,
+            text="<",
+            width=10
+        )
+        self.section_objects.append(btn_decrease_range)
+        btn_decrease_range.pack(side=tk.LEFT)
+        if self.range_start > 0:
+            btn_decrease_range.bind("<Button-1>", decrease_range)
+        else:
+            btn_decrease_range.config(state=tk.DISABLED)
 
     def events(self, *args):
         """The 'timetable' page"""
         self.destroy_section_objects()
-
-        lbl_title = self.create_title("Events")
+        self.create_title("Events")
 
     def me(self, *args):
         """The 'me' page"""
         self.destroy_section_objects()
-
-        lbl_title = self.create_title("Me")
+        self.create_title("Me")
 
     def settings(self, *args):
         """The 'settings' page"""
         self.destroy_section_objects()
-
-        lbl_title = self.create_title("Settings")
+        self.create_title("Settings")
 
     def run(self):
         """Run the app."""

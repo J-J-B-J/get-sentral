@@ -23,7 +23,7 @@ print("""
 ─╯    ╰──╯   ╰─────╯ ╰──╯      ╰────────╯ ╰──╯
                                    ╰────────────╯
 """)
-print('Created by SuperHarmony910 and J-J-B-J')
+print('Created by SuperHarmony910 and J-J-B-J. Logo by cheepling.')
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
