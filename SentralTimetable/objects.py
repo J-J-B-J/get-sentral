@@ -147,7 +147,7 @@ class Event:
     """A class to manage an event."""
 
     def __init__(self, title: str, date: Date or DateRange, flag: str,
-                 type_: str):
+                 type_: str["event", "assessment"]):
         self.title = title
         self.date = date
         self.flag = flag
