@@ -524,6 +524,60 @@ class App:
         self.destroy_section_objects()
         self.create_title("Me")
 
+        frm_me = tk.Frame(self.window, width=500, height=500)
+        self.section_objects.append(frm_me)
+        frm_me.pack()
+
+        lbl_name = tk.Label(
+            frm_me,
+            text=self.data.user.name,
+            font=("Arial", 20)
+        )
+        self.section_objects.append(lbl_name)
+        lbl_name.pack(side=tk.TOP)
+
+        lbl_school = tk.Label(
+            frm_me,
+            text=self.data.user.school
+        )
+        self.section_objects.append(lbl_school)
+        lbl_school.pack(side=tk.TOP)
+
+        lbl_number = tk.Label(
+            frm_me,
+            text=self.data.user.number
+        )
+        self.section_objects.append(lbl_number)
+        lbl_number.pack(side=tk.TOP)
+
+        def show_barcode(*args):
+            barcode_window = tk.Tk()
+            barcode_window.title("Barcode")
+            barcode_window.geometry('1100x140')
+            barcode_window.focus_set()
+            barcode_window.bind(
+                "<Escape>",
+                lambda *args: barcode_window.destroy()
+            )
+
+            lbl_barcode = tk.Label(
+                barcode_window,
+                text=self.data.user.barcode,
+                font=("Arial", 15)
+            )
+            lbl_barcode.pack()
+
+            barcode_window.mainloop()
+
+        btn_barcode = tk.Button(
+            frm_me,
+            text="Show barcode",
+            width=10
+        )
+        self.section_objects.append(btn_barcode)
+        btn_barcode.pack(side=tk.TOP)
+        btn_barcode.bind("<Button-1>", show_barcode)
+
     def settings(self, *args):
         """The 'settings' page"""
         self.destroy_section_objects()
