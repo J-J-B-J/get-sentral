@@ -29,7 +29,7 @@ class App:
 
         self.state = 1
         self.notice_range_start = 0
-        self.event_range_start = 0
+        self.event_range_start = -1
         self.reload()
 
     def create_buttons(self):
@@ -328,6 +328,12 @@ class App:
             for m in range(start_month, end_month + 1)
             for y in range(start_year, end_year + 1)
         ]
+
+        if self.event_range_start == -1:
+            if datetime.date.today().month in \
+                    [m for m in range(start_month, end_month + 1)]:
+                self.event_range_start = datetime.date.today().month - \
+                                         start_month
         month = months[self.event_range_start]
 
         lbl_month = tk.Label(
@@ -445,6 +451,21 @@ class App:
 
             day_window.mainloop()
 
+        frm_days = tk.Frame(frm_calendar, width=500, height=50)
+        self.section_objects.append(frm_days)
+        frm_days.pack()
+
+        for day in ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]:
+            lbl_day = tk.Label(
+                frm_days,
+                text=day,
+                width=4,
+                height=2,
+                borderwidth=3
+            )
+            self.section_objects.append(lbl_day)
+            lbl_day.pack(side=tk.LEFT)
+
         for week in month:
             frm_week = tk.Frame(frm_calendar, width=500, height=50)
             self.section_objects.append(frm_week)
@@ -469,6 +490,10 @@ class App:
                     )
                 else:
                     lbl_day.config(state=tk.DISABLED)
+
+                if day.month == datetime.date.today().month and \
+                        day.day == datetime.date.today().day:
+                    lbl_day.config(font=("Arial", "15", "bold"))
 
         btn_increase_range = tk.Button(
             frm_calendar,
