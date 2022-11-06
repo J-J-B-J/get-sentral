@@ -1,5 +1,6 @@
 """The app for get-sentral."""
 import tkinter as tk
+from tkinter import ttk
 from threading import Thread
 import SentralTimetable
 from functools import partial
@@ -27,7 +28,6 @@ class App:
             SentralTimetable.User("", "", 0, "")
         )
 
-        self.state = 1
         self.notice_range_start = 0
         self.event_range_start = -1
         self.reload()
@@ -81,44 +81,6 @@ class App:
         self.btn_settings.bind("<Button-1>", self.settings)
         self.btn_reload.bind("<Button-1>", self.reload)
 
-    def reload(self, *args):
-        """Reload the data"""
-        self.btn_reload.config(state=tk.DISABLED)
-        self.btn_reload.unbind("<Button-1>")
-        self.window.unbind("<Command-r>")
-
-        reload_window = tk.Tk()
-        reload_window.title('↻')
-        reload_window.geometry('100x25')
-        reload_window.resizable(False, False)
-        lbl_reload = tk.Label(reload_window, text='Reloading.')
-        lbl_reload.pack(side=tk.LEFT)
-
-        def sentral(*args):
-            """Get the timetable"""
-            self.data = SentralTimetable.get_timetable()
-
-        sentral_thread = Thread(target=sentral)
-        sentral_thread.start()
-
-        def reload(*args):
-            """Reload the 'reload' window"""
-            if self.state == 5:
-                lbl_reload.config(text='Reloading.')
-                self.state = 1
-            else:
-                lbl_reload.config(text=lbl_reload['text'] + '.')
-                self.state += 1
-            if not sentral_thread.is_alive():
-                reload_window.destroy()
-                self.btn_reload.config(state=tk.NORMAL)
-                self.btn_reload.bind("<Button-1>", self.reload)
-                self.window.bind("<Command-r>", self.reload)
-            else:
-                reload_window.after(200, reload)
-
-        reload()
-
     def destroy_section_objects(self):
         """Destroy all the objects in the section_objects list."""
         for object_ in self.section_objects:
@@ -135,6 +97,45 @@ class App:
         self.section_objects.append(lbl_title)
         lbl_title.pack(side=tk.TOP)
         return lbl_title
+
+    def reload(self, *args):
+        """Reload the data"""
+        self.window.unbind("<Command-r>")
+        self.destroy_section_objects()
+        self.frm_button.destroy()
+        self.create_title("Loading...")
+
+        progressbar = ttk.Progressbar(
+            self.window,
+            orient='horizontal',
+            length=300,
+            mode='determinate'
+        )
+        self.section_objects.append(progressbar)
+        progressbar.pack()
+        progressbar.start(280)
+
+        def sentral(*args):
+            """Get the timetable"""
+            self.data = SentralTimetable.get_timetable()
+
+        sentral_thread = Thread(target=sentral)
+        sentral_thread.start()
+
+        def reload(*args):
+            """Reload the 'reload' window"""
+            progressbar.start()
+            if not sentral_thread.is_alive():
+                self.destroy_section_objects()
+                self.create_buttons()
+                self.window.bind("<Command-r>", self.reload)
+                self.timetable()
+            else:
+                self.window.after(200, reload)
+
+        reload()
+
+        self.window.mainloop()
 
     def timetable(self, *args):
         """The 'timetable' page"""
