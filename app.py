@@ -1,6 +1,7 @@
 """The app for get-sentral."""
 import tkinter as tk
 from tkinter import ttk
+from tkinter.messagebox import *
 from threading import Thread
 import SentralTimetable
 from functools import partial
@@ -30,7 +31,21 @@ class App:
 
         self.notice_range_start = 0
         self.event_range_start = -1
-        self.reload()
+
+        try:
+            with open("App_Data.txt", "r") as file:
+                self.username = file.readline().strip()
+                self.password = file.readline().strip()
+                self.url = file.readline().strip()
+        except Exception:
+            self.username = ""
+            self.password = ""
+            self.url = ""
+
+        if not self.username or not self.password or not self.url:
+            self.settings()
+        else:
+            self.reload()
 
     def create_buttons(self):
         """Create the buttons for the top of the app"""
@@ -117,7 +132,13 @@ class App:
 
         def sentral(*args):
             """Get the timetable"""
-            self.data = SentralTimetable.get_timetable()
+            self.data = SentralTimetable.get_timetable(
+                debug=False,
+                timeout=30,
+                usr=self.username,
+                pwd=self.password,
+                url=self.url
+            )
 
         sentral_thread = Thread(target=sentral)
         sentral_thread.start()
@@ -583,6 +604,86 @@ class App:
         """The 'settings' page"""
         self.destroy_section_objects()
         self.create_title("Settings")
+
+        frm_settings = tk.Frame(self.window, width=500, height=500)
+        self.section_objects.append(frm_settings)
+        frm_settings.pack()
+
+        frm_username = tk.Frame(frm_settings, width=500, height=50)
+        self.section_objects.append(frm_username)
+        frm_username.pack()
+
+        lbl_username = tk.Label(
+            frm_username,
+            text="Username"
+        )
+        self.section_objects.append(lbl_username)
+        lbl_username.pack(side=tk.LEFT)
+
+        ent_username = tk.Entry(
+            frm_username,
+            width=30
+        )
+        self.section_objects.append(ent_username)
+        ent_username.insert(0, self.username)
+        ent_username.pack(side=tk.RIGHT)
+
+        frm_password = tk.Frame(frm_settings, width=500, height=50)
+        self.section_objects.append(frm_password)
+        frm_password.pack()
+
+        lbl_password = tk.Label(
+            frm_password,
+            text="Password"
+        )
+        self.section_objects.append(lbl_password)
+        lbl_password.pack(side=tk.LEFT)
+
+        ent_password = tk.Entry(
+            frm_password,
+            show="*",
+            width=30
+        )
+        self.section_objects.append(ent_password)
+        ent_password.insert(0, self.password)
+        ent_password.pack(side=tk.RIGHT)
+
+        frm_url = tk.Frame(frm_settings, width=500, height=50)
+        self.section_objects.append(frm_url)
+        frm_url.pack()
+
+        lbl_url = tk.Label(
+            frm_url,
+            text="URL"
+        )
+        self.section_objects.append(lbl_url)
+        lbl_url.pack(side=tk.LEFT)
+
+        ent_url = tk.Entry(
+            frm_url,
+            width=30
+        )
+        self.section_objects.append(ent_url)
+        ent_url.insert(0, self.url)
+        ent_url.pack(side=tk.RIGHT)
+
+        def save_settings(*args):
+            """Save the settings"""
+            self.username = ent_username.get()
+            self.password = ent_password.get()
+            self.url = ent_url.get()
+            with open("App_Data.txt", "w") as file:
+                file.write(f"{self.username}\n{self.password}\n{self.url}")
+            showinfo("Settings", "Settings saved")
+
+        btn_save = tk.Button(
+            frm_settings,
+            text="Save",
+            width=10
+        )
+        self.section_objects.append(btn_save)
+        btn_save.pack(side=tk.BOTTOM)
+        btn_save.bind("<Button-1>", save_settings)
 
     def run(self):
         """Run the app."""
