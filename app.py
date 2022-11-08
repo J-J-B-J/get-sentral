@@ -614,8 +614,30 @@ class App:
         self.section_objects.append(lbl_login)
         lbl_login.pack(side=tk.TOP, fill=tk.X)
 
-        def create_setting(name: str, initial_text: str):
+        def create_setting(name: str, initial_text: str, help_text: str):
             """Create a setting"""
+            def show_help_window(title: str, text: str, event: tk.Event):
+                """Show a window with help text"""
+                window = tk.Tk()
+                window.title(title)
+                window.geometry('250x100')
+                window.resizable(False, True)
+                window.focus_set()
+                window.bind(
+                    "<Escape>",
+                    lambda *args: window.destroy()
+                )
+
+                lbl_text = tk.Label(
+                    window,
+                    text=text,
+                    wraplength=240,
+                    justify=tk.LEFT
+                )
+                lbl_text.pack()
+
+                window.mainloop()
+
             frm_setting = tk.Frame(frm_settings, width=500, height=50)
             self.section_objects.append(frm_setting)
             frm_setting.pack()
@@ -629,19 +651,53 @@ class App:
             self.section_objects.append(lbl_setting)
             lbl_setting.pack(side=tk.LEFT)
 
-            ent_setting = tk.Entry(
+            btn_setting_help = tk.Button(
                 frm_setting,
-                width=30
+                text="?",
+                width=2
             )
+            self.section_objects.append(btn_setting_help)
+            btn_setting_help.pack(side=tk.LEFT)
+            btn_setting_help.bind(
+                "<Button-1>",
+                partial(show_help_window, name, help_text)
+            )
+
+            if name == "Password":
+                ent_setting = tk.Entry(
+                    frm_setting,
+                    show="*",
+                    width=30
+                )
+            else:
+                ent_setting = tk.Entry(
+                    frm_setting,
+                    width=30
+                )
+
             ent_setting.insert(0, initial_text)
             self.section_objects.append(ent_setting)
             ent_setting.pack(side=tk.RIGHT)
 
             return ent_setting
 
-        ent_username = create_setting("Username", self.username)
-        ent_password = create_setting("Password", self.password)
-        ent_url = create_setting("URL", self.url)
+        ent_username = create_setting(
+            "Username",
+            self.username,
+            "The username you use to login to Sentral"
+        )
+        ent_password = create_setting(
+            "Password",
+            self.password,
+            "The password you use to login to Sentral"
+        )
+        ent_url = create_setting(
+            "URL",
+            self.url,
+            "The URL of your school's Sentral dashboard. Must start with "
+            "https:// and end with /portal/dashboard.\nE.g. "
+            "https://examplehs.sentral.com.au/portal/dashboard"
+        )
 
         def save_settings(*args):
             """Save the settings"""
