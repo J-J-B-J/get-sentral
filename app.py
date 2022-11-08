@@ -52,48 +52,43 @@ class App:
         self.frm_button = tk.Frame(self.window, width=500)
         self.frm_button.pack()
 
-        self.btn_timetable = tk.Button(
-            self.frm_button,
-            text="Timetable",
-            width=10
+        def create_button(text: str, bind_fn: callable):
+            """Create a single button"""
+            btn = tk.Button(
+                self.frm_button,
+                text=text,
+                width=10
+            )
+            btn.pack(side=tk.LEFT)
+            btn.bind("<Button-1>", bind_fn)
+            return btn
+
+        self.btn_timetable = create_button(
+            "Timetable",
+            self.timetable
         )
-        self.btn_timetable.pack(side=tk.LEFT)
-        self.btn_notices = tk.Button(
-            self.frm_button,
-            text="Notices",
-            width=10
+        self.btn_notices = create_button(
+            "Notices",
+            self.notices
         )
-        self.btn_notices.pack(side=tk.LEFT)
-        self.btn_events = tk.Button(
-            self.frm_button,
-            text="Events",
-            width=10
+        self.btn_events = create_button(
+            "Events",
+            self.events
         )
-        self.btn_events.pack(side=tk.LEFT)
-        self.btn_me = tk.Button(
-            self.frm_button,
-            text="Me",
-            width=10
+        self.btn_me = create_button(
+            "Me",
+            self.me
         )
-        self.btn_me.pack(side=tk.LEFT)
-        self.btn_settings = tk.Button(
-            self.frm_button,
-            text="Settings",
-            width=10
+        self.btn_settings = create_button(
+            "Settings",
+            self.settings
         )
-        self.btn_settings.pack(side=tk.LEFT)
         self.btn_reload = tk.Button(
             self.frm_button,
             text="↻",
             width=3
         )
         self.btn_reload.pack()
-
-        self.btn_timetable.bind("<Button-1>", self.timetable)
-        self.btn_notices.bind("<Button-1>", self.notices)
-        self.btn_events.bind("<Button-1>", self.events)
-        self.btn_me.bind("<Button-1>", self.me)
-        self.btn_settings.bind("<Button-1>", self.settings)
         self.btn_reload.bind("<Button-1>", self.reload)
 
     def destroy_section_objects(self):
@@ -609,63 +604,44 @@ class App:
         self.section_objects.append(frm_settings)
         frm_settings.pack()
 
-        frm_username = tk.Frame(frm_settings, width=500, height=50)
-        self.section_objects.append(frm_username)
-        frm_username.pack()
-
-        lbl_username = tk.Label(
-            frm_username,
-            text="Username"
+        # Create the User details
+        lbl_login = tk.Label(
+            frm_settings,
+            text="Login details",
+            fg="grey50",
+            anchor=tk.W,
         )
-        self.section_objects.append(lbl_username)
-        lbl_username.pack(side=tk.LEFT)
+        self.section_objects.append(lbl_login)
+        lbl_login.pack(side=tk.TOP, fill=tk.X)
 
-        ent_username = tk.Entry(
-            frm_username,
-            width=30
-        )
-        self.section_objects.append(ent_username)
-        ent_username.insert(0, self.username)
-        ent_username.pack(side=tk.RIGHT)
+        def create_setting(name: str, initial_text: str):
+            """Create a setting"""
+            frm_setting = tk.Frame(frm_settings, width=500, height=50)
+            self.section_objects.append(frm_setting)
+            frm_setting.pack()
 
-        frm_password = tk.Frame(frm_settings, width=500, height=50)
-        self.section_objects.append(frm_password)
-        frm_password.pack()
+            lbl_setting = tk.Label(
+                frm_setting,
+                text=name,
+                anchor=tk.W,
+                width=10
+            )
+            self.section_objects.append(lbl_setting)
+            lbl_setting.pack(side=tk.LEFT)
 
-        lbl_password = tk.Label(
-            frm_password,
-            text="Password"
-        )
-        self.section_objects.append(lbl_password)
-        lbl_password.pack(side=tk.LEFT)
+            ent_setting = tk.Entry(
+                frm_setting,
+                width=30
+            )
+            ent_setting.insert(0, initial_text)
+            self.section_objects.append(ent_setting)
+            ent_setting.pack(side=tk.RIGHT)
 
-        ent_password = tk.Entry(
-            frm_password,
-            show="*",
-            width=30
-        )
-        self.section_objects.append(ent_password)
-        ent_password.insert(0, self.password)
-        ent_password.pack(side=tk.RIGHT)
+            return ent_setting
 
-        frm_url = tk.Frame(frm_settings, width=500, height=50)
-        self.section_objects.append(frm_url)
-        frm_url.pack()
-
-        lbl_url = tk.Label(
-            frm_url,
-            text="URL"
-        )
-        self.section_objects.append(lbl_url)
-        lbl_url.pack(side=tk.LEFT)
-
-        ent_url = tk.Entry(
-            frm_url,
-            width=30
-        )
-        self.section_objects.append(ent_url)
-        ent_url.insert(0, self.url)
-        ent_url.pack(side=tk.RIGHT)
+        ent_username = create_setting("Username", self.username)
+        ent_password = create_setting("Password", self.password)
+        ent_url = create_setting("URL", self.url)
 
         def save_settings(*args):
             """Save the settings"""
@@ -674,7 +650,8 @@ class App:
             self.url = ent_url.get()
             with open("App_Data.txt", "w") as file:
                 file.write(f"{self.username}\n{self.password}\n{self.url}")
-            showinfo("Settings", "Settings saved")
+            if askyesno("Saved", "Save complete. Do you want to reload?"):
+                self.reload()
 
         btn_save = tk.Button(
             frm_settings,
