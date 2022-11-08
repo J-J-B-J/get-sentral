@@ -24,5 +24,5 @@
 </ul>
 
 <p>
-    See our <a href="https://j-j-b-j.github.io/get-sentral/">official documentation</a> for more information.
+    See our <a href="https://j-j-b-j.github.io/get-sentral/">official documentation</a> or <a href="https://pypi.org/project/SentralTimetable/">PyPi page</a> for more information.
 </p>
