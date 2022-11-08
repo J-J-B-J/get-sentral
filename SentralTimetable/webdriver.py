@@ -1,10 +1,13 @@
 """Functions to simplify use of the webdriver"""
-from selenium.webdriver.chrome.options import Options
+# Standard library imports
+import time
+
+# Third party imports
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-import time
 
 
 def create_webdriver(headless: bool) -> webdriver.Chrome:

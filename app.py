@@ -1,12 +1,15 @@
 """The app for get-sentral."""
-import tkinter as tk
-from tkinter import ttk
-from tkinter.messagebox import *
-from threading import Thread
-import SentralTimetable
-from functools import partial
+# Standard library imports
 from calendar import Calendar
 import datetime
+from functools import partial
+import tkinter as tk
+from threading import Thread
+from tkinter import ttk
+from tkinter.messagebox import *
+
+# Local imports
+import SentralTimetable
 
 
 class App:

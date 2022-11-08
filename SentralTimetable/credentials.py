@@ -1,7 +1,7 @@
 """Functions to get the credentials"""
+# Standard library imports
 from json import load
-import json
-import os
+from os import getenv
 
 JSON_FILENAME = "Sentral_Details.json"
 

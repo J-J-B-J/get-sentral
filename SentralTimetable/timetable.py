@@ -1,9 +1,9 @@
 """A function to get the timetable for the current week"""
-
+# Local imports
 from .credentials import *
+from .objects import *
 from .scrapers import *
 from .webdriver import *
-from .objects import *
 
 # Print the get-sentral logo
 print("""
