@@ -23,6 +23,8 @@ class App:
         self.window.iconphoto(True, tk.PhotoImage(file='docs/img/icon.png'))
         self.window.bind("<Command-r>", self.reload)
 
+        self.mode = self.timetable
+
         self.create_buttons()
         self.section_objects = []
         self.data = SentralTimetable.Sentral(
@@ -35,15 +37,25 @@ class App:
         self.notice_range_start = 0
         self.event_range_start = -1
 
-        try:
-            with open("App_Data.txt", "r") as file:
+        with open("App_Data.txt", "r") as file:
+            try:
                 self.username = file.readline().strip()
+            except Exception:
+                self.username = ""
+            try:
                 self.password = file.readline().strip()
+            except Exception:
+                self.password = ""
+            try:
                 self.url = file.readline().strip()
-        except Exception:
-            self.username = ""
-            self.password = ""
-            self.url = ""
+            except Exception:
+                self.url = ""
+            try:
+                self.delay_reload = int(file.readline().strip())
+            except Exception:
+                self.delay_reload = 5
+
+        self.window.after(self.delay_reload * 60000, self.reload)
 
         if not self.username or not self.password or not self.url:
             self.settings()
@@ -100,7 +112,7 @@ class App:
             object_.destroy()
         self.section_objects = []
 
-    def create_title(self, title: str):
+    def create_title_and_set_mode(self, title: str, mode: callable):
         """Create a title for the page."""
         lbl_title = tk.Label(
             self.window,
@@ -109,24 +121,13 @@ class App:
         )
         self.section_objects.append(lbl_title)
         lbl_title.pack(side=tk.TOP)
+        self.mode = mode
         return lbl_title
 
     def reload(self, *args):
-        """Reload the data"""
+        """Reload the data in the background."""
         self.window.unbind("<Command-r>")
-        self.destroy_section_objects()
-        self.frm_button.destroy()
-        self.create_title("Loading...")
-
-        progressbar = ttk.Progressbar(
-            self.window,
-            orient='horizontal',
-            length=300,
-            mode='determinate'
-        )
-        self.section_objects.append(progressbar)
-        progressbar.pack()
-        progressbar.start(280)
+        self.btn_reload.config(state=tk.DISABLED)
 
         def sentral(*args):
             """Get the timetable"""
@@ -142,24 +143,27 @@ class App:
         sentral_thread.start()
 
         def reload(*args):
-            """Reload the 'reload' window"""
-            progressbar.start()
+            """To be run after the thread is finished."""
             if not sentral_thread.is_alive():
-                self.destroy_section_objects()
-                self.create_buttons()
                 self.window.bind("<Command-r>", self.reload)
-                self.timetable()
+                self.btn_reload.config(state=tk.NORMAL)
+                if self.mode == self.settings:
+                    return
+                elif self.mode == self.reload:
+                    return
+                else:
+                    self.mode()
+                self.window.after(self.delay_reload * 60000,
+                                  self.reload)
             else:
                 self.window.after(200, reload)
 
         reload()
 
-        self.window.mainloop()
-
     def timetable(self, *args):
         """The 'timetable' page"""
         self.destroy_section_objects()
-        self.create_title("Timetable")
+        self.create_title_and_set_mode("Timetable", self.timetable)
 
         if not self.data.classes:
             lbl_no_notices = tk.Label(
@@ -213,7 +217,7 @@ class App:
     def notices(self, *args):
         """The 'notices' page"""
         self.destroy_section_objects()
-        self.create_title("Notices")
+        self.create_title_and_set_mode("Notices", self.notices)
 
         if not self.data.notices:
             lbl_no_notices = tk.Label(
@@ -274,7 +278,8 @@ class App:
 
             notice_window.mainloop()
 
-        for notice in self.data.notices[self.notice_range_start:self.notice_range_start + 5]:
+        for notice in self.data.notices[
+                      self.notice_range_start:self.notice_range_start + 5]:
             frm_notice = tk.Frame(frm_notices, width=500, height=50)
             self.section_objects.append(frm_notice)
             frm_notice.pack()
@@ -322,7 +327,7 @@ class App:
     def events(self, *args):
         """The 'timetable' page"""
         self.destroy_section_objects()
-        self.create_title("Events")
+        self.create_title_and_set_mode("Events", self.events)
 
         if not self.data.events:
             lbl_no_events = tk.Label(
@@ -542,7 +547,7 @@ class App:
     def me(self, *args):
         """The 'me' page"""
         self.destroy_section_objects()
-        self.create_title("Me")
+        self.create_title_and_set_mode("Me", self.me)
 
         frm_me = tk.Frame(self.window, width=500, height=500)
         self.section_objects.append(frm_me)
@@ -601,21 +606,11 @@ class App:
     def settings(self, *args):
         """The 'settings' page"""
         self.destroy_section_objects()
-        self.create_title("Settings")
+        self.create_title_and_set_mode("Settings", self.settings)
 
         frm_settings = tk.Frame(self.window, width=500, height=500)
         self.section_objects.append(frm_settings)
         frm_settings.pack()
-
-        # Create the User details
-        lbl_login = tk.Label(
-            frm_settings,
-            text="Login details",
-            fg="grey50",
-            anchor=tk.W,
-        )
-        self.section_objects.append(lbl_login)
-        lbl_login.pack(side=tk.TOP, fill=tk.X)
 
         def create_setting(name: str, initial_text: str, help_text: str):
             """Create a setting"""
@@ -684,6 +679,18 @@ class App:
 
             return ent_setting
 
+        def create_label(text: str):
+            """Create a label"""
+            lbl = tk.Label(
+                frm_settings,
+                text=text,
+                fg="grey50"
+            )
+            self.section_objects.append(lbl)
+            lbl.pack(side=tk.TOP, fill=tk.X)
+
+        # Create the User details
+        create_label("Login details")
         ent_username = create_setting(
             "Username",
             self.username,
@@ -702,13 +709,31 @@ class App:
             "https://examplehs.sentral.com.au/portal/dashboard"
         )
 
+        # Create reload settings
+        create_label("Reload")
+        ent_delay_reload = create_setting(
+            "Reload wait",
+            str(self.delay_reload),
+            "The number of minutes to wait before reloading the page. "
+            "Must be a positive number."
+        )
+
         def save_settings(*args):
             """Save the settings"""
             self.username = ent_username.get()
             self.password = ent_password.get()
             self.url = ent_url.get()
+            if ent_delay_reload.get().isdecimal() and \
+                    float(ent_delay_reload.get()) > 0:
+                self.delay_reload = float(ent_delay_reload.get())
+            else:
+                showerror("Error", "Reload wait must be a positive number")
+                return
             with open("App_Data.txt", "w") as file:
-                file.write(f"{self.username}\n{self.password}\n{self.url}")
+                file.write(
+                    f"{self.username}\n{self.password}\n{self.url}"
+                    f"\n{self.delay_reload}"
+                )
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload()
 
