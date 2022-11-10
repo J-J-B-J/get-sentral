@@ -32,7 +32,7 @@ def get_credentials(debug: bool, usr: str, pwd: str, url: str, timeout: int)\
     """
     # Use "is None" instead of "not" for debug because debug could be False
     if debug is None:
-        debug = {"True": True, "False": False}.get(os.getenv("DEBUG"))
+        debug = {"True": True, "False": False}.get(getenv("DEBUG"))
         if debug is None:
             debug = get_data_from_json(JSON_FILENAME).get("DEBUG")
             if debug is None:
@@ -42,26 +42,26 @@ def get_credentials(debug: bool, usr: str, pwd: str, url: str, timeout: int)\
                     if debug is not None:
                         break
     if not usr:
-        usr = os.getenv("USER_NAME")
+        usr = getenv("USER_NAME")
         if not usr:
             usr = get_data_from_json(JSON_FILENAME).get("USERNAME")
             if not usr:
                 usr = input("Username: ").lower()
     if not pwd:
-        pwd = os.getenv("PASSWORD")
+        pwd = getenv("PASSWORD")
         if not pwd:
             pwd = get_data_from_json(JSON_FILENAME).get("PASSWORD")
             if not pwd:
                 pwd = input("Password: ")
     if not url:
-        url = os.getenv("URL")
+        url = getenv("URL")
         if not url:
             url = get_data_from_json(JSON_FILENAME).get("URL")
             if not url:
                 url = input("URL: ")
     if not timeout:
         try:
-            timeout = int(os.getenv("TIMEOUT"))
+            timeout = int(getenv("TIMEOUT"))
         except TypeError:
             timeout = None
         except ValueError:
