@@ -3,6 +3,7 @@
 from calendar import Calendar
 import datetime
 from functools import partial
+import sys
 import tkinter as tk
 from threading import Thread
 from tkinter import ttk
@@ -20,7 +21,14 @@ class App:
         self.window = tk.Tk()
         self.window.title("Sentral")
         self.window.geometry("500x500")
-        self.window.iconphoto(True, tk.PhotoImage(file='docs/img/icon.png'))
+        # If it is running from PyInstaller as opposed to from the command line
+        if getattr(sys, 'frozen', False):
+            self.window.iconphoto(
+                True,
+                tk.PhotoImage(file=os.path.join(sys._MEIPASS, "files/bg.png"))
+            )
+        else:
+         self.window.iconphoto(True, tk.PhotoImage(file='docs/img/icon.png'))
         self.window.bind("<Command-r>", self.reload)
 
         self.mode = self.timetable
