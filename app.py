@@ -45,23 +45,29 @@ class App:
         self.notice_range_start = 0
         self.event_range_start = -1
 
-        with open("App_Data.txt", "r") as file:
-            try:
-                self.username = file.readline().strip()
-            except Exception:
-                self.username = ""
-            try:
-                self.password = file.readline().strip()
-            except Exception:
-                self.password = ""
-            try:
-                self.url = file.readline().strip()
-            except Exception:
-                self.url = ""
-            try:
-                self.delay_reload = int(file.readline().strip())
-            except Exception:
-                self.delay_reload = 5
+        try:
+            with open("App_Data.txt", "r") as file:
+                try:
+                    self.username = file.readline().strip()
+                except Exception:
+                    self.username = ""
+                try:
+                    self.password = file.readline().strip()
+                except Exception:
+                    self.password = ""
+                try:
+                    self.url = file.readline().strip()
+                except Exception:
+                    self.url = ""
+                try:
+                    self.delay_reload = int(file.readline().strip())
+                except Exception:
+                    self.delay_reload = 5
+        except FileNotFoundError:
+            self.username = ""
+            self.password = ""
+            self.url = ""
+            self.delay_reload = 5
 
         self.window.after(self.delay_reload * 60000, self.reload)
 
