@@ -4,7 +4,6 @@ from .credentials import *
 from .objects import *
 from .scrapers import *
 from .webdriver import *
-from .objects import *
 
 # Print the get-sentral logo
 print("""
