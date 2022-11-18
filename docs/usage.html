@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="img/icon.png"/>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-md navbar-dark mb-4">
+
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="nav-link" href="/get-sentral">get-sentral</a>
+            </div>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <div class="navbar-text"><a href="/get-sentral/installation">Installation</a></div>
+                </li>
+
+                <pre>  </pre>
+
+                <li class="nav-item">
+                    <div class="navbar-text"><a href="/get-sentral/variables">Variables</a></div>
+                </li>
+
+                <pre>  </pre>
+
+                <li class="nav-item">
+                    <div class="navbar-text"><a href="/get-sentral/usage">Usage</a></div>
+                </li>
+
+                <pre>   </pre>
+
+                <li class="nav-item">
+                    <div class="navbar-text">
+                        <a class="github-button" href="https://github.com/J-J-B-J/get-sentral/subscription" data-size="large" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: dark_high_contrast;" data-icon="octicon-eye" data-show-count="true" aria-label="Watch J-J-B-J/get-sentral on GitHub">Watch</a>
+                        <a class="github-button" href="https://github.com/J-J-B-J/get-sentral" data-size="large" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: dark_high_contrast;" data-icon="octicon-star" data-show-count="true" aria-label="Star J-J-B-J/get-sentral on GitHub">Star</a>
+                        <a class="github-button" href="https://github.com/J-J-B-J/get-sentral/fork" data-size="large" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: dark_high_contrast;" data-icon="octicon-repo-forked" data-show-count="true" aria-label="Fork J-J-B-J/get-sentral on GitHub">Fork</a>
+                    </div>
+                </li>
+
+                <pre>   </pre>
+
+                <li class="nav-item">
+                    <div class="navbar-text">
+                        A pure python library by
+                        <a class="link" href="https://github.com/SuperHarmony910">
+                            <img src="https://avatars.githubusercontent.com/u/57850338" height="25px" alt="SuperHarmony910 profile picture" style="border-radius: 50%">
+                            SuperHarmony910
+                        </a>
+                        and
+                        <a class="link" href="https://github.com/J-J-B-J">
+                            <img src="https://avatars.githubusercontent.com/u/79617327" height="25px" alt="J-J-B-J profile picture" style="border-radius: 50%">
+                            J-J-B-J
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </nav>
+
+    <div class="container">
+        <h2>Usage</h2>
+        <p>This page presumes you've installed the package and set the variables. See <a class="link" href="/get-sentral/installation">Installation</a> and <a class="link" href="/get-sentral/variables">Variables</a>.</p>
+
+        <div>
+            <h3>Standalone</h3>
+            <p>
+                This mode makes the program get your timetable and print out all the details, neatly formatted.
+                This method is NOT RECOMMENDED if you plan to use this program as a library or in a project.
+                Really the only time you should be using this mode is for testing.
+            </p>
+
+            <h5>Code editor</h5>
+            <ol>
+                <li>
+                    Open the get-sentral directory in your favourite code editor, like <a class="link" href="https://www.jetbrains.com/pycharm/">PyCharm</a>.
+                    <br>
+                    <small>N.B. If you use a <a class="link" href="https://www.jetbrains.com">JetBrains</a> product, the project is already set up for you.</small>
+                </li>
+                <li>Run <code>example.py</code></li>
+            </ol>
+
+            <h5>Terminal</h5>
+            <ol>
+                <li>Open a new terminal tab/window.</li>
+                <li>Run <code>cd Downloads/get-sentral</code></li>
+                <li>
+                    Run <code>python3 example.py</code>
+                    <br>
+                    <small>N.B. If you use Python 2, use <code>python</code> instead of <code>python3</code> above.</small>
+                </li>
+            </ol>
+        </div>
+
+        <br>
+
+        <div>
+            <h3>In an external Python program</h3>
+            <p>To use this mode, use:</p>
+            <pre>
+<span class="pykey">import</span> SentralTimetable
+SentralTimetable.get_timetable()</pre>
+            <p>Using <code>get_timetable()</code> returns the data as a <code>Sentral()</code> object. See the home page for details on this object, or see <code>objects.py</code>.</p>
+            <br>
+            <br>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

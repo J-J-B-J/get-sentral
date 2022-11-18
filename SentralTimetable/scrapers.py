@@ -1,10 +1,14 @@
 """Scrapers for HTML"""
-from .objects import *
+# Standard library imports
+import datetime
 
+# Third party imports
+from BarcodeGenerator import generate_barcode
 from bs4 import BeautifulSoup
 import datetime
-from BarcodeGenerator import generate_barcode
 
+# Local imports
+from .objects import *
 
 MONTHS_LONG = [
     "",

@@ -1,6 +1,7 @@
 """A function to get the timetable for the current week"""
-
+# Local imports
 from .credentials import *
+from .objects import *
 from .scrapers import *
 from .webdriver import *
 from .objects import *
@@ -23,7 +24,7 @@ print("""
 ─╯    ╰──╯   ╰─────╯ ╰──╯      ╰────────╯ ╰──╯
                                    ╰────────────╯
 """)
-print('Created by SuperHarmony910 and J-J-B-J')
+print('Created by SuperHarmony910 and J-J-B-J. Logo by cheepling.')
 
 
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,

@@ -136,3 +136,4 @@ SentralTimetable.egg-info
 # Environment variables
 *.env
 SentralTimetable/Sentral_Details.json
+App_Data.txt
