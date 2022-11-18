@@ -9,4 +9,3 @@ PyInstaller.__main__.run([
     '--splash=docs/img/icon.png',
 
 ])
-
