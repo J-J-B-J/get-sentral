@@ -60,16 +60,18 @@ class App:
                 except Exception:
                     self.url = ""
                 try:
-                    self.delay_reload = int(file.readline().strip())
+                    self.delay_reload = float(file.readline().strip())
                 except Exception:
-                    self.delay_reload = 5
+                    self.delay_reload = 5.0
         except FileNotFoundError:
             self.username = ""
             self.password = ""
             self.url = ""
-            self.delay_reload = 5
+            self.delay_reload = 5.0
 
-        self.window.after(self.delay_reload * 60000, self.reload)
+        self.window.after(int(self.delay_reload * 60000), self.reload)
+
+        self.last_reload = "N/A"
 
         if not self.username or not self.password or not self.url:
             self.settings()
@@ -143,6 +145,8 @@ class App:
         self.window.unbind("<Command-r>")
         self.btn_reload.config(state=tk.DISABLED)
 
+        self.last_reload = datetime.datetime.now().strftime("%H:%M:%S")
+
         def sentral(*args):
             """Get the timetable"""
             self.data = SentralTimetable.get_timetable(
@@ -167,8 +171,7 @@ class App:
                     return
                 else:
                     self.mode()
-                self.window.after(self.delay_reload * 60000,
-                                  self.reload)
+                self.window.after(int(self.delay_reload * 60000), self.reload)
             else:
                 self.window.after(200, reload)
 
@@ -703,6 +706,15 @@ class App:
             self.section_objects.append(lbl)
             lbl.pack(side=tk.TOP, fill=tk.X)
 
+        def create_text(text: str):
+            """Create a label"""
+            lbl = tk.Label(
+                frm_settings,
+                text=text
+            )
+            self.section_objects.append(lbl)
+            lbl.pack(side=tk.TOP, fill=tk.X)
+
         # Create the User details
         create_label("Login details")
         ent_username = create_setting(
@@ -731,6 +743,8 @@ class App:
             "The number of minutes to wait before reloading the page. "
             "Must be a positive number."
         )
+
+        create_text(f"Last reloaded at {self.last_reload}")
 
         def save_settings(*args):
             """Save the settings"""
