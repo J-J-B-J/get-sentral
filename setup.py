@@ -17,6 +17,7 @@ setup(
         'selenium~=4.4.2',
         'TextBarcodeGenerator~=2022.0.2',
         'pyinstaller~=5.6.2',
+        'webdriver-manager~=3.8.3',
     ],
     package_dir={'': '.'},
     classifiers=[

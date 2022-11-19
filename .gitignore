@@ -137,3 +137,6 @@ SentralTimetable.egg-info
 *.env
 SentralTimetable/Sentral_Details.json
 App_Data.txt
+
+# Program Files
+icon.png

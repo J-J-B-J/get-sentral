@@ -1,13 +1,14 @@
 """The app for get-sentral."""
 # Standard library imports
 from calendar import Calendar
-import datetime
 from functools import partial
-import sys
-import tkinter as tk
 from threading import Thread
 from tkinter import ttk
 from tkinter.messagebox import *
+import datetime
+import sys
+import tkinter as tk
+import urllib.request
 
 # Local imports
 import SentralTimetable
@@ -21,14 +22,13 @@ class App:
         self.window = tk.Tk()
         self.window.title("Sentral")
         self.window.geometry("500x500")
-        # If it is running from PyInstaller as opposed to from the command line
-        if getattr(sys, 'frozen', False):
-            self.window.iconphoto(
-                True,
-                tk.PhotoImage(file=os.path.join(sys._MEIPASS, "files/bg.png"))
-            )
-        else:
-         self.window.iconphoto(True, tk.PhotoImage(file='docs/img/icon.png'))
+        urllib.request.urlretrieve(
+            "https://github.com/J-J-B-J/get-sentral/raw/main/docs/img/icon"
+            ".png", "icon.png")
+        self.window.iconphoto(
+            True,
+            tk.PhotoImage(file='icon.png')
+        )
         self.window.bind("<Command-r>", self.reload)
 
         self.mode = self.timetable
@@ -748,10 +748,19 @@ class App:
 
         def save_settings(*args):
             """Save the settings"""
+
+            def check_decimal(num: str):
+                """Check if a number is a decimal number (or int)"""
+                try:
+                    float(num)
+                    return True
+                except ValueError:
+                    return False
+
             self.username = ent_username.get()
             self.password = ent_password.get()
             self.url = ent_url.get()
-            if ent_delay_reload.get().isdecimal() and \
+            if check_decimal(ent_delay_reload.get()) and \
                     float(ent_delay_reload.get()) > 0:
                 self.delay_reload = float(ent_delay_reload.get())
             else:
