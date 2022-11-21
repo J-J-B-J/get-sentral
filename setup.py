@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="SentralTimetable",
-    version="2022.0.5",
+    version="2022.0.6",
     description="A tool to get your timetable from Sentral.",
     long_description_content_type="text/markdown",
     long_description=open("README.md").read(),
