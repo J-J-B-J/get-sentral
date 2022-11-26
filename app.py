@@ -602,7 +602,7 @@ class App:
             """Show the barcode in a new window"""
             barcode_window = tk.Tk()
             barcode_window.title("Barcode")
-            barcode_window.geometry('1100x140')
+            barcode_window.geometry('593x90')
             barcode_window.focus_set()
             barcode_window.bind(
                 "<Escape>",
@@ -612,7 +612,7 @@ class App:
             lbl_barcode = tk.Label(
                 barcode_window,
                 text=self.data.user.barcode,
-                font=("Arial", 15)
+                font=("Arial", 8)
             )
             lbl_barcode.pack()
 
