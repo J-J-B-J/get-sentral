@@ -158,7 +158,20 @@ def scrape_user(html: str) -> User:
         number = 0
     barcode = generate_barcode(number)
 
-    return User(name, school, number, barcode)
+    try:
+        journal_form = soup.find_all(class_='span3')[1].find('form')
+        journal_text_box = journal_form.find(class_='editable-placeholder')
+    except AttributeError:
+        journal = "Today is a weekend. You cannot access your journal."
+    else:
+        if journal_text_box is None:
+            journal = ""
+        else:
+            journal = ""
+            for tag in journal_form.find_all('p'):
+                journal += ' '.join(tag.strings) + '\n'
+
+    return User(name, school, number, barcode, journal)
 
 
 def scrape_calendar(html: str) -> list:
