@@ -53,20 +53,25 @@ class App:
         self.notice_range_start = 0
         self.event_range_start = -1
 
+        # Read the app data file to get the details
         try:
             with open("App_Data.txt", "r") as file:
+                # First line is the username
                 try:
                     self.username = file.readline().strip()
                 except Exception:
                     self.username = ""
+                # Second line is the password
                 try:
                     self.password = file.readline().strip()
                 except Exception:
                     self.password = ""
+                # Third line is the url
                 try:
                     self.url = file.readline().strip()
                 except Exception:
                     self.url = ""
+                # Fourth line is the delay between reloads
                 try:
                     self.delay_reload = float(file.readline().strip())
                 except Exception:
@@ -773,6 +778,7 @@ class App:
             else:
                 showerror("Error", "Reload wait must be a positive number")
                 return
+            # Save the data to the app data file
             with open("App_Data.txt", "w") as file:
                 file.write(
                     f"{self.username}\n{self.password}\n{self.url}"
