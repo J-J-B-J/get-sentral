@@ -160,7 +160,7 @@ def scrape_user(html: str) -> User:
 
     try:
         journal_form = soup.find_all(class_='span3')[1].find('form')
-        journal_text_box = journal_form.find(class_='editable-placeholder')
+        journal_text_box = journal_form.find(class_='editable')
     except AttributeError:
         journal = "Today is a weekend. You cannot access your journal."
     else:
@@ -168,8 +168,11 @@ def scrape_user(html: str) -> User:
             journal = ""
         else:
             journal = ""
+            # Get the text from all the <p> tags. This is necessary to stop the
+            # text inside the button from being scraped
             for tag in journal_form.find_all('p'):
                 journal += ' '.join(tag.strings) + '\n'
+            journal = journal.rstrip()  # Remove the trailing newline
 
     return User(name, school, number, barcode, journal)
 
