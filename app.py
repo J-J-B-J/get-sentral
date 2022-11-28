@@ -6,6 +6,7 @@ from threading import Thread
 from tkinter import ttk
 from tkinter.messagebox import *
 import datetime
+import dotenv
 import sys
 import tkinter as tk
 import urllib.request
@@ -54,32 +55,13 @@ class App:
         self.event_range_start = -1
 
         # Read the app data file to get the details
+        details = dict(dotenv.dotenv_values("App_Credentials.env"))
+        self.username = details.get("USERNAME", "")
+        self.password = details.get("PASSWORD", "")
+        self.url = details.get("URL", "")
         try:
-            with open("App_Data.txt", "r") as file:
-                # First line is the username
-                try:
-                    self.username = file.readline().strip()
-                except Exception:
-                    self.username = ""
-                # Second line is the password
-                try:
-                    self.password = file.readline().strip()
-                except Exception:
-                    self.password = ""
-                # Third line is the url
-                try:
-                    self.url = file.readline().strip()
-                except Exception:
-                    self.url = ""
-                # Fourth line is the delay between reloads
-                try:
-                    self.delay_reload = float(file.readline().strip())
-                except Exception:
-                    self.delay_reload = 5.0
-        except FileNotFoundError:
-            self.username = ""
-            self.password = ""
-            self.url = ""
+            self.delay_reload = float(details.get("DELAY_RELOAD", 5.0))
+        except ValueError:
             self.delay_reload = 5.0
 
         self.window.after(int(self.delay_reload * 60000), self.reload)
@@ -779,11 +761,11 @@ class App:
                 showerror("Error", "Reload wait must be a positive number")
                 return
             # Save the data to the app data file
-            with open("App_Data.txt", "w") as file:
-                file.write(
-                    f"{self.username}\n{self.password}\n{self.url}"
-                    f"\n{self.delay_reload}"
-                )
+            dotenv.set_key("App_Credentials.env", "USERNAME", self.username)
+            dotenv.set_key("App_Credentials.env", "PASSWORD", self.password)
+            dotenv.set_key("App_Credentials.env", "URL", self.url)
+            dotenv.set_key("App_Credentials.env", "DELAY_RELOAD",
+                           str(self.delay_reload))
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload()
 

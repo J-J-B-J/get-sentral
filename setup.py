@@ -18,6 +18,8 @@ setup(
         'TextBarcodeGenerator~=2022.0.2',
         'pyinstaller~=5.6.2',
         'webdriver-manager~=3.8.3',
+        'python-dotenv~=0.20.0',
+        'setuptools~=61.3.0',
     ],
     package_dir={'': '.'},
     classifiers=[
