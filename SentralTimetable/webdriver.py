@@ -87,3 +87,22 @@ def webdriver_go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> \
                 "load in 5 secs. You can change the timeout by passing a "
                 "value to the timeout arguement"
             )
+
+
+def webdriver_save_journal(journal: str, driver: webdriver.Chrome, usr: str,
+                           pwd: str, url: str, timeout: int = 5):
+    """Save the text journal to the journal section of Sentral."""
+    webdriver_login(driver, usr, pwd, url, timeout)
+    # Click the edit journal button
+    driver.find_element(By.CLASS_NAME, "btn.btn-mini.btn-info.btn-editable")\
+        .click()
+    # Enter the text into the textarea field
+    journal_div = driver.find_element(By.CLASS_NAME, "redactor-placeholder")
+    journal_entry = journal_div.find_element(
+        By.CLASS_NAME,
+        "editable-enabled.redactor-editor"
+    )
+    journal_entry.clear()
+    journal_entry.send_keys(journal)
+    # Click the save button
+    driver.find_element(By.CLASS_NAME, "editable-save.btn.btn-success").click()

@@ -1,4 +1,7 @@
 """A function to get the timetable for the current week"""
+# Third party imports
+from selenium.webdriver import Chrome
+
 # Local imports
 from .credentials import *
 from .objects import *
@@ -26,10 +29,9 @@ print("""
 print('Created by SuperHarmony910 and J-J-B-J. Logo by cheepling.')
 
 
-def get_timetable(usr: str = None, pwd: str = None, url: str = None,
-                  debug: bool = None, timeout: int = None) -> Sentral:
-    """Get the timetable for the current week"""
-
+def __login_to_homepage(usr: str = None, pwd: str = None, url: str = None,
+                        debug: bool = None, timeout: int = None) -> tuple:
+    """Login to the homepage"""
     # Get credentials
     debug, usr, pwd, url, timeout = get_credentials(debug, usr, pwd, url,
                                                     timeout)
@@ -46,6 +48,16 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     if debug:
         print("Logging in")
     webdriver_login(driver, usr, pwd, url, timeout)
+
+    return driver, debug, usr, pwd, url, timeout
+
+
+def get_timetable(usr: str = None, pwd: str = None, url: str = None,
+                  debug: bool = None, timeout: int = None) -> Sentral:
+    """Get the timetable for the current week"""
+
+    driver, debug, usr, pwd, url, timeout = \
+        __login_to_homepage(usr, pwd, url, debug, timeout)
 
     if debug:
         print("Scraping Timetable")
@@ -67,3 +79,16 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         events=events,
         user=user
     )
+
+
+def set_journal(journal: str = "", usr: str = None, pwd: str = None, url: str = None,
+                debug: bool = None, timeout: int = None)\
+        -> None:
+    """Set the journal for a given date"""
+
+    driver, debug, usr, pwd, url, timeout = \
+        __login_to_homepage(usr, pwd, url, debug, timeout)
+
+    if debug:
+        print("Saving journal")
+    webdriver_save_journal(journal, driver, usr, pwd, url, timeout)

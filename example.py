@@ -2,7 +2,7 @@
 Run this as an example to test out the code. If you have built and installed
 the package, you should be able to use it in another directory.
 """
-from SentralTimetable import get_timetable, objects
+from SentralTimetable import get_timetable, objects, set_journal
 import datetime
 
 
@@ -90,6 +90,17 @@ def main():
     print(f"Number: {timetable.user.number}")
     print(f"School: {timetable.user.school}")
     print(f"\nBarcode:\n\n{timetable.user.barcode}")
+    print(f"\nJournal:\n{timetable.user.journal}")
+
+    print("\nJournal: (Enter 'QUIT' to exit)")
+    journal = ""
+    while True:
+        entry = input("> ")
+        if entry == "QUIT":
+            break
+        else:
+            journal += entry + "\n"
+    set_journal(journal)
 
 
 if __name__ == "__main__":
