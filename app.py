@@ -48,7 +48,7 @@ class App:
             [],
             [],
             [],
-            SentralTimetable.User("", "", 0, "")
+            SentralTimetable.User("", "", 0, "", "")
         )
 
         self.notice_range_start = 0
