@@ -6,6 +6,7 @@ from threading import Thread
 from tkinter import ttk
 from tkinter.messagebox import *
 import datetime
+import dotenv
 import sys
 import tkinter as tk
 import urllib.request
@@ -19,6 +20,14 @@ class App:
 
     def __init__(self):
         """Initialize the app."""
+        self.frm_button = None
+        self.btn_timetable = None
+        self.btn_notices = None
+        self.btn_events = None
+        self.btn_me = None
+        self.btn_settings = None
+        self.btn_reload = None
+        
         self.window = tk.Tk()
         self.window.title("Sentral")
         self.window.geometry("500x500")
@@ -45,28 +54,14 @@ class App:
         self.notice_range_start = 0
         self.event_range_start = -1
 
+        # Read the app data file to get the details
+        details = dict(dotenv.dotenv_values("App_Credentials.env"))
+        self.username = details.get("USERNAME", "")
+        self.password = details.get("PASSWORD", "")
+        self.url = details.get("URL", "")
         try:
-            with open("App_Data.txt", "r") as file:
-                try:
-                    self.username = file.readline().strip()
-                except Exception:
-                    self.username = ""
-                try:
-                    self.password = file.readline().strip()
-                except Exception:
-                    self.password = ""
-                try:
-                    self.url = file.readline().strip()
-                except Exception:
-                    self.url = ""
-                try:
-                    self.delay_reload = float(file.readline().strip())
-                except Exception:
-                    self.delay_reload = 5.0
-        except FileNotFoundError:
-            self.username = ""
-            self.password = ""
-            self.url = ""
+            self.delay_reload = float(details.get("DELAY_RELOAD", 5.0))
+        except ValueError:
             self.delay_reload = 5.0
 
         self.window.after(int(self.delay_reload * 60000), self.reload)
@@ -140,14 +135,14 @@ class App:
         self.mode = mode
         return lbl_title
 
-    def reload(self, *args):
+    def reload(self, *_):
         """Reload the data in the background."""
         self.window.unbind("<Command-r>")
         self.btn_reload.config(state=tk.DISABLED)
 
         self.last_reload = datetime.datetime.now().strftime("%H:%M:%S")
 
-        def sentral(*args):
+        def sentral(*_):
             """Get the timetable"""
             self.data = SentralTimetable.get_timetable(
                 debug=False,
@@ -160,7 +155,7 @@ class App:
         sentral_thread = Thread(target=sentral)
         sentral_thread.start()
 
-        def reload(*args):
+        def reload(*_):
             """To be run after the thread is finished."""
             if not sentral_thread.is_alive():
                 self.window.bind("<Command-r>", self.reload)
@@ -176,8 +171,46 @@ class App:
                 self.window.after(200, reload)
 
         reload()
+    
+    def create_increase_decrease(self, frame: tk.Frame, counter, 
+                                 increment: int, data: list, increase_range,
+                                 decrease_range):
+        """
+        Create the increase and decrease buttons for a page.
+        :param frame: The frame in which to pack the buttons
+        :param counter: The variable which keeps track of the count
+        :param increment: The amount to increment the counter by
+        :param data: The list of data that is being displayed
+        :param increase_range: The callback for when the increase button is
+        pressed
+        :param decrease_range: The callback for when the decrease button is
+        pressed
+        """
+        btn_increase_range = tk.Button(
+            frame,
+            text=">",
+            width=10
+        )
+        self.section_objects.append(btn_increase_range)
+        btn_increase_range.pack(side=tk.RIGHT)
+        if counter + increment < len(data):
+            btn_increase_range.bind("<Button-1>", increase_range)
+        else:
+            btn_increase_range.config(state=tk.DISABLED)
 
-    def timetable(self, *args):
+        btn_decrease_range = tk.Button(
+            frame,
+            text="<",
+            width=10
+        )
+        self.section_objects.append(btn_decrease_range)
+        btn_decrease_range.pack(side=tk.LEFT)
+        if counter > 0:
+            btn_decrease_range.bind("<Button-1>", decrease_range)
+        else:
+            btn_decrease_range.config(state=tk.DISABLED)
+
+    def timetable(self, *_):
         """The 'timetable' page"""
         self.destroy_section_objects()
         self.create_title_and_set_mode("Timetable", self.timetable)
@@ -231,7 +264,7 @@ class App:
 
             periods.append(frm_period)
 
-    def notices(self, *args):
+    def notices(self, *_):
         """The 'notices' page"""
         self.destroy_section_objects()
         self.create_title_and_set_mode("Notices", self.notices)
@@ -249,17 +282,17 @@ class App:
         self.section_objects.append(frm_notices)
         frm_notices.pack()
 
-        def increase_range(*args):
+        def increase_range(*_):
             """Increase the range of notices shown"""
             self.notice_range_start += 5
             self.notices()
 
-        def decrease_range(*args):
+        def decrease_range(*_):
             """Decrease the range of notices shown"""
             self.notice_range_start -= 5
             self.notices()
 
-        def open_notice(notice: SentralTimetable.Notice, event: tk.Event):
+        def open_notice(this_notice: SentralTimetable.Notice, *_):
             """Show the detail view for a notice"""
             notice_window = tk.Tk()
             notice_window.title('Notice')
@@ -267,28 +300,28 @@ class App:
             notice_window.focus_set()
             notice_window.bind(
                 "<Escape>",
-                lambda *args: notice_window.destroy()
+                lambda _: notice_window.destroy()
             )
 
             lbl_title = tk.Label(
                 notice_window,
-                text=notice.title,
+                text=this_notice.title,
                 font=("Arial", 20)
             )
             lbl_title.pack(side=tk.TOP)
 
             lbl_date = tk.Label(
                 notice_window,
-                text=f"By {notice.teacher} on "
-                     f"{notice.date.day}/{notice.date.month}/"
-                     f"{notice.date.year} at {notice.date.hour}:"
-                     f"{notice.date.minute}"
+                text=f"By {this_notice.teacher} on "
+                     f"{this_notice.date.day}/{this_notice.date.month}/"
+                     f"{this_notice.date.year} at {this_notice.date.hour}:"
+                     f"{this_notice.date.minute}"
             )
             lbl_date.pack(side=tk.TOP)
 
             lbl_content = tk.Label(
                 notice_window,
-                text=notice.content,
+                text=this_notice.content,
                 wraplength=490
             )
             lbl_content.pack(side=tk.TOP)
@@ -316,32 +349,12 @@ class App:
                 "<Button-1>",
                 partial(open_notice, notice)
             )
+        
+        self.create_increase_decrease(frm_notices, self.notice_range_start, 5,
+                                      self.data.notices, increase_range,
+                                      decrease_range)
 
-        btn_increase_range = tk.Button(
-            frm_notices,
-            text=">",
-            width=10
-        )
-        self.section_objects.append(btn_increase_range)
-        btn_increase_range.pack(side=tk.RIGHT)
-        if self.notice_range_start + 5 < len(self.data.notices):
-            btn_increase_range.bind("<Button-1>", increase_range)
-        else:
-            btn_increase_range.config(state=tk.DISABLED)
-
-        btn_decrease_range = tk.Button(
-            frm_notices,
-            text="<",
-            width=10
-        )
-        self.section_objects.append(btn_decrease_range)
-        btn_decrease_range.pack(side=tk.LEFT)
-        if self.notice_range_start > 0:
-            btn_decrease_range.bind("<Button-1>", decrease_range)
-        else:
-            btn_decrease_range.config(state=tk.DISABLED)
-
-    def events(self, *args):
+    def events(self, *_):
         """The 'timetable' page"""
         self.destroy_section_objects()
         self.create_title_and_set_mode("Events", self.events)
@@ -388,17 +401,17 @@ class App:
         self.section_objects.append(lbl_month)
         lbl_month.pack()
 
-        def increase_range(*args):
+        def increase_range(*_):
             """Increase the range of events shown"""
             self.event_range_start += 1
             self.events()
 
-        def decrease_range(*args):
+        def decrease_range(*_):
             """Decrease the range of events shown"""
             self.event_range_start -= 1
             self.events()
 
-        def open_event(event: SentralTimetable.Event, tk_event: tk.Event):
+        def open_event(event: SentralTimetable.Event, *_):
             """Show the detail view for an event"""
             event_window = tk.Tk()
             event_window.title('Event')
@@ -406,7 +419,7 @@ class App:
             event_window.focus_set()
             event_window.bind(
                 "<Escape>",
-                lambda *args: event_window.destroy()
+                lambda _: event_window.destroy()
             )
 
             lbl_title = tk.Label(
@@ -459,27 +472,28 @@ class App:
 
             event_window.mainloop()
 
-        def open_day(day: datetime.date, tk_event: tk.Event):
+        def open_day(this_day: datetime.date, *_):
             """Show the events for a day"""
             day_window = tk.Tk()
-            day_window.title(day.strftime("%A %d %B %Y"))
+            day_window.title(this_day.strftime("%A %d %B %Y"))
             day_window.geometry('500x150')
             day_window.focus_set()
             day_window.bind(
                 "<Escape>",
-                lambda *args: day_window.destroy()
+                lambda _: day_window.destroy()
             )
 
             lbl_title = tk.Label(
                 day_window,
-                text=f"Events on {day.day}/{day.month}/{day.year}",
+                text=f"Events on "
+                     f"{this_day.day}/{this_day.month}/{this_day.year}",
                 font=("Arial", 20)
             )
             lbl_title.pack(side=tk.TOP)
 
             for event in self.data.events:
                 if (event.date.dy, event.date.mth, event.date.yr) == \
-                        (day.day, day.month, day.year):
+                        (this_day.day, this_day.month, this_day.year):
                     lbl_event = tk.Label(
                         day_window,
                         text=event.title,
@@ -536,32 +550,11 @@ class App:
                 if day.month == datetime.date.today().month and \
                         day.day == datetime.date.today().day:
                     lbl_day.config(font=("Arial", "15", "bold"))
+        
+        self.create_increase_decrease(frm_calendar, self.event_range_start, 1,
+                                      months, increase_range, decrease_range)
 
-        btn_increase_range = tk.Button(
-            frm_calendar,
-            text=">",
-            width=10
-        )
-        self.section_objects.append(btn_increase_range)
-        btn_increase_range.pack(side=tk.RIGHT)
-        if self.event_range_start + 1 < len(months):
-            btn_increase_range.bind("<Button-1>", increase_range)
-        else:
-            btn_increase_range.config(state=tk.DISABLED)
-
-        btn_decrease_range = tk.Button(
-            frm_calendar,
-            text="<",
-            width=10
-        )
-        self.section_objects.append(btn_decrease_range)
-        btn_decrease_range.pack(side=tk.LEFT)
-        if self.event_range_start > 0:
-            btn_decrease_range.bind("<Button-1>", decrease_range)
-        else:
-            btn_decrease_range.config(state=tk.DISABLED)
-
-    def me(self, *args):
+    def me(self, *_):
         """The 'me' page"""
         self.destroy_section_objects()
         self.create_title_and_set_mode("Me", self.me)
@@ -592,20 +585,21 @@ class App:
         self.section_objects.append(lbl_number)
         lbl_number.pack(side=tk.TOP)
 
-        def show_barcode(*args):
+        def show_barcode(*_):
+            """Show the barcode in a new window"""
             barcode_window = tk.Tk()
             barcode_window.title("Barcode")
-            barcode_window.geometry('1100x140')
+            barcode_window.geometry('593x90')
             barcode_window.focus_set()
             barcode_window.bind(
                 "<Escape>",
-                lambda *args: barcode_window.destroy()
+                lambda _: barcode_window.destroy()
             )
 
             lbl_barcode = tk.Label(
                 barcode_window,
                 text=self.data.user.barcode,
-                font=("Arial", 15)
+                font=("Arial", 8)
             )
             lbl_barcode.pack()
 
@@ -620,7 +614,7 @@ class App:
         btn_barcode.pack(side=tk.TOP)
         btn_barcode.bind("<Button-1>", show_barcode)
 
-    def settings(self, *args):
+    def settings(self, *_):
         """The 'settings' page"""
         self.destroy_section_objects()
         self.create_title_and_set_mode("Settings", self.settings)
@@ -631,7 +625,7 @@ class App:
 
         def create_setting(name: str, initial_text: str, help_text: str):
             """Create a setting"""
-            def show_help_window(title: str, text: str, event: tk.Event):
+            def show_help_window(title: str, text: str, *_):
                 """Show a window with help text"""
                 window = tk.Tk()
                 window.title(title)
@@ -640,7 +634,7 @@ class App:
                 window.focus_set()
                 window.bind(
                     "<Escape>",
-                    lambda *args: window.destroy()
+                    lambda _: window.destroy()
                 )
 
                 lbl_text = tk.Label(
@@ -746,7 +740,7 @@ class App:
 
         create_text(f"Last reloaded at {self.last_reload}")
 
-        def save_settings(*args):
+        def save_settings(*_):
             """Save the settings"""
 
             def check_decimal(num: str):
@@ -766,11 +760,12 @@ class App:
             else:
                 showerror("Error", "Reload wait must be a positive number")
                 return
-            with open("App_Data.txt", "w") as file:
-                file.write(
-                    f"{self.username}\n{self.password}\n{self.url}"
-                    f"\n{self.delay_reload}"
-                )
+            # Save the data to the app data file
+            dotenv.set_key("App_Credentials.env", "USERNAME", self.username)
+            dotenv.set_key("App_Credentials.env", "PASSWORD", self.password)
+            dotenv.set_key("App_Credentials.env", "URL", self.url)
+            dotenv.set_key("App_Credentials.env", "DELAY_RELOAD",
+                           str(self.delay_reload))
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload()
 
