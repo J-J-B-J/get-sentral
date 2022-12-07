@@ -629,6 +629,7 @@ class App:
         )
         self.section_objects.append(txt_journal)
         txt_journal.pack(side=tk.TOP)
+        txt_journal.insert("1.0", self.data.user.journal)
 
         btn_save = tk.Button(
             frm_me,
