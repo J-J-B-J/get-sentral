@@ -48,7 +48,7 @@ class App:
             [],
             [],
             [],
-            SentralTimetable.User("", "", 0, "")
+            SentralTimetable.User("", "", 0, "", "")
         )
 
         self.notice_range_start = 0
@@ -613,6 +613,60 @@ class App:
         self.section_objects.append(btn_barcode)
         btn_barcode.pack(side=tk.TOP)
         btn_barcode.bind("<Button-1>", show_barcode)
+
+        lbl_journal = tk.Label(
+            frm_me,
+            text="Journal",
+            anchor=tk.W
+        )
+        self.section_objects.append(lbl_journal)
+        lbl_journal.pack(side=tk.TOP, fill=tk.X)
+
+        txt_journal = tk.Text(
+            frm_me,
+            width=50,
+            height=10
+        )
+        self.section_objects.append(txt_journal)
+        txt_journal.pack(side=tk.TOP)
+        txt_journal.insert("1.0", self.data.user.journal)
+
+        btn_save = tk.Button(
+            frm_me,
+            text="Save",
+            width=10
+        )
+        self.section_objects.append(btn_save)
+        btn_save.pack(side=tk.TOP)
+
+        def save_journal(*_):
+            """Save the journal in the background"""
+            btn_save.config(text="Saving...", state=tk.DISABLED)
+            txt_journal.config(state=tk.DISABLED)
+
+            def save():
+                """Save the journal"""
+                journal = txt_journal.get("1.0", tk.END)
+                self.data.user.journal = journal
+                SentralTimetable.set_journal(
+                    journal,
+                    debug=False,
+                    timeout=30,
+                    usr=self.username,
+                    pwd=self.password,
+                    url=self.url
+                )
+                try:  # In case the elements have been destroyed
+                    btn_save.config(text="Save", state=tk.NORMAL)
+                    txt_journal.config(state=tk.NORMAL)
+                    showinfo(message="Journal saved")
+                except tk.TclError:
+                    pass
+
+            save_thread = Thread(target=save)
+            save_thread.start()
+
+        btn_save.bind("<Button-1>", save_journal)
 
     def settings(self, *_):
         """The 'settings' page"""

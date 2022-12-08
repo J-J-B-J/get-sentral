@@ -163,18 +163,20 @@ class Event:
 class User:
     """A class to manage the user details"""
 
-    def __init__(self, name: str, school: str, number: int, barcode: str):
+    def __init__(self, name: str, school: str, number: int, barcode: str,
+                 journal: str):
         self.name = name
         self.school = school
         self.number = number
         self.barcode = barcode
+        self.journal = journal
 
     def __str__(self):
-        return f"{self.name} ({self.school}, {self.number})\n{self.barcode}"
+        return f"{self.name} ({self.school}, {self.number}, {self.journal})\n{self.barcode}"
 
     def __repr__(self):
         return f"User({self.name}, {self.school}, {self.number}, " \
-               f"{self.barcode})"
+               f"{self.barcode}, {self.journal})"
 
 
 class Sentral:
