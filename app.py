@@ -2,6 +2,7 @@
 # Standard library imports
 from calendar import Calendar
 from functools import partial
+from PIL import ImageTk, Image
 from threading import Thread
 from tkinter import ttk
 from tkinter.messagebox import *
@@ -142,6 +143,7 @@ class App:
 
         self.last_reload = datetime.datetime.now().strftime("%H:%M:%S")
 
+        # Create a thread to reload the data
         def sentral(*_):
             """Get the timetable"""
             self.data = SentralTimetable.get_timetable(
@@ -155,11 +157,48 @@ class App:
         sentral_thread = Thread(target=sentral)
         sentral_thread.start()
 
+        # Create the reloading window
+
+        # A list of the image objects for the reloading window
+        images = [
+            ImageTk.PhotoImage(
+                Image.open(f"./img/Loading/Sentral-{x}.png")
+            ) for x in range(125)
+        ]
+        frame_num = 0
+
+        reload_window = tk.Toplevel()
+        reload_window.geometry("100x100")
+        reload_window.resizable(False, False)
+        reload_window.title("↻")
+
+        frm_img = tk.Frame(reload_window, width=600, height=400)
+        frm_img.pack()
+        frm_img.place(anchor='center', relx=0.5, rely=0.5)
+
+        # Create a Label Widget to display the text or Image
+        lbl_img = tk.Label(frm_img, image=images[0])
+        lbl_img.pack()
+
+        def next_frame():
+            """Go to the next frame in the animation"""
+            nonlocal frame_num
+            reload_window.after(15, next_frame)
+            frame_num += 1
+            if frame_num >= len(images):
+                frame_num = 0
+            lbl_img.config(image=images[frame_num])
+            reload_window.update()
+
+        next_frame()
+
+        # Reload the data
         def reload(*_):
             """To be run after the thread is finished."""
             if not sentral_thread.is_alive():
                 self.window.bind("<Command-r>", self.reload)
                 self.btn_reload.config(state=tk.NORMAL)
+                reload_window.destroy()
                 if self.mode == self.settings:
                     return
                 elif self.mode == self.reload:
