@@ -28,6 +28,11 @@ class App:
         self.btn_me = None
         self.btn_settings = None
         self.btn_reload = None
+
+        self.reload_manual = partial(self.reload, True)
+        self.reload_auto = partial(self.reload, False)
+        self.reload_manual.__name__ = "reload_manual"  # Stops AttributeError
+        self.reload_auto.__name__ = "reload_auto"
         
         self.window = tk.Tk()
         self.window.title("Sentral")
@@ -39,7 +44,7 @@ class App:
             True,
             tk.PhotoImage(file='icon.png')
         )
-        self.window.bind("<Command-r>", self.reload)
+        self.window.bind("<Command-r>", self.reload_manual)
 
         self.mode = self.timetable
 
@@ -65,14 +70,14 @@ class App:
         except ValueError:
             self.delay_reload = 5.0
 
-        self.window.after(int(self.delay_reload * 60000), self.reload)
+        self.window.after(int(self.delay_reload * 60000), self.reload_auto)
 
         self.last_reload = "N/A"
 
         if not self.username or not self.password or not self.url:
             self.settings()
         else:
-            self.reload()
+            self.reload(manual=True)
 
     def create_buttons(self):
         """Create the buttons for the top of the app"""
@@ -116,7 +121,7 @@ class App:
             width=3
         )
         self.btn_reload.pack()
-        self.btn_reload.bind("<Button-1>", self.reload)
+        self.btn_reload.bind("<Button-1>", self.reload_manual)
 
     def destroy_section_objects(self):
         """Destroy all the objects in the section_objects list."""
@@ -136,7 +141,7 @@ class App:
         self.mode = mode
         return lbl_title
 
-    def reload(self, *_):
+    def reload(self, manual: bool = False, *_):
         """Reload the data in the background."""
         self.window.unbind("<Command-r>")
         self.btn_reload.config(state=tk.DISABLED)
@@ -157,48 +162,50 @@ class App:
         sentral_thread = Thread(target=sentral)
         sentral_thread.start()
 
-        # Create the reloading window
+        reload_window = None
 
-        # A list of the image objects for the reloading window
-        images = [
-            ImageTk.PhotoImage(
-                Image.open(f"./img/Loading/Sentral-{x}.png")
-            ) for x in range(125)
-        ]
-        frame_num = 0
+        if manual:  # Create the reload window
+            # A list of the image objects for the reloading window
+            images = [
+                ImageTk.PhotoImage(
+                    Image.open(f"./img/Loading/Sentral-{x}.png")
+                ) for x in range(125)
+            ]
+            frame_num = 0
 
-        reload_window = tk.Toplevel()
-        reload_window.geometry("100x100")
-        reload_window.resizable(False, False)
-        reload_window.title("↻")
+            reload_window = tk.Toplevel()
+            reload_window.geometry("100x100")
+            reload_window.resizable(False, False)
+            reload_window.title("↻")
 
-        frm_img = tk.Frame(reload_window, width=600, height=400)
-        frm_img.pack()
-        frm_img.place(anchor='center', relx=0.5, rely=0.5)
+            frm_img = tk.Frame(reload_window, width=600, height=400)
+            frm_img.pack()
+            frm_img.place(anchor='center', relx=0.5, rely=0.5)
 
-        # Create a Label Widget to display the text or Image
-        lbl_img = tk.Label(frm_img, image=images[0])
-        lbl_img.pack()
+            # Create a Label Widget to display the text or Image
+            lbl_img = tk.Label(frm_img, image=images[0])
+            lbl_img.pack()
 
-        def next_frame():
-            """Go to the next frame in the animation"""
-            nonlocal frame_num
-            reload_window.after(15, next_frame)
-            frame_num += 1
-            if frame_num >= len(images):
-                frame_num = 0
-            lbl_img.config(image=images[frame_num])
-            reload_window.update()
+            def next_frame():
+                """Go to the next frame in the animation"""
+                nonlocal frame_num
+                reload_window.after(15, next_frame)
+                frame_num += 1
+                if frame_num >= len(images):
+                    frame_num = 0
+                lbl_img.config(image=images[frame_num])
+                reload_window.update()
 
-        next_frame()
+            next_frame()
 
         # Reload the data
         def reload(*_):
             """To be run after the thread is finished."""
             if not sentral_thread.is_alive():
-                self.window.bind("<Command-r>", self.reload)
+                self.window.bind("<Command-r>", self.reload_manual)
                 self.btn_reload.config(state=tk.NORMAL)
-                reload_window.destroy()
+                if manual:
+                    reload_window.destroy()
                 if self.mode == self.settings:
                     return
                 elif self.mode == self.reload:
@@ -860,7 +867,7 @@ class App:
             dotenv.set_key("App_Credentials.env", "DELAY_RELOAD",
                            str(self.delay_reload))
             if askyesno("Saved", "Save complete. Do you want to reload?"):
-                self.reload()
+                self.reload(manual=True)
 
         btn_save = tk.Button(
             frm_settings,
