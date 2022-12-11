@@ -127,14 +127,30 @@ class DateRange:
                f"{self.end_minute})"
 
 
+class Attachment:
+    """A class for a file linked from Sentral."""
+
+    def __init__(self, name: str, url: str):
+        self.name = name
+        self.url = url
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"Attachment({self.name}, {self.url})"
+
+
 class Notice:
     """A class to manage a notice."""
 
-    def __init__(self, title: str, teacher: str, date: Date, content: str):
+    def __init__(self, title: str, teacher: str, date: Date, content: str,
+                 attachments: list[Attachment]):
         self.title = title
         self.teacher = teacher
         self.date = date
         self.content = content
+        self.attachments = attachments
 
     def __str__(self):
         return f"{self.title} by {self.teacher} on {self.date}"

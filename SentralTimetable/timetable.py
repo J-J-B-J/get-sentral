@@ -62,7 +62,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     if debug:
         print("Scraping Timetable")
     classes = scrape_timetable(driver.page_source)
-    notices = scrape_notices(driver.page_source)
+    notices = scrape_notices(driver.page_source, url)
     user = scrape_user(driver.page_source)
 
     if debug:

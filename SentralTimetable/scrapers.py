@@ -73,7 +73,7 @@ def scrape_timetable(html: str) -> list[Period or EmptyPeriod]:
     return data
 
 
-def scrape_notices(html: str) -> list:
+def scrape_notices(html: str, url: str) -> list:
     """
     Scrape the HTML for the notices
     :param html: The HTML source code
@@ -120,11 +120,22 @@ def scrape_notices(html: str) -> list:
         for tag in notice.find_all('p'):
             notice_content += ' '.join(tag.strings) + '\n'
 
+        base_url = "/".join(url.split('/')[0:3])
+
+        attachment_div = notice.find(class_='dropdown-menu')
+        attachments = []
+        if attachment_div is not None:
+            for attachment in attachment_div.find_all('li'):
+                attachment_name = str(attachment.find('a').string).strip()
+                attachment_url = base_url + str(attachment.find('a')['href'])
+                attachments.append(Attachment(attachment_name, attachment_url))
+
         notice_data = Notice(
             notice_title,
             notice_teacher,
             notice_date,
-            notice_content
+            notice_content,
+            attachments
         )
         data.append(notice_data)
     return data
