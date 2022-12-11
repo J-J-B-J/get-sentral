@@ -12,6 +12,9 @@ import sys
 import tkinter as tk
 import urllib.request
 
+# Third party imports
+import pyperclip
+
 # Local imports
 import SentralTimetable
 
@@ -364,6 +367,19 @@ class App:
                      f"{this_notice.date.minute}"
             )
             lbl_date.pack(side=tk.TOP)
+
+            def copy_link(url):
+                """Copy the url to the clipboard and say so"""
+                pyperclip.copy(url)
+                showinfo(message="Copied.")
+
+            for attachment in this_notice.attachments:
+                btn_attachment = tk.Button(
+                    notice_window,
+                    text=attachment.name,
+                    command=lambda: copy_link(attachment.url)
+                )
+                btn_attachment.pack(side=tk.TOP)
 
             lbl_content = tk.Label(
                 notice_window,
