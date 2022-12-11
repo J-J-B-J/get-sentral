@@ -52,6 +52,25 @@ def __login_to_homepage(usr: str = None, pwd: str = None, url: str = None,
     return driver, debug, usr, pwd, url, timeout
 
 
+def __return_to_homepage(driver, url, debug, timeout):
+    """Return to the homepage"""
+    if debug:
+        print("Navigating to homepage")
+    driver.get(url)
+
+    while True:
+        if driver.current_url.endswith('/portal/dashboard'):
+            return
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
+
+
 def get_timetable(usr: str = None, pwd: str = None, url: str = None,
                   debug: bool = None, timeout: int = None) -> Sentral:
     """Get the timetable for the current week"""
@@ -64,6 +83,12 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     classes = scrape_timetable(driver.page_source)
     notices = scrape_notices(driver.page_source)
     user = scrape_user(driver.page_source)
+
+    if debug:
+        print("Navigating to daily timetable")
+    webdriver_go_to_timetable(driver, timeout)
+    # TODO: Scrape the daily timetable
+    __return_to_homepage(driver, url, debug, timeout)
 
     if debug:
         print("Navigating to calendar")
