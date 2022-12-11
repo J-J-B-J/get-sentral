@@ -60,6 +60,10 @@ def main():
         print('-' * len(notice.title))
         print(f"By {notice.teacher} on {notice.date}")
         print('-' * len(notice.title))
+        if notice.attachments:
+            print("Attachments:")
+            for attachment in notice.attachments:
+                print(f" - \"{attachment.name}\": {attachment.url}")
         print(notice.content + '\n')
 
     print("\nEVENTS\n")
