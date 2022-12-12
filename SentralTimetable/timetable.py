@@ -79,14 +79,14 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         __login_to_homepage(usr, pwd, url, debug, timeout)
 
     if debug:
-        print("Scraping Timetable")
-    classes = scrape_timetable(driver.page_source)
+        print("Scraping Notices")
     notices = scrape_notices(driver.page_source)
     user = scrape_user(driver.page_source)
 
     if debug:
         print("Navigating to daily timetable")
     webdriver_go_to_timetable(driver, timeout)
+    print("Scraping Timetable")
     # TODO: Scrape the daily timetable
     __return_to_homepage(driver, url, debug, timeout)
 
