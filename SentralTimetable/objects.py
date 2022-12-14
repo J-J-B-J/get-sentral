@@ -141,18 +141,21 @@ class Award:
         self.via = via
 
     def __str__(self):
-        if self.for_ != "" and self.via != "":
-            return f"{self.type} on {self.date} for {self.for_} via " \
-                   f"{self.via} ({self.reason}, {self.value} points)"
-        elif self.for_ != "":
-            return f"{self.type} on {self.date} for {self.for_} " \
-                   f"({self.reason}, {self.value} points)"
-        elif self.via != "":
-            return f"{self.type} on {self.date} via {self.via} " \
-                   f"({self.reason}, {self.value} points)"
+        if self.via != "":
+            via = f" via {self.via}"
         else:
-            return f"{self.type} on {self.date} ({self.reason}, {self.value} " \
-                   f"points)"
+            via = ""
+        if self.for_ != "":
+            for_ = f" for {self.for_}"
+        else:
+            for_ = ""
+        if self.teacher != "":
+            teacher = f" from {self.teacher}"
+        else:
+            teacher = ""
+        return f"{self.date} - {self.type}: {self.reason}{for_}{via}{teacher}"\
+                 f" ({self.value} points)"
+
 
     def __repr__(self):
         return f"Award({self.date}, {self.type}, {self.reason}, " \

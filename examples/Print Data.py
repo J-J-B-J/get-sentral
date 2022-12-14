@@ -82,6 +82,10 @@ def main():
             print(event.flag + '\033[0;0m')
         print()
 
+    print("\n\nAWARDS\n")
+    for award in timetable.awards:
+        print(str(award))
+
     print("\n\nME\n")
     print(f"Name: {timetable.user.name}")
     print(f"Number: {timetable.user.number}")
