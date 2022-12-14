@@ -26,6 +26,7 @@ class App:
         self.btn_notices = None
         self.btn_events = None
         self.btn_me = None
+        self.btn_awards = None
         self.btn_settings = None
         self.btn_reload = None
 
@@ -36,7 +37,7 @@ class App:
         
         self.window = tk.Tk()
         self.window.title("Sentral")
-        self.window.geometry("500x500")
+        self.window.geometry("600x600")
         urllib.request.urlretrieve(
             "https://github.com/J-J-B-J/get-sentral/raw/main/docs/img/icon"
             ".png", "icon.png")
@@ -54,11 +55,13 @@ class App:
             [],
             [],
             [],
+            [],
             SentralTimetable.User("", "", 0, "", "")
         )
 
         self.notice_range_start = 0
         self.event_range_start = -1
+        self.award_range_start = 0
 
         # Read the app data file to get the details
         details = dict(dotenv.dotenv_values("App_Credentials.env"))
@@ -110,6 +113,10 @@ class App:
         self.btn_me = create_button(
             "Me",
             self.me
+        )
+        self.btn_awards = create_button(
+            "Awards",
+            self.awards
         )
         self.btn_settings = create_button(
             "Settings",
@@ -713,6 +720,112 @@ class App:
             save_thread.start()
 
         btn_save.bind("<Button-1>", save_journal)
+
+    def awards(self, *_):
+        """The 'awards' page"""
+        self.destroy_section_objects()
+        self.create_title_and_set_mode("Awards", self.awards)
+
+        if not self.data.awards:
+            lbl_no_awards = tk.Label(
+                self.window,
+                text="No awards found. Try harder! ;)"
+            )
+            self.section_objects.append(lbl_no_awards)
+            lbl_no_awards.pack()
+
+        frm_awards = tk.Frame(self.window, width=500, height=450)
+        self.section_objects.append(frm_awards)
+        frm_awards.pack()
+
+        def increase_range(*_):
+            """Increase the range of awards shown"""
+            self.award_range_start += 5
+            self.awards()
+
+        def decrease_range(*_):
+            """Decrease the range of awards shown"""
+            self.award_range_start -= 5
+            self.awards()
+
+        def open_award(this_award: SentralTimetable.Award, *_):
+            """Show the detail view for an award"""
+            award_window = tk.Tk()
+            award_window.title('Award')
+            award_window.geometry('500x150')
+            award_window.focus_set()
+            award_window.bind(
+                "<Escape>",
+                lambda _: award_window.destroy()
+            )
+
+            lbl_title = tk.Label(
+                award_window,
+                text=f"{this_award.date}: {this_award.type}",
+                font=("Arial", 20)
+            )
+            lbl_title.pack(side=tk.TOP)
+
+            lbl_reason = tk.Label(
+                award_window,
+                text=f"Reason: {this_award.reason}"
+            )
+            lbl_reason.pack(side=tk.TOP)
+
+            if this_award.for_:
+                lbl_for = tk.Label(
+                    award_window,
+                    text=f"For: {this_award.for_}"
+                )
+                lbl_for.pack(side=tk.TOP)
+
+            if this_award.via:
+                lbl_via = tk.Label(
+                    award_window,
+                    text=f"Via: {this_award.via}"
+                )
+                lbl_via.pack(side=tk.TOP)
+
+            if this_award.teacher != "":
+                lbl_teacher = tk.Label(
+                    award_window,
+                    text=f"By {this_award.teacher}"
+                )
+                lbl_teacher.pack(side=tk.TOP)
+
+            lbl_value = tk.Label(
+                award_window,
+                text=f"Value: {this_award.value}"
+            )
+            lbl_value.pack(side=tk.TOP)
+
+            award_window.mainloop()
+
+        for award in self.data.awards[
+                     self.award_range_start:self.award_range_start + 5]:
+            frm_award = tk.Frame(frm_awards, width=500, height=50)
+            self.section_objects.append(frm_award)
+            frm_award.pack()
+
+            lbl_award_title = tk.Label(
+                frm_award,
+                text=f"{award.date}: {award.type}",
+                width=50,
+                height=2,
+                wraplength=390,
+                borderwidth=3,
+                relief="raised"
+            )
+            self.section_objects.append(lbl_award_title)
+            lbl_award_title.pack(side=tk.LEFT)
+            lbl_award_title.bind(
+                "<Button-1>",
+                partial(open_award, award)
+            )
+
+        self.create_increase_decrease(frm_awards, self.award_range_start, 5,
+                                      self.data.awards, increase_range,
+                                      decrease_range)
 
     def settings(self, *_):
         """The 'settings' page"""
