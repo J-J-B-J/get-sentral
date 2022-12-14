@@ -127,6 +127,36 @@ class DateRange:
                f"{self.end_minute})"
 
 
+class Award:
+    """A class to manage an award"""
+
+    def __init__(self, date: Date, type_: str, reason: str, teacher: str,
+                 for_: str = "", via: str = ""):
+        self.date = date
+        self.type = type_
+        self.reason = reason
+        self.teacher = teacher
+        self.for_ = for_
+        self.via = via
+
+    def __str__(self):
+        if self.for_ != "" and self.via != "":
+            return f"{self.type} on {self.date} for {self.for_} via " \
+                   f"{self.via} ({self.reason})"
+        elif self.for_ != "":
+            return f"{self.type} on {self.date} for {self.for_} " \
+                   f"({self.reason})"
+        elif self.via != "":
+            return f"{self.type} on {self.date} via {self.via} " \
+                   f"({self.reason})"
+        else:
+            return f"{self.type} on {self.date} ({self.reason})"
+
+    def __repr__(self):
+        return f"Award({self.date}, {self.type}, {self.reason}, " \
+               f"{self.teacher}, {self.for_}, {self.via})"
+
+
 class Notice:
     """A class to manage a notice."""
 
