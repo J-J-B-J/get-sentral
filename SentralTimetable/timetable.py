@@ -97,8 +97,9 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     __return_to_homepage(driver, url, debug, timeout)
     if debug:
         print("Navigating to and scraping awards")
+    awards = []
     for _ in webdriver_get_awards_pages(driver, timeout):
-        print(driver.current_url)
+        awards.extend(scrape_awards(driver.page_source))
 
     return Sentral(
         classes=classes,
