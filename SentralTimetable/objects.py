@@ -131,26 +131,28 @@ class Award:
     """A class to manage an award"""
 
     def __init__(self, date: Date, type_: str, reason: str, teacher: str,
-                 for_: str = "", via: str = ""):
+                 value: int, for_: str = "", via: str = ""):
         self.date = date
         self.type = type_
         self.reason = reason
         self.teacher = teacher
+        self.value = value
         self.for_ = for_
         self.via = via
 
     def __str__(self):
         if self.for_ != "" and self.via != "":
             return f"{self.type} on {self.date} for {self.for_} via " \
-                   f"{self.via} ({self.reason})"
+                   f"{self.via} ({self.reason}, {self.value} points)"
         elif self.for_ != "":
             return f"{self.type} on {self.date} for {self.for_} " \
-                   f"({self.reason})"
+                   f"({self.reason}, {self.value} points)"
         elif self.via != "":
             return f"{self.type} on {self.date} via {self.via} " \
-                   f"({self.reason})"
+                   f"({self.reason}, {self.value} points)"
         else:
-            return f"{self.type} on {self.date} ({self.reason})"
+            return f"{self.type} on {self.date} ({self.reason}, {self.value} " \
+                   f"points)"
 
     def __repr__(self):
         return f"Award({self.date}, {self.type}, {self.reason}, " \
