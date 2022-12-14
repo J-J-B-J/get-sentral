@@ -337,12 +337,12 @@ class App:
 
         def increase_range(*_):
             """Increase the range of notices shown"""
-            self.notice_range_start += 5
+            self.notice_range_start += 11
             self.notices()
 
         def decrease_range(*_):
             """Decrease the range of notices shown"""
-            self.notice_range_start -= 5
+            self.notice_range_start -= 11
             self.notices()
 
         def open_notice(this_notice: SentralTimetable.Notice, *_):
@@ -382,7 +382,7 @@ class App:
             notice_window.mainloop()
 
         for notice in self.data.notices[
-                      self.notice_range_start:self.notice_range_start + 5]:
+                      self.notice_range_start:self.notice_range_start + 11]:
             frm_notice = tk.Frame(frm_notices, width=500, height=50)
             self.section_objects.append(frm_notice)
             frm_notice.pack()
@@ -403,7 +403,7 @@ class App:
                 partial(open_notice, notice)
             )
         
-        self.create_increase_decrease(frm_notices, self.notice_range_start, 5,
+        self.create_increase_decrease(frm_notices, self.notice_range_start, 11,
                                       self.data.notices, increase_range,
                                       decrease_range)
 
@@ -740,12 +740,12 @@ class App:
 
         def increase_range(*_):
             """Increase the range of awards shown"""
-            self.award_range_start += 5
+            self.award_range_start += 11
             self.awards()
 
         def decrease_range(*_):
             """Decrease the range of awards shown"""
-            self.award_range_start -= 5
+            self.award_range_start -= 11
             self.awards()
 
         def open_award(this_award: SentralTimetable.Award, *_):
@@ -802,7 +802,7 @@ class App:
             award_window.mainloop()
 
         for award in self.data.awards[
-                     self.award_range_start:self.award_range_start + 5]:
+                     self.award_range_start:self.award_range_start + 11]:
             frm_award = tk.Frame(frm_awards, width=500, height=50)
             self.section_objects.append(frm_award)
             frm_award.pack()
@@ -823,7 +823,7 @@ class App:
                 partial(open_award, award)
             )
 
-        self.create_increase_decrease(frm_awards, self.award_range_start, 5,
+        self.create_increase_decrease(frm_awards, self.award_range_start, 11,
                                       self.data.awards, increase_range,
                                       decrease_range)
 
