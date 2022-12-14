@@ -105,6 +105,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         classes=classes,
         notices=notices,
         events=events,
+        awards=awards,
         user=user
     )
 
