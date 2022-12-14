@@ -101,7 +101,6 @@ def webdriver_get_awards_pages(driver: webdriver.Chrome, timeout: int = 5) -> \
                 "value to the timeout arguement"
             )
     # Loop through the pages
-    old_url = driver.current_url
 
     while True:
         yield None
