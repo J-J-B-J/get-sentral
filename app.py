@@ -74,8 +74,6 @@ class App:
         )
         self.window.bind("<Command-r>", self.reload_manual)
 
-        self.mode = self.timetable
-
         self.notice_range_start = 0
         self.event_range_start = -1
 
@@ -91,6 +89,7 @@ class App:
         self.tabs = tuple(
             details.get("TABS", "Timetable,Notices,Events,Me").split(",")
         )
+        self.start_tab = details.get("START_TAB", "Timetable")
 
         self.create_buttons()
         self.section_objects = []
@@ -100,6 +99,16 @@ class App:
             [],
             SentralTimetable.User("", "", 0, "", "")
         )
+        if self.start_tab == "Timetable":
+            self.mode = self.timetable
+        elif self.start_tab == "Notices":
+            self.mode = self.notices
+        elif self.start_tab == "Events":
+            self.mode = self.events
+        elif self.start_tab == "Me":
+            self.mode = self.me
+        else:
+            self.mode = self.timetable
 
         self.window.after(int(self.delay_reload * 60000), self.reload_auto)
 
@@ -174,7 +183,10 @@ class App:
         return lbl_title
 
     def reload(self, manual: bool = False, *_):
-        """Reload the data in the background."""
+        """
+        Reload the data in the background.
+        :param manual: Whether the reload was activated by the user.
+        """
         self.window.unbind("<Command-r>")
         self.btn_reload.config(state=tk.DISABLED)
 
@@ -915,6 +927,21 @@ class App:
         for tab in self.tabs:
             ddlb_tabs.insert(tk.END, tab)
 
+        frm_start_tab = create_setting(
+            "Start tab",
+            "The tab to open when the app is started"
+        )
+        var_start_tab = tk.StringVar()
+        var_start_tab.set(self.start_tab)
+        mnu_start_tab = tk.OptionMenu(
+            frm_start_tab,
+            var_start_tab,
+            "Timetable", "Notices", "Events", "Me"
+        )
+        self.section_objects.append(mnu_start_tab)
+        mnu_start_tab.pack(side=tk.RIGHT)
+        mnu_start_tab.config(width=27)
+
         def save_settings(*_):
             """Save the settings"""
 
@@ -944,6 +971,9 @@ class App:
             dotenv.set_key("App_Credentials.env", "DELAY_RELOAD",
                            str(self.delay_reload))
             dotenv.set_key("App_Credentials.env", "TABS", ','.join(self.tabs))
+            dotenv.set_key("App_Credentials.env", "START_TAB",
+                           var_start_tab.get())
+
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload(manual=True)
             if old_tabs != self.tabs:
@@ -963,7 +993,7 @@ class App:
 
     def run(self):
         """Run the app."""
-        self.timetable()
+        self.mode()
         self.window.mainloop()
 
 
