@@ -1,4 +1,6 @@
 <h1>get-sentral</h1>
+<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 <h2>A simple Python function to summon your timetable from Sentral.</h2>
 <img src="https://github.com/J-J-B-J/get-sentral/raw/main/docs/img/SentralHome.png" alt="Sample Sentral Dashboard" width="100%">
 <p>
