@@ -16,6 +16,34 @@ import urllib.request
 import SentralTimetable
 
 
+class DragDropListbox(tk.Listbox):
+    """ A Tkinter listbox with drag'n'drop reordering of entries. """
+    def __init__(self, master, **kw):
+        kw['selectmode'] = tk.SINGLE
+        tk.Listbox.__init__(self, master, kw)
+        self.bind('<Button-1>', self.setCurrent)
+        self.bind('<B1-Motion>', self.shiftSelection)
+        self.curIndex = None
+
+    def setCurrent(self, event):
+        """Set the current selection"""
+        self.curIndex = self.nearest(event.y)
+
+    def shiftSelection(self, event):
+        """Move the selection"""
+        a = self.nearest(event.y)
+        if a < self.curIndex:
+            x = self.get(a)
+            self.delete(a)
+            self.insert(a + 1, x)
+            self.curIndex = a
+        elif a > self.curIndex:
+            x = self.get(a)
+            self.delete(a)
+            self.insert(a - 1, x)
+            self.curIndex = a
+
+
 class App:
     """Overall class to manage the app."""
 
@@ -48,15 +76,6 @@ class App:
 
         self.mode = self.timetable
 
-        self.create_buttons()
-        self.section_objects = []
-        self.data = SentralTimetable.Sentral(
-            [],
-            [],
-            [],
-            SentralTimetable.User("", "", 0, "", "")
-        )
-
         self.notice_range_start = 0
         self.event_range_start = -1
 
@@ -69,6 +88,18 @@ class App:
             self.delay_reload = float(details.get("DELAY_RELOAD", 5.0))
         except ValueError:
             self.delay_reload = 5.0
+        self.tabs = tuple(
+            details.get("TABS", "Timetable,Notices,Events,Me").split(",")
+        )
+
+        self.create_buttons()
+        self.section_objects = []
+        self.data = SentralTimetable.Sentral(
+            [],
+            [],
+            [],
+            SentralTimetable.User("", "", 0, "", "")
+        )
 
         self.window.after(int(self.delay_reload * 60000), self.reload_auto)
 
@@ -95,22 +126,23 @@ class App:
             btn.bind("<Button-1>", bind_fn)
             return btn
 
-        self.btn_timetable = create_button(
-            "Timetable",
-            self.timetable
-        )
-        self.btn_notices = create_button(
-            "Notices",
-            self.notices
-        )
-        self.btn_events = create_button(
-            "Events",
-            self.events
-        )
-        self.btn_me = create_button(
-            "Me",
-            self.me
-        )
+        for tab in self.tabs:
+            if tab == "Timetable":
+                self.btn_timetable = create_button(
+                    "Timetable", self.timetable
+                )
+            elif tab == "Notices":
+                self.btn_notices = create_button(
+                    "Notices", self.notices
+                )
+            elif tab == "Events":
+                self.btn_events = create_button(
+                    "Events", self.events
+                )
+            elif tab == "Me":
+                self.btn_me = create_button(
+                    "Me", self.me
+                )
         self.btn_settings = create_button(
             "Settings",
             self.settings
@@ -723,8 +755,8 @@ class App:
         self.section_objects.append(frm_settings)
         frm_settings.pack()
 
-        def create_setting(name: str, initial_text: str, help_text: str):
-            """Create a setting"""
+        def create_setting(name: str, help_text: str):
+            """Create a setting label"""
             def show_help_window(title: str, text: str, *_):
                 """Show a window with help text"""
                 window = tk.Tk()
@@ -771,7 +803,16 @@ class App:
                 "<Button-1>",
                 partial(show_help_window, name, help_text)
             )
+            return frm_setting
 
+        def create_setting_entry(name: str, initial_text: str, frm_setting):
+            """
+            Create a setting's entry widget
+            :param frm_setting: The frame for the setting
+            :param name: The name of the setting
+            :param initial_text: The initial text to put in the entry
+            :return: The entry
+            """
             if name == "Password":
                 ent_setting = tk.Entry(
                     frm_setting,
@@ -811,34 +852,68 @@ class App:
 
         # Create the User details
         create_label("Login details")
-        ent_username = create_setting(
+        frm_username = create_setting(
             "Username",
-            self.username,
             "The username you use to login to Sentral"
         )
-        ent_password = create_setting(
+        ent_username = create_setting_entry(
+            "Username",
+            self.username,
+            frm_username
+        )
+        frm_password = create_setting(
             "Password",
-            self.password,
             "The password you use to login to Sentral"
         )
-        ent_url = create_setting(
+        ent_password = create_setting_entry(
+            "Password",
+            self.password,
+            frm_password
+        )
+        frm_url = create_setting(
             "URL",
-            self.url,
             "The URL of your school's Sentral dashboard. Must start with "
             "https:// and end with /portal/dashboard.\nE.g. "
             "https://examplehs.sentral.com.au/portal/dashboard"
         )
+        ent_url = create_setting_entry(
+            "URL",
+            self.url,
+            frm_url
+        )
 
         # Create reload settings
         create_label("Reload")
-        ent_delay_reload = create_setting(
+        frm_delay_reload = create_setting(
             "Reload wait",
-            str(self.delay_reload),
             "The number of minutes to wait before reloading the page. "
             "Must be a positive number."
         )
+        ent_delay_reload = create_setting_entry(
+            "Reload wait",
+            str(self.delay_reload),
+            frm_delay_reload
+        )
 
         create_text(f"Last reloaded at {self.last_reload}")
+
+        # Create the tab settings
+        create_label("Tabs")
+        frm_tab_order = create_setting(
+            "Tab order",
+            "The order of the tabs at the top of the app. "
+            "Drag and drop to move."
+        )
+        ddlb_tabs = DragDropListbox(
+            frm_tab_order,
+            width=30,
+            height=4  # The number of tabs, minus one
+        )
+        self.section_objects.append(ddlb_tabs)
+        ddlb_tabs.pack(side=tk.RIGHT)
+
+        for tab in self.tabs:
+            ddlb_tabs.insert(tk.END, tab)
 
         def save_settings(*_):
             """Save the settings"""
@@ -860,14 +935,22 @@ class App:
             else:
                 showerror("Error", "Reload wait must be a positive number")
                 return
+            old_tabs = self.tabs
+            self.tabs = ddlb_tabs.get(0, tk.END)
             # Save the data to the app data file
             dotenv.set_key("App_Credentials.env", "USERNAME", self.username)
             dotenv.set_key("App_Credentials.env", "PASSWORD", self.password)
             dotenv.set_key("App_Credentials.env", "URL", self.url)
             dotenv.set_key("App_Credentials.env", "DELAY_RELOAD",
                            str(self.delay_reload))
+            dotenv.set_key("App_Credentials.env", "TABS", ','.join(self.tabs))
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload(manual=True)
+            if old_tabs != self.tabs:
+                self.destroy_section_objects()
+                self.frm_button.destroy()
+                self.create_buttons()
+                self.settings()
 
         btn_save = tk.Button(
             frm_settings,
