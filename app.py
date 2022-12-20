@@ -261,54 +261,112 @@ class App:
         self.destroy_section_objects()
         self.create_title_and_set_mode("Timetable", self.timetable)
 
-        if not self.data.classes:
-            lbl_no_notices = tk.Label(
-                self.window,
-                text="No classes found."
-            )
-            self.section_objects.append(lbl_no_notices)
-            lbl_no_notices.pack()
+        day_number = 0
 
-        frm_timetable = tk.Frame(self.window, width=500, height=450)
-        self.section_objects.append(frm_timetable)
-        frm_timetable.pack()
+        def create_periods():
+            """Create the periods for the current day."""
+            nonlocal periods
+            nonlocal day_number
+            self.destroy_section_objects()
 
-        periods = []
-        for period in self.data.classes:
-            frm_period = tk.Frame(frm_timetable, width=500, height=50)
-            self.section_objects.append(frm_period)
-            frm_period.pack()
-
-            lbl_period_number = tk.Label(
-                frm_period,
-                text=period.period,
-                width=5,
-                height=2
-            )
-            self.section_objects.append(lbl_period_number)
-            lbl_period_number.pack(side=tk.LEFT)
-            if type(period) == SentralTimetable.Period:
-                lbl_period_name = tk.Label(
-                    frm_period,
-                    text=f"{period.subject} in {period.room} with "
-                         f"{period.teacher}",
-                    background=period.colour.hex,
-                    width=40,
-                    height=2,
-                    wraplength=390,
-                    borderwidth=3,
-                    relief="raised"
+            if not self.data.days:
+                lbl_no_notices = tk.Label(
+                    self.window,
+                    text="No classes found."
                 )
-            else:
-                lbl_period_name = tk.Label(
+                self.section_objects.append(lbl_no_notices)
+                lbl_no_notices.pack()
+                return
+
+            def increase_range(*_):
+                """Increase the range of the timetable"""
+                nonlocal periods
+                nonlocal day_number
+                day_number += 1
+                if day_number >= len(self.data.days):
+                    day_number = len(self.data.days) - 1
+                for period_ in periods:
+                    period_.destroy()
+                periods = []
+                create_periods()
+
+            def decrease_range(*_):
+                """Decrease the range of the timetable"""
+                nonlocal periods
+                nonlocal day_number
+                day_number -= 1
+                if day_number < 0:
+                    day_number = 0
+                for period_ in periods:
+                    period_.destroy()
+                periods = []
+                create_periods()
+
+            frm_timetable = tk.Frame(self.window, width=500, height=450)
+            self.section_objects.append(frm_timetable)
+            frm_timetable.pack()
+
+            DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday",
+                            "Friday", "Saturday", "Sunday"]
+            MONTHS = ["", "January", "February", "March", "April", "May",
+                      "June", "July", "August", "September", "October",
+                      "November", "December"]
+            date = self.data.days[day_number].date
+            weekday = DAYS_OF_WEEK[
+                datetime.date(date.yr, date.mth, date.day).weekday()
+            ]
+
+            lbl_day = tk.Label(
+                frm_timetable,
+                text=f"{weekday} {date.day} {MONTHS[date.mth]}"
+            )
+            self.section_objects.append(lbl_day)
+            lbl_day.pack()
+
+            for period in self.data.days[day_number].classes:
+                frm_period = tk.Frame(frm_timetable, width=500, height=50)
+                self.section_objects.append(frm_period)
+                frm_period.pack()
+
+                lbl_period_number = tk.Label(
                     frm_period,
-                    width=40,
+                    text=period.period,
+                    width=5,
                     height=2
                 )
-            self.section_objects.append(lbl_period_name)
-            lbl_period_name.pack(side=tk.LEFT)
+                self.section_objects.append(lbl_period_number)
+                lbl_period_number.pack(side=tk.LEFT)
+                if type(period) == SentralTimetable.Period:
+                    lbl_period_name = tk.Label(
+                        frm_period,
+                        text=f"{period.subject} in {period.room} with "
+                             f"{period.teacher}",
+                        background=period.colour.hex,
+                        width=40,
+                        height=2,
+                        wraplength=390,
+                        borderwidth=3,
+                        relief="raised"
+                    )
+                else:
+                    lbl_period_name = tk.Label(
+                        frm_period,
+                        width=40,
+                        height=2
+                    )
+                self.section_objects.append(lbl_period_name)
+                lbl_period_name.pack(side=tk.LEFT)
 
-            periods.append(frm_period)
+                periods.append(frm_period)
+
+            self.create_increase_decrease(
+                frm_timetable, day_number, 1, self.data.days, increase_range,
+                decrease_range
+            )
+
+        periods = []
+        create_periods()
+
 
     def notices(self, *_):
         """The 'notices' page"""
