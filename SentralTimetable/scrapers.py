@@ -76,6 +76,7 @@ def scrape_timetable(html: str) -> list[Period or EmptyPeriod]:
 def scrape_notices(html: str, url: str) -> list:
     """
     Scrape the HTML for the notices
+    :param url: The URL of the page
     :param html: The HTML source code
     :return: Notices
     """
@@ -141,22 +142,23 @@ def scrape_notices(html: str, url: str) -> list:
     return data
 
 
-def scrape_user(html: str) -> User:
+def scrape_user(html_home: str, html_reporting: str) -> User:
     """
     Scrape the user data
-    :param html: The HTML source code
+    :param html_home: The HTML source code for the Sentral home page
+    :param html_reporting: The HTML source code for the Sentral reporting page
     :return: The user data
     """
-    soup = BeautifulSoup(html, 'html.parser')
+    soup_home = BeautifulSoup(html_home, 'html.parser')
     try:
-        school_div = soup.find('h1')
+        school_div = soup_home.find('h1')
         school = str(school_div.text)
         subtext = str(school_div.find('span').text)
         school = school.replace(subtext, '').strip()
     except AttributeError:
         school = "Unknown"
 
-    student_div = soup.find(class_='student-login')
+    student_div = soup_home.find(class_='student-login')
     try:
         name = str(student_div.find('span').text.title())
     except AttributeError:
@@ -170,7 +172,7 @@ def scrape_user(html: str) -> User:
     barcode = generate_barcode(number)
 
     try:
-        journal_form = soup.find_all(class_='span3')[1].find('form')
+        journal_form = soup_home.find_all(class_='span3')[1].find('form')
         journal_text_box = journal_form.find(class_='editable')
     except AttributeError:
         journal = "Today is a weekend/holiday. You cannot access your journal."
@@ -187,7 +189,41 @@ def scrape_user(html: str) -> User:
                 journal += ' '.join(tag.strings) + '\n'
             journal = journal.rstrip()  # Remove the trailing newline
 
-    return User(name, school, number, barcode, journal)
+    soup_reporting = BeautifulSoup(html_reporting, 'html.parser')
+
+    reports = []
+    for report in soup_reporting.find_all('tr')[1:]:  # The rows excluding the
+        # header
+        report_name = str(report.find('td').text)
+        report_url = str(report.find('a')['href'])
+
+        date = str(report.find_all('td')[1].text)
+        try:
+            day = int(date.split('/')[0])
+        except ValueError:
+            day = 1
+        try:
+            month = int(date.split('/')[1])
+        except ValueError:
+            month = 1
+        try:
+            year = int(date.split('/')[2].split(' ')[0])
+        except ValueError:
+            year = 0
+        try:
+            hour = int(date.split(' ')[1].split(':')[0])
+        except ValueError:
+            hour = 0
+        try:
+            minute = int(date.split(' ')[1].split(':')[1])
+        except ValueError:
+            minute = 0
+
+        report_date = Date(year, month, day, hour, minute)
+
+        reports.append(Report(report_name, report_url, report_date))
+
+    return User(name, school, number, barcode, journal, reports)
 
 
 def scrape_calendar(html: str) -> list:

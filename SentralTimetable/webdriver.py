@@ -89,6 +89,27 @@ def webdriver_go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> \
             )
 
 
+def webdriver_go_to_reporting(driver: webdriver.Chrome, timeout: int = 5) -> \
+        None:
+    """Get the pages of the awards section of Sentral."""
+    # Open the reporting section
+    url = driver.find_element(value='portal-links')\
+        .find_element(By.CLASS_NAME, 'colour-reporting').get_attribute('href')
+    driver.get(url)
+    start_time = time.time()
+    while True:
+        if '/reports/' in driver.current_url:
+            break
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
+
+
 def webdriver_save_journal(journal: str, driver: webdriver.Chrome, usr: str,
                            pwd: str, url: str, timeout: int = 5):
     """Save the text journal to the journal section of Sentral."""
