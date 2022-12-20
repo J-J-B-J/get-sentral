@@ -102,7 +102,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     classes = scrape_timetable(html_homepage)
     notices = scrape_notices(html_homepage, url)
     events = scrape_calendar(html_calendar)
-    user = scrape_user(html_homepage, html_reporting)
+    user = scrape_user(html_homepage, html_reporting, url)
 
     return Sentral(
         classes=classes,

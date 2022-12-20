@@ -142,11 +142,12 @@ def scrape_notices(html: str, url: str) -> list:
     return data
 
 
-def scrape_user(html_home: str, html_reporting: str) -> User:
+def scrape_user(html_home: str, html_reporting: str, url: str) -> User:
     """
     Scrape the user data
     :param html_home: The HTML source code for the Sentral home page
     :param html_reporting: The HTML source code for the Sentral reporting page
+    :param url: The URL of the home page
     :return: The user data
     """
     soup_home = BeautifulSoup(html_home, 'html.parser')
@@ -192,10 +193,10 @@ def scrape_user(html_home: str, html_reporting: str) -> User:
     soup_reporting = BeautifulSoup(html_reporting, 'html.parser')
 
     reports = []
-    for report in soup_reporting.find_all('tr')[1:]:  # The rows excluding the
-        # header
+    for report in reversed(soup_reporting.find_all('tr')[1:]):  # The rows
+        # excluding the header, in reverse order
         report_name = str(report.find('td').text)
-        report_url = str(report.find('a')['href'])
+        report_url = '/'.join(url.split('/')[:3])+str(report.find('a')['href'])
 
         date = str(report.find_all('td')[1].text)
         try:

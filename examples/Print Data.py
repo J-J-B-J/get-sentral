@@ -93,6 +93,9 @@ def main():
     print(f"\nBarcode:\n\n{timetable.user.barcode}")
     print(f"\nJournal:\n{timetable.user.journal}")
 
+    reports = '\n'.join([str(report) for report in timetable.user.reports])
+    print(f"\nReports:\n{reports}")
+
 
 if __name__ == "__main__":
     main()
