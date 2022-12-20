@@ -210,9 +210,9 @@ def scrape_user(html: str) -> User:
         journal_form = soup.find_all(class_='span3')[1].find('form')
         journal_text_box = journal_form.find(class_='editable')
     except AttributeError:
-        journal = "Today is a weekend/holiday. You cannot access your journal."
+        journal = "ERR_JOURNAL_UNAVAILABLE"
     except IndexError:
-        journal = "Today is a weekend/holiday. You cannot access your journal."
+        journal = "ERR_JOURNAL_UNAVAILABLE"
     else:
         if journal_text_box is None:
             journal = ""
