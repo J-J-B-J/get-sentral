@@ -24,6 +24,10 @@ MONTHS_SHORT = [
     "Sep", "Oct", "Nov", "Dec"
 ]
 
+class JournalUnavailableError(Exception):
+    """The journal for today is not available"""
+    pass
+
 
 def scrape_timetable(html: str) -> list[SchoolDay]:
     """
@@ -221,9 +225,9 @@ def scrape_user(html: str) -> User:
         journal_form = soup.find_all(class_='span3')[1].find('form')
         journal_text_box = journal_form.find(class_='editable')
     except AttributeError:
-        journal = "Today is a weekend/holiday. You cannot access your journal."
+        journal = JournalUnavailableError
     except IndexError:
-        journal = "Today is a weekend/holiday. You cannot access your journal."
+        journal = JournalUnavailableError
     else:
         if journal_text_box is None:
             journal = ""
