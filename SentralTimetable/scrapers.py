@@ -25,7 +25,7 @@ MONTHS_SHORT = [
 ]
 
 
-def scrape_timetable(html: str) -> list[Period or EmptyPeriod]:
+def scrape_timetable(html: str) -> list[SchoolDay]:
     """
     Scrape the HTML for the timetable
     :param html: The HTML source code
@@ -34,42 +34,90 @@ def scrape_timetable(html: str) -> list[Period or EmptyPeriod]:
     # Fetch the page and create a BeautifulSoup object
     soup = BeautifulSoup(html, 'html.parser')
     data = []
-    try:
-        timetable_periods = soup.find(class_="timetable table").find_all('tr')
-    except AttributeError:
+
+    # Find the table containing the timetable and split it by weeks
+    timetable = soup.find(class_='timetable table')
+    weeks = [
+        BeautifulSoup(x, 'html.parser')  # A BeautifulSoup object for each week
+        for x in str(timetable).split('<!-- Spacers -->')
+    ][:-1]  # Remove the last item, which is spacers at the end of the table
+
+    if not weeks:
         return data
-    for period in timetable_periods:
-        class_number = str(period.find('th').string)
-        if 'inactive' in period.find('td')['class']:
-            class_ = EmptyPeriod(class_number)
-        else:
+
+    # Find the number of days in a week
+    date_cells = weeks[0].find_all('th', class_='timetable-date')
+    days_in_week = int(len(date_cells) / 2)  # Divide by two because the day of
+    # the week, e.g. "Monday", and the date, e.g. "1/1/2022" cells both have
+    # the class "timetable-date" :(
+
+    # Create the objects
+    for week in weeks:
+        days = {}
+
+        # Get the dates
+        date_cells = week.find_all('th', class_='timetable-date')\
+            [days_in_week:]
+        for date_cell in date_cells:  # Date format is "DD/MM/YYYY"
+            date = date_cell.text.split("/")
             try:
-                class_name = str(period.find_all('strong')[0].string)
-            except IndexError:
-                class_name = "Unknown"
+                day = int(date[0])
+            except ValueError:
+                day = 1
             try:
-                if 'Room' in period.text:
-                    class_room = str(period.find_all('strong')[1].string)
+                month = int(date[1])
+            except ValueError:
+                month = 1
+            try:
+                year = int(date[2])
+            except ValueError:
+                year = 0
+            days[Date(year, month, day)] = []
+
+        # Get the periods
+        rows = BeautifulSoup(
+            str(week).split("<!-- Periods")[1],
+            'html.parser'
+        ).find_all('tr')  # Ignore the header rows
+        for row in rows:
+            row_name = row.find('th').string.strip()
+            row_periods = row.find_all('td', class_='timetable-dayperiod')
+            for i, period in enumerate(row_periods):
+                if 'class="inactive' in str(period):
+                    class_ = EmptyPeriod(row_name)
                 else:
-                    class_room = "Unknown"
-            except IndexError:
-                class_room = "Unknown"
-            try:
-                if 'with' in period.text:
-                    class_teacher = str(period.find_all('strong')[-1].string)
-                else:
-                    class_teacher = "Unknown"
-            except IndexError:
-                class_teacher = "Unknown"
-            colour = str(period.find('div').attrs['style'])[-8:-1]
-            class_ = Period(
-                class_number,
-                class_name,
-                class_room,
-                class_teacher,
-                Colour(colour)
-            )
-        data.append(class_)
+                    try:
+                        class_name = str(period.find_all('strong')[0].string)
+                    except IndexError:
+                        class_name = "Unknown"
+                    try:
+                        if 'Room' in period.text:
+                            class_room = str(period.find_all('strong')[1].string)
+                        else:
+                            class_room = "Unknown"
+                    except IndexError:
+                        class_room = "Unknown"
+                    try:
+                        if 'with' in period.text:
+                            class_teacher = str(period.find_all('strong')[-1].string)
+                        else:
+                            class_teacher = "Unknown"
+                    except IndexError:
+                        class_teacher = "Unknown"
+                    colour = str(period.find('div').attrs['style'])[-8:-1]
+                    class_ = Period(
+                        row_name,
+                        class_name,
+                        class_room,
+                        class_teacher,
+                        Colour(colour)
+                    )
+                days[list(days.keys())[i]].append(class_)
+
+        # Convert the dictionary to SchoolDay objects
+        for date, periods in days.items():
+            data.append(SchoolDay(periods, date))
+
     return data
 
 

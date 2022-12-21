@@ -40,19 +40,25 @@ def main():
     """The main function"""
     timetable = get_timetable()
 
+    MONTHS = [
+        "",
+        "Janurary", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"
+    ]
+
     print("\n\nCLASSES\n")
-    for class_ in timetable.classes:
-        if type(class_) == objects.Period:
-            class_: objects.Period
-            print(f'{class_.period}: ', end='')
-            __print_colour(
-                f"{class_.subject} in {class_.room}"
-                f" with {class_.teacher}",
-                class_.colour.hex
-            )
-        elif type(class_) == objects.EmptyPeriod:
-            class_: objects.EmptyPeriod
-            print(f"{class_.period}: Empty")
+    for day in timetable.days:
+        print(f"{day.date.dy} {MONTHS[day.date.mth]} {day.date.yr}")
+        for period in day.classes:
+            if type(period) == objects.Period:
+                __print_colour(
+                    f"Period {period.period}: {period.subject} in {period.room} "
+                      f"with {period.teacher}",
+                    period.colour.hex
+                )
+            else:
+                print(f"Period {period.period}")
+        print()
 
     print("\n\nNOTICES\n")
     for notice in timetable.notices:

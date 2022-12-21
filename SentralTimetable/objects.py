@@ -1,4 +1,5 @@
 """Classes to manage the objects in the timetable."""
+import datetime
 
 
 # Yes I know it is the Australian spelling. Deal with it.
@@ -141,6 +142,20 @@ class Attachment:
         return f"Attachment({self.name}, {self.url})"
 
 
+class SchoolDay:
+    """A class for a school day."""
+
+    def __init__(self, classes: list[Period or EmptyPeriod], date: Date):
+        self.classes = classes
+        self.date = date
+
+    def __str__(self):
+        return f"School Day on {self.date}: {self.classes}"
+
+    def __repr__(self):
+        return f"SchoolDay({self.date}, {self.classes})"
+
+
 class Notice:
     """A class to manage a notice."""
 
@@ -198,17 +213,17 @@ class User:
 class Sentral:
     """One class to rule them all... or at least contain the others"""
 
-    def __init__(self, classes: list[Period or EmptyPeriod],
-                 notices: list[Notice], events: list[Event], user: User):
-        self.classes = classes
+    def __init__(self, days: list[SchoolDay], notices: list[Notice],
+                 events: list[Event], user: User):
+        self.days = days
         self.notices = notices
         self.events = events
         self.user = user
 
     def __str__(self):
-        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+        return f"Sentral({self.days}, {self.notices}, {self.events}, " \
                f"{self.user})"
 
     def __repr__(self):
-        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+        return f"Sentral({self.days}, {self.notices}, {self.events}, " \
                f"{self.user})"
