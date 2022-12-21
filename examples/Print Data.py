@@ -47,7 +47,7 @@ def main():
     ]
 
     print("\n\nCLASSES\n")
-    for day in timetable.days:
+    for day in timetable.classes:
         print(f"{day.date.dy} {MONTHS[day.date.mth]} {day.date.yr}")
         for period in day.classes:
             if type(period) == objects.Period:
