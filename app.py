@@ -750,6 +750,14 @@ class App:
         self.section_objects.append(btn_save)
         btn_save.pack(side=tk.TOP)
 
+        if self.data.user.journal == SentralTimetable.JournalUnavailableError:
+            txt_journal.delete("1.0", "end")
+            txt_journal.insert("1.0", "Today is a weekend/holiday. You cannot "
+                                      "access your journal.")
+
+            btn_save.config(state=tk.DISABLED)
+            return txt_journal.config(state=tk.DISABLED)
+
         def save_journal(*_):
             """Save the journal in the background"""
             btn_save.config(text="Saving...", state=tk.DISABLED)

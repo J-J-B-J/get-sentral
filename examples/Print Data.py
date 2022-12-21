@@ -1,4 +1,5 @@
 """Print out your details from Sentral"""
+import SentralTimetable
 from SentralTimetable import get_timetable, objects
 import datetime
 
@@ -91,13 +92,20 @@ def main():
     print("\n\nAWARDS\n")
     for award in timetable.awards:
         print(str(award))
+    
+    with timetable.user.journal as journal:
+        if journal == SentralTimetable.JournalUnavailableError:
+            journal = "Today is a weekend/holiday. You cannot access your " \
+                      "journal."
+        elif journal == "":
+            journal = "You do not have a journal entry for today."
 
     print("\n\nME\n")
     print(f"Name: {timetable.user.name}")
     print(f"Number: {timetable.user.number}")
     print(f"School: {timetable.user.school}")
     print(f"\nBarcode:\n\n{timetable.user.barcode}")
-    print(f"\nJournal:\n{timetable.user.journal}")
+    print(f"\nJournal:\n{journal}")
 
 
 if __name__ == "__main__":
