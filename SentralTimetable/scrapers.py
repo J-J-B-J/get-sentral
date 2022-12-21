@@ -354,3 +354,86 @@ def scrape_calendar(html: str) -> list:
                 event_type
             ))
     return data
+
+def scrape_awards(html: str) -> list:
+    """
+    Scrape the HTML for the awards
+    :param html: The HTML source code
+    :return: The awards
+    """
+    # Fetch the page and create a BeautifulSoup object
+    soup = BeautifulSoup(html, 'html.parser')
+    data = []
+    awards_table = soup.find_all(
+        'table',
+        class_='table table-striped table-hover'
+    )[1].find('tbody')
+    awards = awards_table.find_all('tr')
+    for award in awards:
+        award_date_tuple = BeautifulSoup(
+            str(award).split('<br/>')[0],
+            'html.parser'
+        ).find_all('td')[0].text.split()[0].split('/')
+        try:
+            award_date = Date(
+                int(award_date_tuple[2]),
+                int(award_date_tuple[1]),
+                int(award_date_tuple[0])
+            )
+        except ValueError:
+            award_date = Date(0, 1, 1)
+        award_type = award.find_all('td')[1].find('strong').text.rstrip(':')\
+            .replace('&#039;', "'")
+        award_reason = BeautifulSoup(
+            str(award.find_all('td')[1]).split('<br/>')[0].split('</strong>')
+            [1],
+            'html.parser'
+        ).text.strip()
+        try:
+            other_text = ''.join(
+                str(award.find_all('td')[1]).split('<br/>')[1:]
+            ).split('</td>')[0]  # The text that will include any/some/all of
+            # the following:
+            # - 'for'
+            # - 'via'
+            # - 'by'
+        except IndexError:  # There is no other text
+            other_text = ''
+        if other_text.find('for') != -1:
+            award_for = BeautifulSoup(
+                other_text.split('for')[1],
+                'html.parser'
+            ).find('span').text.strip()
+        else:
+            award_for = ''
+        if other_text.find('via') != -1:
+            award_via = BeautifulSoup(
+                other_text.split('via')[1],
+                'html.parser'
+            ).find('a').text.strip()
+        else:
+            award_via = ''
+        if other_text.find('by') != -1:
+            award_teacher = BeautifulSoup(
+                other_text.split('by')[1],
+                'html.parser'
+            ).find('span').text.strip()
+        else:
+            award_teacher = ''
+
+        try:
+            award_value = int(award.find_all('td')[2].text.strip())
+        except ValueError:
+            award_value = 0
+
+        data.append(Award(
+            award_date,
+            award_type,
+            award_reason,
+            award_teacher,
+            award_value,
+            award_for,
+            award_via
+        ))
+
+    return data

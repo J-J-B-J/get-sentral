@@ -87,7 +87,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         print("Navigating to daily timetable")
     webdriver_go_to_timetable(driver, timeout)
     print("Scraping Timetable")
-    days = scrape_timetable(driver.page_source)
+    classes = scrape_timetable(driver.page_source)
     __return_to_homepage(driver, url, debug, timeout)
 
     if debug:
@@ -98,10 +98,20 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
         print("Scraping Calendar")
     events = scrape_calendar(driver.page_source)
 
+    if debug:
+        print("Navigating home")
+    __return_to_homepage(driver, url, debug, timeout)
+    if debug:
+        print("Navigating to and scraping awards")
+    awards = []
+    for _ in webdriver_get_awards_pages(driver, timeout):
+        awards.extend(scrape_awards(driver.page_source))
+
     return Sentral(
-        days=days,
+        classes=classes,
         notices=notices,
         events=events,
+        awards=awards,
         user=user
     )
 

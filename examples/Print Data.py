@@ -48,7 +48,7 @@ def main():
     ]
 
     print("\n\nCLASSES\n")
-    for day in timetable.days:
+    for day in timetable.classes:
         print(f"{day.date.dy} {MONTHS[day.date.mth]} {day.date.yr}")
         for period in day.classes:
             if type(period) == objects.Period:
@@ -89,6 +89,10 @@ def main():
             print(event.flag + '\033[0;0m')
         print()
 
+    print("\n\nAWARDS\n")
+    for award in timetable.awards:
+        print(str(award))
+    
     with timetable.user.journal as journal:
         if journal == SentralTimetable.JournalUnavailableError:
             journal = "Today is a weekend/holiday. You cannot access your " \

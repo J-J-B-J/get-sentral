@@ -1,5 +1,6 @@
 """Functions to simplify use of the webdriver"""
 # Standard library imports
+from typing import Generator  # Type 'Generator' needs to be imported
 import time
 
 # Third party imports
@@ -63,6 +64,65 @@ def webdriver_login(driver: webdriver.Chrome, usr: str, pwd: str, url: str,
                     "value to the timeout arguement"
                 )
 
+
+def webdriver_get_awards_pages(driver: webdriver.Chrome, timeout: int = 5) -> \
+        Generator:
+    """Get the pages of the awards section of Sentral."""
+    # Open the wellbeing section
+    url = driver.find_element(value='portal-links')\
+        .find_element(By.CLASS_NAME, 'colour-wellbeing').get_attribute('href')
+    driver.get(url)
+    start_time = time.time()
+    while True:
+        if '/wellbeing/overview/' in driver.current_url:
+            break
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
+    # Open the awards section
+    url = driver.find_elements(By.CLASS_NAME, "colour-wellbeing")[3] \
+        .get_attribute('href')
+    driver.get(url)
+    start_time = time.time()
+    while True:
+        if '/wellbeing/awards' in driver.current_url:
+            break
+            # Loop through the pages
+
+    while True:
+        yield None
+        old_url = driver.current_url
+        next_url = driver.find_element(By.CLASS_NAME,
+                                       "icon-chevron-left") \
+            .find_element(By.XPATH, "..").get_attribute('href')
+        if next_url == "#" or next_url == driver.current_url + "#":
+            break
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
+        driver.find_element(By.CLASS_NAME, "icon-chevron-left").click()
+        start_time = time.time()
+        while True:
+            if driver.current_url != old_url:
+                break
+            elif time.time() > start_time + timeout:
+                raise TypeError(
+                    "The URL is not at the specified Sentral dashboard.\n "
+                    "Please disable headless mode and test the code to ensure "
+                    "that it is functional. The page may also have failed to "
+                    "load in 5 secs. You can change the timeout by passing a "
+                    "value to the timeout arguement"
+                )
 
 def webdriver_go_to_timetable(driver: webdriver.Chrome, timeout: int = 5) -> \
         None:

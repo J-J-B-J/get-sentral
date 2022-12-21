@@ -128,6 +128,41 @@ class DateRange:
                f"{self.end_minute})"
 
 
+class Award:
+    """A class to manage an award"""
+
+    def __init__(self, date: Date, type_: str, reason: str, teacher: str,
+                 value: int, for_: str = "", via: str = ""):
+        self.date = date
+        self.type = type_
+        self.reason = reason
+        self.teacher = teacher
+        self.value = value
+        self.for_ = for_
+        self.via = via
+
+    def __str__(self):
+        if self.via != "":
+            via = f" via {self.via}"
+        else:
+            via = ""
+        if self.for_ != "":
+            for_ = f" for {self.for_}"
+        else:
+            for_ = ""
+        if self.teacher != "":
+            teacher = f" from {self.teacher}"
+        else:
+            teacher = ""
+        return f"{self.date} - {self.type}: {self.reason}{for_}{via}{teacher}"\
+                 f" ({self.value} points)"
+
+
+    def __repr__(self):
+        return f"Award({self.date}, {self.type}, {self.reason}, " \
+               f"{self.teacher}, {self.for_}, {self.via})"
+
+
 class SchoolDay:
     """A class for a school day."""
 
@@ -197,17 +232,19 @@ class User:
 class Sentral:
     """One class to rule them all... or at least contain the others"""
 
-    def __init__(self, days: list[SchoolDay], notices: list[Notice],
-                 events: list[Event], user: User):
-        self.days = days
+    def __init__(self, classes: list[Period or EmptyPeriod],
+                 notices: list[Notice], events: list[Event],
+                 awards: list[Award], user: User):
+        self.classes = classes
         self.notices = notices
         self.events = events
+        self.awards = awards
         self.user = user
 
     def __str__(self):
-        return f"Sentral({self.days}, {self.notices}, {self.events}, " \
-               f"{self.user})"
+        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+               f"{self.awards}, {self.user})"
 
     def __repr__(self):
-        return f"Sentral({self.days}, {self.notices}, {self.events}, " \
-               f"{self.user})"
+        return f"Sentral({self.classes}, {self.notices}, {self.events}, " \
+               f"{self.awards}, {self.user})"
