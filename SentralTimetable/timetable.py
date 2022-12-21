@@ -91,6 +91,13 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     __return_to_homepage(driver, url, debug, timeout)
 
     if debug:
+        print("Navigating to daily timetable")
+    webdriver_go_to_timetable(driver, timeout)
+    print("Scraping Timetable")
+    days = scrape_timetable(driver.page_source)
+    __return_to_homepage(driver, url, debug, timeout)
+
+    if debug:
         print("Navigating to calendar")
     webdriver_go_to_calendar(driver, timeout * 2)
 
@@ -105,7 +112,7 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     user = scrape_user(html_homepage, html_reporting, url)
 
     return Sentral(
-        classes=classes,
+        days=days,
         notices=notices,
         events=events,
         user=user

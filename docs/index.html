@@ -92,91 +92,147 @@
             <p>This is simply a container for the other objects.</p>
             <div style="text-indent: 20px">
                 <h3>
-                    <code>.classes</code>
+                    <code>.days</code>
                     <span class="pycom">{list}</span>
                 </h3>
-                <p>A list of <code>Period</code> and <code>EmptyPeriod</code> objects.</p>
+                <p>A list of <code>SchoolDay</code> objects.</p>
                 <div style="text-indent: 40px">
                     <h4>
-                        <code>EmptyPeriod</code>
+                        <code>SchoolDay</code>
+                        <span class="pycom">{Custom}</span>
                     </h4>
-                    <p>An empty period, which is a period with no class.</p>
-                    <div style="text-indent:60px">
-                        <h5>
-                            <code>.period</code>
-                            <span class="pycom">{str}</span>
-                        </h5>
-                        <p>The name/number of the period.</p>
-                    </div>
-
-                    <h4>
-                        <code>Period</code>
-                    </h4>
-                    <p>A period with a class.</p>
+                    <p>A container for all Periods in a day</p>
                     <div style="text-indent: 60px">
-                        <h5>
-                            <code>.period</code>
-                            <span class="pycom">{str}</span>
-                        </h5>
-                        <p>The name/number of the period.</p>
-
-                        <h5>
-                            <code>.subject</code>
-                            <span class="pycom">{str}</span>
-                        </h5>
-                        <p>The subject name of the period.</p>
-
-                        <h5>
-                            <code>.room</code>
-                            <span class="pycom">{str}</span>
-                        </h5>
-                        <p>The room of the period.</p>
-
-                        <h5>
-                            <code>.teacher</code>
-                            <span class="pycom">{str}</span>
-                        </h5>
-                        <p>The teacher of the period.</p>
-
-                        <h5>
-                            <code>.colour</code>
-                            <span class="pycom">{Colour}</span>
-                        </h5>
-                        <p>The background colour of the period.</p>
+                        <h4>
+                            <code>.date</code>
+                            <span class="pycom">{Date}</span>
+                        </h4>
+                        <p>The date of the day.</p>
                         <div style="text-indent: 80px">
                             <h6>
-                                <code>.red</code> /
-                                <code>.r</code>
+                                <code>.day</code> /
+                                <code>.dy</code>
                                 <span class="pycom">{int}</span>
                             </h6>
-                            <p>The red component of the colour.</p>
+                            <p>The day of the month in <code>1 .. 31</code>, <code>1 .. 30</code>, <code>1 .. 29</code> or <code>1 .. 28</code>, depending on the month and weather it is a leap year.</p>
 
                             <h6>
-                                <code>.green</code> /
-                                <code>.g</code>
+                                <code>.month</code> /
+                                <code>.mth</code>
                                 <span class="pycom">{int}</span>
                             </h6>
-                            <p>The green component of the colour.</p>
+                            <p>The month in <code>1 .. 12</code>.</p>
 
                             <h6>
-                                <code>.blue</code> /
-                                <code>.b</code>
+                                <code>.year</code> /
+                                <code>.yr</code>
                                 <span class="pycom">{int}</span>
                             </h6>
-                            <p>The blue component of the colour.</p>
+                            <p>The year in <code>0 .. ∞</code>.</p>
 
                             <h6>
-                                <code>.hex</code>
-                                <span class="pycom">{str}</span>
+                                <code>.hour</code> /
+                                <code>.hr</code>
+                                <span class="pycom">{int}</span>
                             </h6>
-                            <p>The hex code of the colour in the format <code class="pystr">#123ABC</code>.</p>
+                            <p>The hour in <code>0 .. 23</code>.</p>
 
                             <h6>
-                                <code>.rgb</code>
-                                <span class="pycom">{tuple}</span>
+                                <code>.minute</code> /
+                                <code>.mnt</code>
+                                <span class="pycom">{int}</span>
                             </h6>
-                            <p>The RGB components of the colour in the format <code>(<span class="pyint">0</span>, <span class="pyint">128</span>, <span class="pyint">255</span>)</code>.</p>
+                            <p>The minute in <code>0 .. 59</code>.</p>
+                        </div>
 
+                        <h4>
+                            <code>.classes</code>
+                            <span class="pycom">{list}</span>
+                        </h4>
+                        <p>A list of <code>Period</code> and <code>EmptyPeriod</code> objects.</p>
+                        <div style="text-indent: 80px">
+                            <h5>
+                                <code>EmptyPeriod</code>
+                            </h5>
+                            <p>An empty period, which is a period with no class.</p>
+                            <div style="text-indent:100px">
+                                <h5>
+                                    <code>.period</code>
+                                    <span class="pycom">{str}</span>
+                                </h5>
+                                <p>The name/number of the period.</p>
+                            </div>
+
+                            <h5>
+                                <code>Period</code>
+                            </h5>
+                            <p>A period with a class.</p>
+                            <div style="text-indent: 100px">
+                                <h6>
+                                    <code>.period</code>
+                                    <span class="pycom">{str}</span>
+                                </h6>
+                                <p>The name/number of the period.</p>
+
+                                <h6>
+                                    <code>.subject</code>
+                                    <span class="pycom">{str}</span>
+                                </h6>
+                                <p>The subject name of the period.</p>
+
+                                <h6>
+                                    <code>.room</code>
+                                    <span class="pycom">{str}</span>
+                                </h6>
+                                <p>The room of the period.</p>
+
+                                <h6>
+                                    <code>.teacher</code>
+                                    <span class="pycom">{str}</span>
+                                </h6>
+                                <p>The teacher of the period.</p>
+
+                                <h6>
+                                    <code>.colour</code>
+                                    <span class="pycom">{Colour}</span>
+                                </h6>
+                                <p>The background colour of the period.</p>
+                                <div style="text-indent: 120px">
+                                    <h6>
+                                        <code>.red</code> /
+                                        <code>.r</code>
+                                        <span class="pycom">{int}</span>
+                                    </h6>
+                                    <p>The red component of the colour.</p>
+
+                                    <h6>
+                                        <code>.green</code> /
+                                        <code>.g</code>
+                                        <span class="pycom">{int}</span>
+                                    </h6>
+                                    <p>The green component of the colour.</p>
+
+                                    <h6>
+                                        <code>.blue</code> /
+                                        <code>.b</code>
+                                        <span class="pycom">{int}</span>
+                                    </h6>
+                                    <p>The blue component of the colour.</p>
+
+                                    <h6>
+                                        <code>.hex</code>
+                                        <span class="pycom">{str}</span>
+                                    </h6>
+                                    <p>The hex code of the colour in the format <code class="pystr">#123ABC</code>.</p>
+
+                                    <h6>
+                                        <code>.rgb</code>
+                                        <span class="pycom">{tuple}</span>
+                                    </h6>
+                                    <p>The RGB components of the colour in the format <code>(<span class="pyint">0</span>, <span class="pyint">128</span>, <span class="pyint">255</span>)</code>.</p>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
