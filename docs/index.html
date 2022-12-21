@@ -365,6 +365,73 @@
                         <span class="pycom">{str}</span>
                     </h5>
                     <p>The user's daily journal entry for today.</p>
+
+                    <h5>
+                        <code>.reports</code>
+                        <span class="pycom">{list[Report]}</span>
+                    </h5>
+                    <p>The user's reports.</p>
+                    <div style="text-indent: 60px">
+                        <h5>
+                            <code>Report</code>
+                        </h5>
+                        <p>A report file.</p>
+                        <div style="text-indent: 80px">
+                            <h6>
+                                <code>.name</code>
+                                <span class="pycom">{str}</span>
+                            </h6>
+                            <p>The year of the report. May also include other info depending on your school.</p>
+
+                            <h6>
+                                <code>.url</code>
+                                <span class="pycom">{str}</span>
+                            </h6>
+                            <p>The URL at wwhich you can access the report.</p>
+
+                            <h6>
+                                <code>.date</code>
+                                <span class="pycom">{Date}</span>
+                            </h6>
+                            <p>The date and time of the report release.</p>
+                            <div style="text-indent: 80px">
+                                <h6>
+                                    <code>.day</code> /
+                                    <code>.dy</code>
+                                    <span class="pycom">{int}</span>
+                                </h6>
+                                <p>The day of the month in <code>1 .. 31</code>, <code>1 .. 30</code>, <code>1 .. 29</code> or <code>1 .. 28</code>, depending on the month and weather it is a leap year.</p>
+
+                                <h6>
+                                    <code>.month</code> /
+                                    <code>.mth</code>
+                                    <span class="pycom">{int}</span>
+                                </h6>
+                                <p>The month in <code>1 .. 12</code>.</p>
+
+                                <h6>
+                                    <code>.year</code> /
+                                    <code>.yr</code>
+                                    <span class="pycom">{int}</span>
+                                </h6>
+                                <p>The year in <code>0 .. ∞</code>.</p>
+
+                                <h6>
+                                    <code>.hour</code> /
+                                    <code>.hr</code>
+                                    <span class="pycom">{int}</span>
+                                </h6>
+                                <p>The hour in <code>0 .. 23</code>.</p>
+
+                                <h6>
+                                    <code>.minute</code> /
+                                    <code>.mnt</code>
+                                    <span class="pycom">{int}</span>
+                                </h6>
+                                <p>The minute in <code>0 .. 59</code>.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
