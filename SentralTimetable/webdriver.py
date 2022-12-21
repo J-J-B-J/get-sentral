@@ -85,12 +85,22 @@ def webdriver_get_awards_pages(driver: webdriver.Chrome, timeout: int = 5) -> \
                 "value to the timeout arguement"
             )
     # Open the awards section
-    url = driver.find_elements(By.CLASS_NAME, "colour-wellbeing")[3]\
+    url = driver.find_elements(By.CLASS_NAME, "colour-wellbeing")[3] \
         .get_attribute('href')
     driver.get(url)
     start_time = time.time()
     while True:
         if '/wellbeing/awards' in driver.current_url:
+            break
+            # Loop through the pages
+
+    while True:
+        yield None
+        old_url = driver.current_url
+        next_url = driver.find_element(By.CLASS_NAME,
+                                       "icon-chevron-left") \
+            .find_element(By.XPATH, "..").get_attribute('href')
+        if next_url == "#" or next_url == driver.current_url + "#":
             break
         elif time.time() > start_time + timeout:
             raise TypeError(
@@ -100,15 +110,6 @@ def webdriver_get_awards_pages(driver: webdriver.Chrome, timeout: int = 5) -> \
                 "load in 5 secs. You can change the timeout by passing a "
                 "value to the timeout arguement"
             )
-    # Loop through the pages
-
-    while True:
-        yield None
-        old_url = driver.current_url
-        next_url = driver.find_element(By.CLASS_NAME, "icon-chevron-left")\
-        .find_element(By.XPATH, "..").get_attribute('href')
-        if next_url == "#" or next_url == driver.current_url + "#":
-            break
         driver.find_element(By.CLASS_NAME, "icon-chevron-left").click()
         start_time = time.time()
         while True:
@@ -122,6 +123,50 @@ def webdriver_get_awards_pages(driver: webdriver.Chrome, timeout: int = 5) -> \
                     "load in 5 secs. You can change the timeout by passing a "
                     "value to the timeout arguement"
                 )
+
+def webdriver_go_to_timetable(driver: webdriver.Chrome, timeout: int = 5) -> \
+        None:
+    """
+    Navigate to the timetable page from the dashboard
+    :param driver: The webdriver object to use
+    :param timeout: The time to wait for the page to load
+    :return: None
+    """
+    # CLick the button to go to the timetable page
+    driver.find_element(By.CLASS_NAME, "colour-timetable").click()
+    start_time = time.time()
+    while True:
+        if '/portal/timetable/mytimetable' in driver.current_url:
+            if driver.current_url.endswith('/daily'):
+                return  # If the page is already at the daily view, return
+            else:
+                break  # If not, go break the loop and go to the daily view
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
+    # Click the button to go to the daily timetable page
+    button_div = driver.find_element(
+        By.CLASS_NAME,
+        "btn-group.position-top-right"
+    )
+    button_div.find_element(By.CLASS_NAME, "btn.btn-success").click()
+    start_time = time.time()
+    while True:
+        if '/daily' in driver.current_url:
+            return
+        elif time.time() > start_time + timeout:
+            raise TypeError(
+                "The URL is not at the specified Sentral dashboard.\n "
+                "Please disable headless mode and test the code to ensure "
+                "that it is functional. The page may also have failed to "
+                "load in 5 secs. You can change the timeout by passing a "
+                "value to the timeout arguement"
+            )
 
 
 def webdriver_go_to_calendar(driver: webdriver.Chrome, timeout: int = 5) -> \

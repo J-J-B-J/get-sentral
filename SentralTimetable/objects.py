@@ -1,4 +1,5 @@
 """Classes to manage the objects in the timetable."""
+import datetime
 
 
 # Yes I know it is the Australian spelling. Deal with it.
@@ -160,6 +161,20 @@ class Award:
     def __repr__(self):
         return f"Award({self.date}, {self.type}, {self.reason}, " \
                f"{self.teacher}, {self.for_}, {self.via})"
+
+
+class SchoolDay:
+    """A class for a school day."""
+
+    def __init__(self, classes: list[Period or EmptyPeriod], date: Date):
+        self.classes = classes
+        self.date = date
+
+    def __str__(self):
+        return f"School Day on {self.date}: {self.classes}"
+
+    def __repr__(self):
+        return f"SchoolDay({self.date}, {self.classes})"
 
 
 class Notice:
