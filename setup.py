@@ -21,6 +21,7 @@ setup(
         'python-dotenv~=0.20.0',
         'setuptools~=61.3.0',
         'Pillow~=9.0.1',
+        'pyperclip~=1.8.2',
     ],
     package_dir={'': '.'},
     classifiers=[

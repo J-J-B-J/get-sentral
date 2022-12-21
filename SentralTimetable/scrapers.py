@@ -125,9 +125,10 @@ def scrape_timetable(html: str) -> list[SchoolDay]:
     return data
 
 
-def scrape_notices(html: str) -> list:
+def scrape_notices(html: str, url: str) -> list:
     """
     Scrape the HTML for the notices
+    :param url: The URL of the page
     :param html: The HTML source code
     :return: Notices
     """
@@ -172,32 +173,45 @@ def scrape_notices(html: str) -> list:
         for tag in notice.find_all('p'):
             notice_content += ' '.join(tag.strings) + '\n'
 
+        base_url = "/".join(url.split('/')[0:3])
+
+        attachment_div = notice.find(class_='dropdown-menu')
+        attachments = []
+        if attachment_div is not None:
+            for attachment in attachment_div.find_all('li'):
+                attachment_name = str(attachment.find('a').string).strip()
+                attachment_url = base_url + str(attachment.find('a')['href'])
+                attachments.append(Attachment(attachment_name, attachment_url))
+
         notice_data = Notice(
             notice_title,
             notice_teacher,
             notice_date,
-            notice_content
+            notice_content,
+            attachments
         )
         data.append(notice_data)
     return data
 
 
-def scrape_user(html: str) -> User:
+def scrape_user(html_home: str, html_reporting: str, url: str) -> User:
     """
     Scrape the user data
-    :param html: The HTML source code
+    :param html_home: The HTML source code for the Sentral home page
+    :param html_reporting: The HTML source code for the Sentral reporting page
+    :param url: The URL of the home page
     :return: The user data
     """
-    soup = BeautifulSoup(html, 'html.parser')
+    soup_home = BeautifulSoup(html_home, 'html.parser')
     try:
-        school_div = soup.find('h1')
+        school_div = soup_home.find('h1')
         school = str(school_div.text)
         subtext = str(school_div.find('span').text)
         school = school.replace(subtext, '').strip()
     except AttributeError:
         school = "Unknown"
 
-    student_div = soup.find(class_='student-login')
+    student_div = soup_home.find(class_='student-login')
     try:
         name = str(student_div.find('span').text.title())
     except AttributeError:
@@ -211,7 +225,7 @@ def scrape_user(html: str) -> User:
     barcode = generate_barcode(number)
 
     try:
-        journal_form = soup.find_all(class_='span3')[1].find('form')
+        journal_form = soup_home.find_all(class_='span3')[1].find('form')
         journal_text_box = journal_form.find(class_='editable')
     except AttributeError:
         journal = JournalUnavailableError
@@ -228,7 +242,41 @@ def scrape_user(html: str) -> User:
                 journal += ' '.join(tag.strings) + '\n'
             journal = journal.rstrip()  # Remove the trailing newline
 
-    return User(name, school, number, barcode, journal)
+    soup_reporting = BeautifulSoup(html_reporting, 'html.parser')
+
+    reports = []
+    for report in reversed(soup_reporting.find_all('tr')[1:]):  # The rows
+        # excluding the header, in reverse order
+        report_name = str(report.find('td').text)
+        report_url = '/'.join(url.split('/')[:3])+str(report.find('a')['href'])
+
+        date = str(report.find_all('td')[1].text)
+        try:
+            day = int(date.split('/')[0])
+        except ValueError:
+            day = 1
+        try:
+            month = int(date.split('/')[1])
+        except ValueError:
+            month = 1
+        try:
+            year = int(date.split('/')[2].split(' ')[0])
+        except ValueError:
+            year = 0
+        try:
+            hour = int(date.split(' ')[1].split(':')[0])
+        except ValueError:
+            hour = 0
+        try:
+            minute = int(date.split(' ')[1].split(':')[1])
+        except ValueError:
+            minute = 0
+
+        report_date = Date(year, month, day, hour, minute)
+
+        reports.append(Report(report_name, report_url, report_date))
+
+    return User(name, school, number, barcode, journal, reports)
 
 
 def scrape_calendar(html: str) -> list:

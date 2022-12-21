@@ -67,6 +67,10 @@ def main():
         print('-' * len(notice.title))
         print(f"By {notice.teacher} on {notice.date}")
         print('-' * len(notice.title))
+        if notice.attachments:
+            print("Attachments:")
+            for attachment in notice.attachments:
+                print(f" - \"{attachment.name}\": {attachment.url}")
         print(notice.content + '\n')
 
     print("\nEVENTS\n")
@@ -102,6 +106,9 @@ def main():
     print(f"School: {timetable.user.school}")
     print(f"\nBarcode:\n\n{timetable.user.barcode}")
     print(f"\nJournal:\n{journal}")
+
+    reports = '\n'.join([str(report) for report in timetable.user.reports])
+    print(f"\nReports:\n{reports}")
 
 
 if __name__ == "__main__":
