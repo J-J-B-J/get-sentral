@@ -8,6 +8,7 @@ from tkinter import ttk
 from tkinter.messagebox import *
 import datetime
 import dotenv
+import json
 import sys
 import tkinter as tk
 import urllib.request
@@ -77,6 +78,10 @@ class App:
         self.notice_range_start = 0
         self.event_range_start = -1
 
+        self.TAB_VISIBLE = "1"
+        self.TAB_MENU = "2"
+        self.TAB_HIDDEN = "3"
+
         # Read the app data file to get the details
         details = dict(dotenv.dotenv_values("App_Credentials.env"))
         self.username = details.get("USERNAME", "")
@@ -90,6 +95,10 @@ class App:
             details.get("TABS", "Timetable,Notices,Events,Me").split(",")
         )
         self.start_tab = details.get("START_TAB", "Timetable")
+        self.tab_visibility = json.loads(details.get(
+            "TAB_VISIBILITY",
+            '{"Timetable": "1", "Notices": "1", "Events": "1", "Me": "1"}'
+        ))
 
         self.create_buttons()
         self.section_objects = []
@@ -942,6 +951,73 @@ class App:
         mnu_start_tab.pack(side=tk.RIGHT)
         mnu_start_tab.config(width=27)
 
+        frm_tab_visibility = create_setting(
+            "Tab visibility",
+            "Which tabs are hidden."
+        )
+        frm_tab_visibility.pack()
+        var_tab_visibility = tk.Variable()
+        var_tab_visibility.set(self.tab_visibility)
+
+        get_tab_visibility_dict = lambda: \
+            json.loads(var_tab_visibility.get().replace("'", '"'))
+
+        get_tab_visibility_str = lambda: \
+            str(var_tab_visibility.get()).replace("'", '"')
+
+        buttons = {}
+        for tab in self.tabs:
+            buttons[tab] = {}
+
+        for tab in self.tabs:
+            frm_tab = tk.Frame(frm_tab_visibility)
+            frm_tab.pack(side=tk.TOP, fill=tk.X)
+            lbl_tab = tk.Label(
+                frm_tab,
+                text=tab
+            )
+            lbl_tab.pack(side=tk.LEFT)
+
+            for i, visible in enumerate(
+                    [self.TAB_HIDDEN, self.TAB_MENU, self.TAB_VISIBLE]):
+                btn_tab_visible = tk.Button(
+                    frm_tab,
+                    text=["Hide", "Menu", "Show"][i],
+                    width=5
+                )
+                btn_tab_visible.pack(side=tk.RIGHT)
+                btn_tab_visible.visible = visible
+                btn_tab_visible.tab = tab
+
+                buttons[tab][visible] = btn_tab_visible
+
+                def set_tab_visibility(event: tk.Event):
+                    """Set the tab visibility"""
+                    widget: tk.Button = event.widget
+                    widget_visibility = widget.visible  # The visibility
+                    # control of the button
+                    widget_tab = widget.tab  # The tab that the button controls
+                    widget_parent = widget.master  # The frame that the widget
+                    # belongs to
+                    current_visibility = get_tab_visibility_dict()
+                    current_visibility[widget_tab] = widget_visibility
+                    var_tab_visibility.set(str(current_visibility))
+                    for btn in widget_parent.winfo_children()[1:]:
+                        # Ignore the label widget at the start
+                        if btn.visible == widget_visibility:
+                            btn.config(state=tk.DISABLED)
+                        else:
+                            btn.config(state=tk.NORMAL)
+
+                btn_tab_visible.bind(
+                    "<Button-1>",
+                    set_tab_visibility
+                )
+                btn_tab_visible.pack(side=tk.RIGHT)
+
+        for tab, setting in self.tab_visibility.items():
+            buttons[tab][setting].config(state=tk.DISABLED)
+
         def save_settings(*_):
             """Save the settings"""
 
@@ -973,6 +1049,8 @@ class App:
             dotenv.set_key("App_Credentials.env", "TABS", ','.join(self.tabs))
             dotenv.set_key("App_Credentials.env", "START_TAB",
                            var_start_tab.get())
+            dotenv.set_key("App_Credentials.env", "TAB_VISIBILITY",
+                           get_tab_visibility_str())
 
             if askyesno("Saved", "Save complete. Do you want to reload?"):
                 self.reload(manual=True)
