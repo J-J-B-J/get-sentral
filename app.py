@@ -765,7 +765,7 @@ class App:
                                       "access your journal.")
 
             btn_save.config(state=tk.DISABLED)
-            return txt_journal.config(state=tk.DISABLED)
+            txt_journal.config(state=tk.DISABLED)
 
         def save_journal(*_):
             """Save the journal in the background"""
