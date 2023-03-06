@@ -81,6 +81,11 @@ def get_timetable(usr: str = None, pwd: str = None, url: str = None,
     html_homepage = driver.page_source
 
     if debug:
+        print("Scraping Notices")
+    notices = scrape_notices(driver.page_source, url)
+    user = scrape_user(driver.page_source)
+    
+    if debug:
         print("Navigating to reporting")
     webdriver_go_to_reporting(driver, timeout)
 
