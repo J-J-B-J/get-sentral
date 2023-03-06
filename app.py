@@ -276,15 +276,23 @@ class App:
             nonlocal day_number
             self.destroy_section_objects()
 
-            if not self.data.days:
-                lbl_no_notices = tk.Label(
+            def no_days():
+                """Create the 'no days' label."""
+                lbl_no_days = tk.Label(
                     self.window,
-                    text="No classes found."
+                    text="No days found."
                 )
-                self.section_objects.append(lbl_no_notices)
-                lbl_no_notices.pack()
-                return
+                self.section_objects.append(lbl_no_days)
+                lbl_no_days.pack()
 
+            try:
+                if not self.data.days:
+                    no_days()
+                    return
+            except AttributeError:
+                no_days()
+                return
+            
             def increase_range(*_):
                 """Increase the range of the timetable"""
                 nonlocal periods
