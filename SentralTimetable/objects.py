@@ -142,6 +142,20 @@ class Attachment:
         return f"Attachment({self.name}, {self.url})"
 
 
+class Report(Attachment):
+    """A class for a report file"""
+
+    def __init__(self, name: str, url: str, date: Date):
+        super().__init__(name, url)
+        self.date = date
+
+    def __str__(self):
+        return f"{self.name} ({self.date})"
+
+    def __repr__(self):
+        return f"Report({self.name}, {self.url}, {self.date})"
+
+
 class SchoolDay:
     """A class for a school day."""
 
@@ -195,19 +209,21 @@ class User:
     """A class to manage the user details"""
 
     def __init__(self, name: str, school: str, number: int, barcode: str,
-                 journal: str):
+                 journal: str, reports: list[Report]):
         self.name = name
         self.school = school
         self.number = number
         self.barcode = barcode
         self.journal = journal
+        self.reports = reports
 
     def __str__(self):
-        return f"{self.name} ({self.school}, {self.number}, {self.journal})\n{self.barcode}"
+        return f"{self.name} ({self.school}, {self.number}, {self.journal}, " \
+               f"{self.reports})\n{self.barcode}"
 
     def __repr__(self):
         return f"User({self.name}, {self.school}, {self.number}, " \
-               f"{self.barcode}, {self.journal})"
+               f"{self.barcode}, {self.journal}, {self.reports})"
 
 
 class Sentral:

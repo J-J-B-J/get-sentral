@@ -39,7 +39,7 @@ class App:
         
         self.window = tk.Tk()
         self.window.title("Sentral")
-        self.window.geometry("500x500")
+        self.window.geometry("500x550")
         urllib.request.urlretrieve(
             "https://github.com/J-J-B-J/get-sentral/raw/main/docs/img/icon"
             ".png", "icon.png")
@@ -57,7 +57,7 @@ class App:
             [],
             [],
             [],
-            SentralTimetable.User("", "", 0, "", "")
+            SentralTimetable.User("", "", 0, "", "", [])
         )
 
         self.notice_range_start = 0
@@ -765,7 +765,7 @@ class App:
                                       "access your journal.")
 
             btn_save.config(state=tk.DISABLED)
-            return txt_journal.config(state=tk.DISABLED)
+            txt_journal.config(state=tk.DISABLED)
 
         def save_journal(*_):
             """Save the journal in the background"""
@@ -795,6 +795,69 @@ class App:
             save_thread.start()
 
         btn_save.bind("<Button-1>", save_journal)
+
+        lbl_reports = tk.Label(
+            frm_me,
+            text="Reports",
+            anchor=tk.W
+        )
+        self.section_objects.append(lbl_reports)
+        lbl_reports.pack(side=tk.TOP, fill=tk.X)
+
+        lstbx_reports = tk.Listbox(
+            frm_me,
+            width=39,
+            height=10
+        )
+        self.section_objects.append(lstbx_reports)
+        lstbx_reports.pack(side=tk.TOP)
+
+        for report in self.data.user.reports:
+            lstbx_reports.insert(tk.END, report)
+
+        def open_report(*_):
+            """Open the selected report"""
+            selected_reports = lstbx_reports.curselection()
+            for selected_report in selected_reports:
+                window = tk.Toplevel()
+                window.title("Report")
+                window.geometry('500x150')
+                window.focus_set()
+                window.bind(
+                    "<Escape>",
+                    lambda _: window.destroy()
+                )
+
+                this_report = self.data.user.reports[selected_report]
+
+                lbl_title = tk.Label(
+                    window,
+                    text=this_report.name,
+                    font=("Arial", 20)
+                )
+                lbl_title.pack(side=tk.TOP)
+
+                lbl_date = tk.Label(
+                    window,
+                    text=str(this_report.date)
+                )
+                lbl_date.pack(side=tk.TOP)
+
+                def copy_link(url):
+                    """Copy the url to the clipboard and say so"""
+                    pyperclip.copy(url)
+                    showinfo(message="Copied.")
+
+                btn_open = tk.Button(
+                    window,
+                    text="Copy URL",
+                    command=lambda: copy_link(this_report.url)
+                )
+                btn_open.pack(side=tk.TOP)
+
+                window.mainloop()
+
+        lstbx_reports.bind("<Button-1>", open_report)
 
     def settings(self, *_):
         """The 'settings' page"""
